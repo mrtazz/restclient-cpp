@@ -19,7 +19,7 @@
  *
  * @return response struct
  */
-RestClient::response RestClient::get(std::string& url)
+RestClient::response RestClient::get(const std::string& url)
 {
   /** create return struct */
   RestClient::response ret;
@@ -56,8 +56,9 @@ RestClient::response RestClient::get(std::string& url)
  *
  * @return response struct
  */
-RestClient::response RestClient::post(std::string& url, std::string& ctype,
-                                      std::string& data)
+RestClient::response RestClient::post(const std::string& url,
+                                      const std::string& ctype,
+                                      const std::string& data)
 {
   /** create return struct */
   RestClient::response ret;
@@ -72,8 +73,9 @@ RestClient::response RestClient::post(std::string& url, std::string& ctype,
  *
  * @return response struct
  */
-RestClient::response RestClient::put(std::string& url, std::string& ctype,
-                                     std::string& data)
+RestClient::response RestClient::put(const std::string& url,
+                                     const std::string& ctype,
+                                     const std::string& data)
 {
   /** create return struct */
   RestClient::response ret;
@@ -86,7 +88,7 @@ RestClient::response RestClient::put(std::string& url, std::string& ctype,
  *
  * @return response struct
  */
-RestClient::response RestClient::del(std::string& url)
+RestClient::response RestClient::del(const std::string& url)
 {
   /** create return struct */
   RestClient::response ret;

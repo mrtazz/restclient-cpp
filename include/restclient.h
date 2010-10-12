@@ -27,15 +27,15 @@ class RestClient
 
     /** public methods */
     // HTTP GET
-    static response get(std::string& url);
+    static response get(const std::string& url);
     // HTTP POST
-    static response post(std::string& url, std::string& ctype,
-                         std::string& data);
+    static response post(const std::string& url, const std::string& ctype,
+                         const std::string& data);
     // HTTP PUT
-    static response put(std::string& url, std::string& ctype,
-                        std::string& data);
+    static response put(const std::string& url, const std::string& ctype,
+                        const std::string& data);
     // HTTP DELETE
-    static response del(std::string& url);
+    static response del(const std::string& url);
 
   private:
     static size_t callback(void *ptr, size_t size, size_t nmemb,

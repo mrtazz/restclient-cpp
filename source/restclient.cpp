@@ -108,6 +108,6 @@ RestClient::response RestClient::del(const std::string& url)
 size_t RestClient::callback(void *data, size_t size, size_t nmemb,
                             void *userdata)
 {
-
+  static_cast<RestClient::response*>(userdata)->body.append((char*)data, size*nmemb);
   return (size * nmemb);
 }

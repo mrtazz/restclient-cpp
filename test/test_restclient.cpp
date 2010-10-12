@@ -33,10 +33,10 @@ class RestClientTest : public ::testing::Test
 };
 
 // Tests
-TEST_F(RestClientTest, TestRestClientGET)
+TEST_F(RestClientTest, TestRestClientGETBody)
 {
-    RestClient::get(url);
-    EXPECT_EQ(0, foo);
+  RestClient::response res = RestClient::get(url);
+  EXPECT_EQ("GET succesful.", res.body);
 }
 TEST_F(RestClientTest, TestRestClientPOST)
 {

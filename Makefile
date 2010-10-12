@@ -6,6 +6,9 @@
 CC = g++
 LD = g++
 
+# logfile for HTTP test server
+LOGFILE = test_server.log
+
 # binaries and folders
 BINDIR = bin
 TEST = $(BINDIR)/test
@@ -48,5 +51,10 @@ clean:
 	@rm -rf bin
 
 all: $(TEST)
+	@echo Starting test server...
+	@ruby test/test_server.rb 2&>1 > $(LOGFILE) &
+	@sleep 5
 	@echo Running tests...
 	@./bin/test
+	@kill `ps ax | grep test_server.rb | grep -v grep | cut -d " " -f 1`
+	@rm $(LOGFILE)

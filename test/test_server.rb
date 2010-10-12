@@ -5,11 +5,11 @@ get '/?' do
 end
 
 post '/?' do
-  params
+  request.body()
 end
 
 put '/?' do
-  params
+  request.body()
 end
 
 delete '/?' do

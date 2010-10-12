@@ -40,16 +40,16 @@ TEST_F(RestClientTest, TestRestClientGET)
 }
 TEST_F(RestClientTest, TestRestClientPOST)
 {
-    RestClient::post(url, ctype, data);
-    EXPECT_EQ(0, foo);
+  RestClient::post(url, ctype, data);
+  EXPECT_EQ(0, foo);
 }
 TEST_F(RestClientTest, TestRestClientPUT)
 {
-    RestClient::put(url, ctype, data);
-    EXPECT_EQ(0, foo);
+  RestClient::put(url, ctype, data);
+  EXPECT_EQ(0, foo);
 }
 TEST_F(RestClientTest, TestRestClientDELETE)
 {
-    RestClient::del(url);
-    EXPECT_EQ(0, foo);
+  RestClient::del(url);
+  EXPECT_EQ(0, foo);
 }

@@ -52,7 +52,7 @@ clean:
 
 all: $(TEST)
 	@echo Starting test server...
-	@ruby test/test_server.rb 2&>1 > $(LOGFILE) &
+	@ruby test/test_server.rb > $(LOGFILE) 2>&1 &
 	@sleep 5
 	@echo Running tests...
 	@./bin/test

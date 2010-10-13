@@ -14,7 +14,7 @@ BINDIR = bin
 TEST = $(BINDIR)/test
 
 # set library and include paths
-INCLUDE =  -Iinclude -I/usr/local/include
+INCLUDE =  -I. -I/usr/local/include
 TESTLIBS = -lgtest -lcurl
 LIBS = -lcurl
 

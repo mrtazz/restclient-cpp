@@ -46,7 +46,7 @@ $(BINDIR):
 .PHONY:  clean all
 
 clean:
-	@rm -rf tests/*.o
+	@rm -rf test/*.o
 	@rm -rf source/*.o
 	@rm -rf bin
 

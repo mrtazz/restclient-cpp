@@ -34,7 +34,7 @@ class RestClientGetTest : public ::testing::Test
 TEST_F(RestClientGetTest, TestRestClientGETBody)
 {
   RestClient::response res = RestClient::get(url);
-  EXPECT_EQ("", res.body);
+  EXPECT_EQ("GET", res.body);
 }
 // check return code
 TEST_F(RestClientGetTest, TestRestClientGETCode)

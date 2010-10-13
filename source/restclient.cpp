@@ -31,9 +31,13 @@ RestClient::response RestClient::get(const std::string& url)
   curl = curl_easy_init();
   if (curl)
   {
+    /** set query URL */
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    /** set callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::callback);
+    /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != 0)
     {
@@ -108,6 +112,7 @@ RestClient::response RestClient::del(const std::string& url)
 size_t RestClient::callback(void *data, size_t size, size_t nmemb,
                             void *userdata)
 {
-  static_cast<RestClient::response*>(userdata)->body.append((char*)data, size*nmemb);
+  static_cast<RestClient::response*>(userdata)->body.append((char*)data,
+                                                            size*nmemb);
   return (size * nmemb);
 }

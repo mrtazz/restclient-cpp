@@ -43,8 +43,7 @@ class RestClient
     static size_t callback(void *ptr, size_t size, size_t nmemb,
                            void *userdata);
     static const std::string user_agent;
+    static const char* user_agent;
 };
 
-const std::string RestClient::user_agent = "restclient-cpp/" +
-                                           RestClientMeta::version;
 #endif  // INCLUDE_RESTCLIENT_H_

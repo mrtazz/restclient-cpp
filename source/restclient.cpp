@@ -11,6 +11,8 @@
 #include <iostream>
 #include "include/restclient.h"
 
+/** initialize user agent string */
+const char* RestClient::user_agent = "restclient-cpp/" VERSION;
 /**
  * @brief HTTP GET method
  *
@@ -30,6 +32,8 @@ RestClient::response RestClient::get(const std::string& url)
   curl = curl_easy_init();
   if (curl)
   {
+    /** set user agent */
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
     /** set query URL */
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     /** set callback function */

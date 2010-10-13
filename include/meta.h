@@ -7,12 +7,8 @@
 #ifndef INCLUDE_META_H_
 #define INCLUDE_META_H_
 
-#include <string>
-
-namespace RestClientMeta {
-  /** version string */
-  const std::string version = "0.1.0";
-};
+// version string normally set from makefile
+#define VERSION ""
 
 #endif  // INCLUDE_META_H_
 

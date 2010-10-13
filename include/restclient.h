@@ -25,6 +25,13 @@ class RestClient
       int code;
       std::string body;
     } response;
+    /** struct used for uploading data */
+    typedef struct
+    {
+      std::string data;
+      int length;
+      int transmitted;
+    } upload_object;
 
     /** public methods */
     // HTTP GET
@@ -40,9 +47,11 @@ class RestClient
 
   private:
     // writedata callback function
-    static size_t callback(void *ptr, size_t size, size_t nmemb,
-                           void *userdata);
-    static const std::string user_agent;
+    static size_t write_callback(void *ptr, size_t size, size_t nmemb,
+                                 void *userdata);
+    // read callback function
+    static size_t read_callback(void *ptr, size_t size, size_t nmemb,
+                                void *userdata);
     static const char* user_agent;
 };
 

@@ -19,7 +19,7 @@ class RestClientGetTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      url = "http://localhost:4567";
+      url = "http://http-test-server.heroku.com";
       ctype = "";
       data = "";
     }
@@ -34,7 +34,7 @@ class RestClientGetTest : public ::testing::Test
 TEST_F(RestClientGetTest, TestRestClientGETBody)
 {
   RestClient::response res = RestClient::get(url);
-  EXPECT_EQ("GET succesful.", res.body);
+  EXPECT_EQ("", res.body);
 }
 // check return code
 TEST_F(RestClientGetTest, TestRestClientGETCode)

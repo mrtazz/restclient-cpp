@@ -51,10 +51,5 @@ clean:
 	@rm -rf bin
 
 all: $(TEST)
-	@echo Starting test server...
-	@ruby test/test_server.rb > $(LOGFILE) 2>&1 &
-	@sleep 5
 	@echo Running tests...
 	@./bin/test
-	@kill `ps ax | grep test_server.rb | grep -v grep | cut -d " " -f 1`
-	@rm $(LOGFILE)

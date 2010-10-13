@@ -1,4 +1,4 @@
-#include "restclient.h"
+#include "include/restclient.h"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -45,12 +45,14 @@ TEST_F(RestClientPostTest, TestRestClientPOSTCode)
 // check content type
 TEST_F(RestClientPostTest, TestRestClientPOSTContentType)
 {
-  RestClient::response res = RestClient::post(url, ctype, data);
+  RestClient::response res = RestClient::post(url.append("/contenttype"),
+                                              ctype, data);
   EXPECT_EQ(ctype, res.body);
 }
 // check response body
 TEST_F(RestClientPostTest, TestRestClientPOSTBody)
 {
-  RestClient::response res = RestClient::post(url, ctype, data);
+  RestClient::response res = RestClient::post(url.append("/body"),
+                                              ctype, data);
   EXPECT_EQ(data, res.body);
 }

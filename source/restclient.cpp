@@ -2,15 +2,14 @@
  * @file restclient.cpp
  * @brief implementation of the restclient class
  * @author Daniel Schauenberg <d@unwiredcouch.com>
- * @version
- * @date 2010-10-12
  */
 
 /*========================
          INCLUDES
   ========================*/
-#include "restclient.h"
+#include <string>
 #include <iostream>
+#include "include/restclient.h"
 
 /**
  * @brief HTTP GET method
@@ -46,7 +45,7 @@ RestClient::response RestClient::get(const std::string& url)
       exit(1);
     }
     long http_code = 0;
-    curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
 
     curl_easy_cleanup(curl);
@@ -115,7 +114,7 @@ RestClient::response RestClient::del(const std::string& url)
 size_t RestClient::callback(void *data, size_t size, size_t nmemb,
                             void *userdata)
 {
-  static_cast<RestClient::response*>(userdata)->body.append((char*)data,
+  reinterpret_cast<RestClient::response*>(userdata)->body.append((char*)data,
                                                             size*nmemb);
   return (size * nmemb);
 }

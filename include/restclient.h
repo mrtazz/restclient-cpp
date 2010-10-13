@@ -9,8 +9,9 @@
 #ifndef INCLUDE_RESTCLIENT_H_
 #define INCLUDE_RESTCLIENT_H_
 
-#include <string>
 #include <curl/curl.h>
+#include <string>
+#include "include/meta.h"
 
 class RestClient
 {
@@ -38,10 +39,12 @@ class RestClient
     static response del(const std::string& url);
 
   private:
+    // writedata callback function
     static size_t callback(void *ptr, size_t size, size_t nmemb,
                            void *userdata);
-
-
+    static const std::string user_agent;
 };
-#endif // INCLUDE_RESTCLIENT_H_
 
+const std::string RestClient::user_agent = "restclient-cpp/" +
+                                           RestClientMeta::version;
+#endif  // INCLUDE_RESTCLIENT_H_

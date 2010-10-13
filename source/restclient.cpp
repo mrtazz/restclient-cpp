@@ -45,6 +45,9 @@ RestClient::response RestClient::get(const std::string& url)
           << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
       exit(1);
     }
+    long http_code = 0;
+    curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code);
+    ret.code = static_cast<int>(http_code);
 
     curl_easy_cleanup(curl);
   }

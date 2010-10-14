@@ -28,9 +28,8 @@ class RestClient
     /** struct used for uploading data */
     typedef struct
     {
-      std::string data;
-      int length;
-      int transmitted;
+      const char* data;
+      size_t length;
     } upload_object;
 
     /** public methods */

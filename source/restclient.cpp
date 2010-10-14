@@ -78,9 +78,8 @@ RestClient::response RestClient::post(const std::string& url,
 
   /** initialize upload object */
   RestClient::upload_object up_obj;
-  up_obj.data = data;
+  up_obj.data = data.c_str();
   up_obj.length = data.size();
-  up_obj.transmitted = 0;
 
   // use libcurl
   CURL *curl;
@@ -188,31 +187,17 @@ size_t RestClient::write_callback(void *data, size_t size, size_t nmemb,
 size_t RestClient::read_callback(void *data, size_t size, size_t nmemb,
                             void *userdata)
 {
-  int max_transmit_length;
+  /** get upload struct */
   RestClient::upload_object* u;
   u = reinterpret_cast<RestClient::upload_object*>(userdata);
-  // check if we can transmit all at once
-  if ((size*nmemb) >= (u->data.size() - u->transmitted))
-  {
-    max_transmit_length = u->data.size() - u->transmitted;
-  }
-  // if not only transmit the size of the buffer
-  else
-  {
-    max_transmit_length = (size*nmemb) + u->transmitted;
-  }
-  for (int i=u->transmitted; i < max_transmit_length; ++i)
-  {
-    reinterpret_cast<char*>(data)[i] = u->data.c_str()[i];
-    ++u->transmitted;
-  }
-  // return 0 if we have submitted all bytes
-  if ((u->data.size() - u->transmitted) == 0)
-  {
-    return 0;
-  }
-  else  // return the transmitted bytes otherwise
-  {
-    return u->transmitted;
-  }
+  /** set correct sizes */
+  size_t curl_size = size * nmemb;
+  size_t copy_size = (u->length < curl_size) ? u->length : curl_size;
+  /** copy data to buffer */
+  memcpy(data, u->data, copy_size);
+  /** decrement length and increment data pointer */
+  u->length -= copy_size;
+  u->data += copy_size;
+  /** return copied size */
+  return copy_size;
 }

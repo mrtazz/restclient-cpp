@@ -45,12 +45,12 @@ TEST_F(RestClientPutTest, TestRestClientPUTCode)
 // check content type
 TEST_F(RestClientPutTest, TestRestClientPUTContentType)
 {
-  RestClient::response res = RestClient::put(url, ctype, data);
+  RestClient::response res = RestClient::put(url+"/contenttype", ctype, data);
   EXPECT_EQ(ctype, res.body);
 }
 // check response body
 TEST_F(RestClientPutTest, TestRestClientPUTBody)
 {
-  RestClient::response res = RestClient::put(url, ctype, data);
+  RestClient::response res = RestClient::put(url+"/body", ctype, data);
   EXPECT_EQ(data, res.body);
 }

@@ -73,6 +73,8 @@ RestClient::response RestClient::post(const std::string& url,
 {
   /** create return struct */
   RestClient::response ret;
+  /** build content-type header string */
+  std::string ctype_header = "Content-Type: " + ctype;
 
   /** initialize upload object */
   RestClient::upload_object up_obj;
@@ -101,6 +103,10 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** set content-type header */
+    curl_slist* header = NULL;
+    header = curl_slist_append(header, ctype_header.c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != 0)

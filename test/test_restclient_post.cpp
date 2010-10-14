@@ -45,14 +45,14 @@ TEST_F(RestClientPostTest, TestRestClientPOSTCode)
 // check content type
 TEST_F(RestClientPostTest, TestRestClientPOSTContentType)
 {
-  RestClient::response res = RestClient::post(url.append("/contenttype"),
+  RestClient::response res = RestClient::post(url+"/contenttype",
                                               ctype, data);
   EXPECT_EQ(ctype, res.body);
 }
 // check response body
 TEST_F(RestClientPostTest, TestRestClientPOSTBody)
 {
-  RestClient::response res = RestClient::post(url.append("/body"),
+  RestClient::response res = RestClient::post(url+"/body",
                                               ctype, data);
   EXPECT_EQ(data, res.body);
 }

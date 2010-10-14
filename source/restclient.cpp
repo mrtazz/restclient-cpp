@@ -94,10 +94,9 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     /** Now specify we want to POST data */
     curl_easy_setopt(curl, CURLOPT_POST, 1L);
-    /** set read callback function */
-    curl_easy_setopt(curl, CURLOPT_READFUNCTION, RestClient::read_callback);
-    /** set data object to pass to callback function */
-    curl_easy_setopt(curl, CURLOPT_READDATA, &up_obj);
+    /** set post fields */
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
     /** set callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */

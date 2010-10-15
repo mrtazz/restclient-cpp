@@ -203,6 +203,42 @@ RestClient::response RestClient::del(const std::string& url)
 {
   /** create return struct */
   RestClient::response ret;
+
+  /** we want HTTP DELETE */
+  const char* http_delete = "DELETE";
+
+  // use libcurl
+  CURL *curl;
+  CURLcode res;
+
+  curl = curl_easy_init();
+  if (curl)
+  {
+    /** set user agent */
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
+    /** set query URL */
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    /** set HTTP DELETE METHOD */
+    curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, http_delete);
+    /** set callback function */
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
+    /** set data object to pass to callback function */
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** perform the actual query */
+    res = curl_easy_perform(curl);
+    if (res != 0)
+    {
+      std::cerr << "Failed to query " << url << ":"
+          << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
+      exit(1);
+    }
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    ret.code = static_cast<int>(http_code);
+
+    curl_easy_cleanup(curl);
+  }
+
   return ret;
 }
 

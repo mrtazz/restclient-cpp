@@ -25,7 +25,9 @@ The response is of type RestClient::response and has two attributes:
 
 ## Dependencies
 - [libcurl][]
+- [gtest][] for development
 
 
 [libcurl]: http://curl.haxx.se/libcurl/
 [ruby rest-client]: http://github.com/archiloque/rest-client
+[gtest]: http://code.google.com/p/googletest/

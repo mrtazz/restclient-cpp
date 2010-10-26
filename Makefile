@@ -13,7 +13,9 @@ LOGFILE = test_server.log
 BINDIR = bin
 LIBDIR = lib
 TEST = $(BINDIR)/test
-LIB = $(LIBDIR)/librestclient-cpp.so
+LIBNAME = librestclient-cpp.so
+LIB = $(LIBDIR)/$(LIBNAME)
+STATIC = $(LIBDIR)/librestclient-cpp.a
 
 # set library and include paths
 INCLUDE =  -I. -I/usr/local/include
@@ -40,9 +42,13 @@ TESTOBJS = $(TESTSRCS:.cpp=.o)
 $(TEST): $(TESTOBJS) $(BINDIR)
 	$(LD) $(LDFLAGS) $(TESTOBJS) -o $(TEST) $(TESTLIBS)
 
-# lib rule
+# dynamic lib rule
 $(LIB): $(OBJS) $(LIBDIR)
-	$(LD) $(LDFLAGS) -shared -soname,$(LIB) -o $(LIB) $(OBJS) $(LIBS)
+	$(LD) $(LDFLAGS) -shared -soname,$(LIBNAME) -o $(LIB) $(OBJS) $(LIBS)
+
+# static lib rule
+$(STATIC): $(OBJS) $(LIBDIR)
+	ar rcs $(STATIC) $(OBJS)
 
 # compile rule
 .cpp.o:
@@ -68,3 +74,5 @@ test: $(TEST)
 	@./bin/test
 
 dynamiclibrary: $(LIB)
+
+staticlibrary: $(STATIC)

@@ -11,6 +11,7 @@
 
 #include <curl/curl.h>
 #include <string>
+#include <cstdlib>
 #include "meta.h"
 
 class RestClient

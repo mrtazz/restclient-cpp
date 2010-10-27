@@ -1,8 +1,7 @@
 # REST client for C++
 
 ## About
-This is a simple REST client for C++. It wraps libcurl for HTTP requests
-and uses jsoncpp for parsing JSON responses.
+This is a simple REST client for C++. It wraps libcurl for HTTP requests.
 
 ## Usage
 I tried to keep usage close to the [ruby rest-client][]. So the basic usage is:
@@ -18,11 +17,17 @@ Examples:
     RestClient::put("http://url.com/put", "text/json", "{"foo": "bla"}")
     RestClient::del("http://url.com/delete")
 
+The response is of type RestClient::response and has two attributes:
+
+    RestClient::response.code // HTTP response code
+    RestClient::response.body // HTTP response body
+
+
 ## Dependencies
 - [libcurl][]
-- [jsoncpp][]
+- [gtest][] for development
 
 
 [libcurl]: http://curl.haxx.se/libcurl/
-[jsoncpp]: http://jsoncpp.sourceforge.net/
 [ruby rest-client]: http://github.com/archiloque/rest-client
+[gtest]: http://code.google.com/p/googletest/

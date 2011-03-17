@@ -33,7 +33,6 @@ The response is of type RestClient::response and has two attributes:
 - [Tracker][]
 
 ## Contribute
-If you want to contribute:
 - Fork the project.
 - Make your feature addition or bug fix.
 - Add tests for it. This is important so I don't break it in a future version

@@ -6,16 +6,16 @@ This is a simple REST client for C++. It wraps libcurl for HTTP requests.
 ## Usage
 I tried to keep usage close to the [ruby rest-client][]. So the basic usage is:
 
-    restclient::method(url, content-type, params);
+    RestClient::method(url, content-type, params);
 
 Examples:
 
     #include "restclient.h"
 
-    RestClient::get("http://url.com")
-    RestClient::post("http://url.com/post", "text/json", "{"foo": "bla"}")
-    RestClient::put("http://url.com/put", "text/json", "{"foo": "bla"}")
-    RestClient::del("http://url.com/delete")
+    RestClient::response r = RestClient::get("http://url.com")
+    RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{"foo": "bla"}")
+    RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{"foo": "bla"}")
+    RestClient::response r = RestClient::del("http://url.com/delete")
 
 The response is of type RestClient::response and has two attributes:
 
@@ -28,6 +28,22 @@ The response is of type RestClient::response and has two attributes:
 - [gtest][] for development
 
 
+## Development
+- [Issues][]
+- [Tracker][]
+
+## Contribute
+If you want to contribute:
+- Fork the project.
+- Make your feature addition or bug fix.
+- Add tests for it. This is important so I don't break it in a future version
+  unintentionally.
+- Commit, do not mess with version
+- Send me a pull request. Bonus points for topic branches.
+
+
 [libcurl]: http://curl.haxx.se/libcurl/
 [ruby rest-client]: http://github.com/archiloque/rest-client
 [gtest]: http://code.google.com/p/googletest/
+[Issues]: https://github.com/mrtazz/restclient-cpp/issues
+[Tracker]: https://www.pivotaltracker.com/projects/255177/stories

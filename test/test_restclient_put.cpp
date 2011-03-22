@@ -54,3 +54,10 @@ TEST_F(RestClientPutTest, TestRestClientPUTBody)
   RestClient::response res = RestClient::put(url+"/body", ctype, data);
   EXPECT_EQ(data, res.body);
 }
+// check for failure
+TEST_F(RestClientPutTest, TestRestClientFailureCode)
+{
+  std::string u = "http://nonexistent";
+  RestClient::response res = RestClient::put(u, ctype, data);
+  EXPECT_EQ(-1, res.code);
+}

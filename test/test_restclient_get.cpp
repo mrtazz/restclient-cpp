@@ -42,3 +42,10 @@ TEST_F(RestClientGetTest, TestRestClientGETCode)
   RestClient::response res = RestClient::get(url);
   EXPECT_EQ(200, res.code);
 }
+// check for failure
+TEST_F(RestClientGetTest, TestRestClientFailureCode)
+{
+  std::string u = "http://nonexistent";
+  RestClient::response res = RestClient::get(u);
+  EXPECT_EQ(-1, res.code);
+}

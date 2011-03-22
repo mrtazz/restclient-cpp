@@ -56,3 +56,10 @@ TEST_F(RestClientPostTest, TestRestClientPOSTBody)
                                               ctype, data);
   EXPECT_EQ(data, res.body);
 }
+// check for failure
+TEST_F(RestClientPostTest, TestRestClientFailureCode)
+{
+  std::string u = "http://nonexistent";
+  RestClient::response res = RestClient::post(u, ctype, data);
+  EXPECT_EQ(-1, res.code);
+}

@@ -46,9 +46,9 @@ RestClient::response RestClient::get(const std::string& url)
     res = curl_easy_perform(curl);
     if (res != 0)
     {
-      std::cerr << "Failed to query " << url << ":"
-          << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
-      exit(1);
+      ret.body = "Failed to query.";
+      ret.code = -1;
+      return ret;
     }
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
@@ -110,9 +110,9 @@ RestClient::response RestClient::post(const std::string& url,
     res = curl_easy_perform(curl);
     if (res != 0)
     {
-      std::cerr << "Failed to query " << url << ":"
-          << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
-      exit(1);
+      ret.body = "Failed to query.";
+      ret.code = -1;
+      return ret;
     }
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
@@ -180,9 +180,9 @@ RestClient::response RestClient::put(const std::string& url,
     res = curl_easy_perform(curl);
     if (res != 0)
     {
-      std::cerr << "Failed to query " << url << ":"
-          << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
-      exit(1);
+      ret.body = "Failed to query.";
+      ret.code = -1;
+      return ret;
     }
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
@@ -229,9 +229,9 @@ RestClient::response RestClient::del(const std::string& url)
     res = curl_easy_perform(curl);
     if (res != 0)
     {
-      std::cerr << "Failed to query " << url << ":"
-          << std::endl << curl_easy_strerror(res) << std::endl << std::flush;
-      exit(1);
+      ret.body = "Failed to query.";
+      ret.code = -1;
+      return ret;
     }
     long http_code = 0;
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);

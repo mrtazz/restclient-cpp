@@ -5,4 +5,4 @@ branches:
   only:
     - develop
 before_script:
-  - sudo apt-get install libgtest-dev libcurl-dev
+  - sudo apt-get install libgtest-dev libcurl4-openssl-dev

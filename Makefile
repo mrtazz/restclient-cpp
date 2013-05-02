@@ -18,13 +18,13 @@ LIB = $(LIBDIR)/$(LIBNAME)
 STATIC = $(LIBDIR)/librestclient-cpp.a
 
 # set library and include paths
-INCLUDE =  -I. -I/usr/local/include
+INCLUDE =  -I. -I/usr/local/include -I${HOME}/include
 TESTLIBS = -lgtest -lcurl
 LIBS = -lcurl
 
 # set compiler and linker flags
 CCFLAGS = -fPIC -O3 -W -Wall
-LDFLAGS = -W -Wall -L/usr/local/lib
+LDFLAGS = -W -Wall -L/usr/local/lib -L${HOME}/lib
 
 # source files
 SRCS =  source/restclient.cpp
@@ -44,7 +44,7 @@ $(TEST): $(TESTOBJS) $(BINDIR)
 
 # dynamic lib rule
 $(LIB): $(OBJS) $(LIBDIR)
-	$(LD) $(LDFLAGS) -shared -soname,$(LIBNAME) -o $(LIB) $(OBJS) $(LIBS)
+	$(LD) $(LDFLAGS) -shared  -o $(LIB) $(OBJS) $(LIBS)
 
 # static lib rule
 $(STATIC): $(OBJS) $(LIBDIR)
@@ -76,3 +76,10 @@ test: $(TEST)
 dynamiclibrary: $(LIB)
 
 staticlibrary: $(STATIC)
+
+install: test
+	@echo Installing to ${HOME}/lib....
+	@cp ./lib/* ${HOME}/lib
+
+all: test dynamiclibrary staticlibrary install
+

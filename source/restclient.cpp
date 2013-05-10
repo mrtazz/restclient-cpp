@@ -77,11 +77,6 @@ RestClient::response RestClient::post(const std::string& url,
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
 
-  /** initialize upload object */
-  RestClient::upload_object up_obj;
-  up_obj.data = data.c_str();
-  up_obj.length = data.size();
-
   // use libcurl
   CURL *curl;
   CURLcode res;

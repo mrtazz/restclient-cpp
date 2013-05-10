@@ -44,7 +44,7 @@ $(TEST): $(TESTOBJS) $(BINDIR)
 
 # dynamic lib rule
 $(LIB): $(OBJS) $(LIBDIR)
-	$(LD) $(LDFLAGS) -shared  -o $(LIB) $(OBJS) $(LIBS)
+	$(LD) $(LDFLAGS) -shared -o $(LIB) $(OBJS) $(LIBS)
 
 # static lib rule
 $(STATIC): $(OBJS) $(LIBDIR)

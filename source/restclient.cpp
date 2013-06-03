@@ -290,19 +290,20 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
   RestClient::response* r;
   r = reinterpret_cast<RestClient::response*>(userdata);
   std::string header(reinterpret_cast<char*>(data), size*nmemb);
-  header = rtrim(header);
   size_t seperator = header.find_first_of(":");
   if ( std::string::npos == seperator ) { 
     //roll with non seperated headers... 
-    header = trim(header); 
+    trim(header); 
     if ( 0 == header.length() ){ 
 	return (size * nmemb); //blank line;
     } 
-    r->headers[trim(header)] = "present";
+    r->headers[header] = "present";
   } else {
     std::string key = header.substr(0, seperator);
+    trim(key);
     std::string value = header.substr(seperator + 1);
-    r->headers[trim(key)] = trim(value);
+    trim (value);
+    r->headers[key] = value;
   }
 
   return (size * nmemb);

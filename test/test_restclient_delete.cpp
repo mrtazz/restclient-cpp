@@ -49,3 +49,8 @@ TEST_F(RestClientDeleteTest, TestRestClientFailureCode)
   RestClient::response res = RestClient::del(u);
   EXPECT_EQ(-1, res.code);
 }
+TEST_F(RestClientDeleteTest, TestRestClientDeleteHeaders) 
+{ 
+  RestClient::response res = RestClient::del(url);
+  EXPECT_EQ("keep-alive", res.headers["Connection"]);
+}

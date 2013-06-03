@@ -17,10 +17,11 @@ Examples:
     RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{"foo": "bla"}")
     RestClient::response r = RestClient::del("http://url.com/delete")
 
-The response is of type RestClient::response and has two attributes:
+The response is of type RestClient::response and has three attributes:
 
     RestClient::response.code // HTTP response code
     RestClient::response.body // HTTP response body
+    RestClient::response.headers // HTTP response headers
 
 
 ## Dependencies

@@ -12,6 +12,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <map>
 
 /** initialize user agent string */
 const char* RestClient::user_agent = "restclient-cpp/" VERSION;
@@ -42,6 +43,10 @@ RestClient::response RestClient::get(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** set the header callback function */
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
+    /** callback object for headers */
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != 0)
@@ -97,6 +102,10 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** set the header callback function */
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
+    /** callback object for headers */
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** set content-type header */
     curl_slist* header = NULL;
     header = curl_slist_append(header, ctype_header.c_str());
@@ -163,6 +172,10 @@ RestClient::response RestClient::put(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** set the header callback function */
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
+    /** callback object for headers */
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** set data size */
     curl_easy_setopt(curl, CURLOPT_INFILESIZE,
                      static_cast<long>(up_obj.length));
@@ -220,6 +233,10 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, RestClient::write_callback);
     /** set data object to pass to callback function */
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &ret);
+    /** set the header callback function */
+    curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
+    /** callback object for headers */
+    curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != 0)
@@ -254,6 +271,39 @@ size_t RestClient::write_callback(void *data, size_t size, size_t nmemb,
   RestClient::response* r;
   r = reinterpret_cast<RestClient::response*>(userdata);
   r->body.append(reinterpret_cast<char*>(data), size*nmemb);
+
+  return (size * nmemb);
+}
+
+/**
+ * @brief header callback for libcurl
+ * 
+ * @param data returned (header line) 
+ * @param size of data
+ * @param nmemb memblock
+ * @param userdata pointer to user data object to save headr data
+ * @return size * nmemb;
+ */
+size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
+                            void *userdata)
+{
+  RestClient::response* r;
+  r = reinterpret_cast<RestClient::response*>(userdata);
+  std::string header(reinterpret_cast<char*>(data), size*nmemb);
+  header = rtrim(header);
+  size_t seperator = header.find_first_of(":");
+  if ( std::string::npos == seperator ) { 
+    //roll with non seperated headers... 
+    header = trim(header); 
+    if ( 0 == header.length() ){ 
+	return (size * nmemb); //blank line;
+    } 
+    r->headers[trim(header)] = "present";
+  } else {
+    std::string key = header.substr(0, seperator);
+    std::string value = header.substr(seperator + 1);
+    r->headers[trim(key)] = trim(value);
+  }
 
   return (size * nmemb);
 }

@@ -61,3 +61,8 @@ TEST_F(RestClientPutTest, TestRestClientFailureCode)
   RestClient::response res = RestClient::put(u, ctype, data);
   EXPECT_EQ(-1, res.code);
 }
+TEST_F(RestClientPutTest, TestRestClientPUTHeaders) 
+{ 
+  RestClient::response res = RestClient::put(url, ctype, data);
+  EXPECT_EQ("keep-alive", res.headers["Connection"]);
+}

@@ -49,3 +49,10 @@ TEST_F(RestClientGetTest, TestRestClientFailureCode)
   RestClient::response res = RestClient::get(u);
   EXPECT_EQ(-1, res.code);
 }
+
+TEST_F(RestClientGetTest, TestRestClientGETHeaders) 
+{ 
+  RestClient::response res = RestClient::get(url);
+  EXPECT_EQ("keep-alive", res.headers["Connection"]);
+}
+

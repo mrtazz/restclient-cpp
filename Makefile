@@ -61,7 +61,7 @@ $(LIBDIR):
 	@mkdir -p $(LIBDIR)
 
 # tasks
-.PHONY:  clean
+.PHONY:  clean style
 
 clean:
 	@rm -rf test/*.o
@@ -72,6 +72,9 @@ clean:
 test: $(TEST)
 	@echo Running tests...
 	@./bin/test
+
+style:
+	@cppcheck -I . --enable=all --xml source 2>cppcheck.xml
 
 dynamiclibrary: $(LIB)
 

@@ -1,0 +1,8 @@
+language: python
+# command to install dependencies
+script: make test
+branches:
+  only:
+    - develop
+before_script:
+  - sudo apt-get install libgtest-dev libcurl4-openssl-dev

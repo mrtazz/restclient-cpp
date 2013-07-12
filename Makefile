@@ -6,6 +6,9 @@
 CC = g++
 LD = g++
 
+# prefix for installation
+PREFIX = .
+
 # logfile for HTTP test server
 LOGFILE = test_server.log
 
@@ -14,17 +17,18 @@ BINDIR = bin
 LIBDIR = lib
 TEST = $(BINDIR)/test
 LIBNAME = librestclient-cpp.so
+STATICNAME = librestclient-cpp.a
 LIB = $(LIBDIR)/$(LIBNAME)
-STATIC = $(LIBDIR)/librestclient-cpp.a
+STATIC = $(LIBDIR)/$(STATICNAME)
 
 # set library and include paths
-INCLUDE =  -I. -I/usr/local/include -I${HOME}/include
+INCLUDE =  -I. -I/usr/local/include
 TESTLIBS = -lgtest -lcurl
 LIBS = -lcurl
 
 # set compiler and linker flags
 CCFLAGS = -fPIC -O3 -W -Wall
-LDFLAGS = -W -Wall -L/usr/local/lib -L${HOME}/lib
+LDFLAGS = -W -Wall -L/usr/local/lib
 
 # source files
 SRCS =  source/restclient.cpp
@@ -81,8 +85,10 @@ dynamiclibrary: $(LIB)
 staticlibrary: $(STATIC)
 
 install: test
-	@echo Installing to ${HOME}/lib....
-	@cp ./lib/* ${HOME}/lib
+	@echo Installing to ${PREFIX}/lib....
+	@install -d ${PREFIX}/lib
+	@install -m 644 ./lib/${STATICNAME} ${PREFIX}/lib
+	@install -m 644 ./lib/${LIBNAME} ${PREFIX}/lib
 
 all: test dynamiclibrary staticlibrary install
 

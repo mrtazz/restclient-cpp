@@ -15,6 +15,16 @@
 
 /** initialize user agent string */
 const char* RestClient::user_agent = "restclient-cpp/" VERSION;
+/** initialize authentication variable */
+std::string RestClient::user_pass =  std::string();
+/** Authentication Methods implementation */
+void RestClient::clearAuth(){
+  RestClient::user_pass.clear();
+}
+void RestClient::setAuth(const std::string& user,const std::string& password){
+  RestClient::user_pass.clear();
+  RestClient::user_pass += user+":"+password;
+}
 /**
  * @brief HTTP GET method
  *
@@ -34,6 +44,11 @@ RestClient::response RestClient::get(const std::string& url)
   curl = curl_easy_init();
   if (curl)
   {
+    /** set basic authentication if present*/
+    if(RestClient::user_pass.length()>0){
+      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_easy_setopt(curl, CURLOPT_USERPWD, RestClient::user_pass.c_str());
+    }
     /** set user agent */
     curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
     /** set query URL */
@@ -89,6 +104,11 @@ RestClient::response RestClient::post(const std::string& url,
   curl = curl_easy_init();
   if (curl)
   {
+    /** set basic authentication if present*/
+    if(RestClient::user_pass.length()>0){
+      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_easy_setopt(curl, CURLOPT_USERPWD, RestClient::user_pass.c_str());
+    }
     /** set user agent */
     curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
     /** set query URL */
@@ -153,6 +173,11 @@ RestClient::response RestClient::put(const std::string& url,
   curl = curl_easy_init();
   if (curl)
   {
+    /** set basic authentication if present*/
+    if(RestClient::user_pass.length()>0){
+      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_easy_setopt(curl, CURLOPT_USERPWD, RestClient::user_pass.c_str());
+    }
     /** set user agent */
     curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
     /** set query URL */
@@ -215,6 +240,11 @@ RestClient::response RestClient::del(const std::string& url)
   curl = curl_easy_init();
   if (curl)
   {
+    /** set basic authentication if present*/
+    if(RestClient::user_pass.length()>0){
+      curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_easy_setopt(curl, CURLOPT_USERPWD, RestClient::user_pass.c_str());
+    }
     /** set user agent */
     curl_easy_setopt(curl, CURLOPT_USERAGENT, RestClient::user_agent);
     /** set query URL */

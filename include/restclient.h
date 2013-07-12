@@ -34,6 +34,9 @@ class RestClient
     } upload_object;
 
     /** public methods */
+    // Auth
+    static void clearAuth();
+    static void setAuth(const std::string& user,const std::string& password);
     // HTTP GET
     static response get(const std::string& url);
     // HTTP POST
@@ -53,6 +56,7 @@ class RestClient
     static size_t read_callback(void *ptr, size_t size, size_t nmemb,
                                 void *userdata);
     static const char* user_agent;
+    static std::string user_pass;
 };
 
 #endif  // INCLUDE_RESTCLIENT_H_

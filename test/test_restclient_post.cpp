@@ -63,3 +63,8 @@ TEST_F(RestClientPostTest, TestRestClientFailureCode)
   RestClient::response res = RestClient::post(u, ctype, data);
   EXPECT_EQ(-1, res.code);
 }
+TEST_F(RestClientPostTest, TestRestClientPOSTHeaders) 
+{ 
+  RestClient::response res = RestClient::post(url, ctype, data);
+  EXPECT_EQ("keep-alive", res.headers["Connection"]);
+}

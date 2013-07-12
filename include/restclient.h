@@ -11,8 +11,10 @@
 
 #include <curl/curl.h>
 #include <string>
+#include <map>
 #include <cstdlib>
 #include "meta.h"
+#include <algorithm>
 
 class RestClient
 {
@@ -20,11 +22,14 @@ class RestClient
     /**
      * public data definitions
      */
+    typedef std::map<std::string, std::string> headermap;
+
     /** response struct for queries */
     typedef struct
     {
       int code;
       std::string body;
+      headermap headers;
     } response;
     /** struct used for uploading data */
     typedef struct
@@ -52,11 +57,33 @@ class RestClient
     // writedata callback function
     static size_t write_callback(void *ptr, size_t size, size_t nmemb,
                                  void *userdata);
+
+    // header callback function
+    static size_t header_callback(void *ptr, size_t size, size_t nmemb,
+				  void *userdata);
     // read callback function
     static size_t read_callback(void *ptr, size_t size, size_t nmemb,
                                 void *userdata);
     static const char* user_agent;
     static std::string user_pass;
+
+    // trim from start
+    static inline std::string &ltrim(std::string &s) {
+      s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+      return s;
+    }
+
+    // trim from end
+    static inline std::string &rtrim(std::string &s) {
+      s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+      return s;
+    }
+
+    // trim from both ends
+    static inline std::string &trim(std::string &s) {
+      return ltrim(rtrim(s));
+    }
+
 };
 
 #endif  // INCLUDE_RESTCLIENT_H_

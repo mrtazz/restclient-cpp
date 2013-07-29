@@ -1,4 +1,4 @@
-language: python
+language: cpp
 # command to install dependencies
 script: make test
 before_script:

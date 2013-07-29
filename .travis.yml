@@ -1,5 +1,5 @@
 language: cpp
 # command to install dependencies
-script: make test
+script: autoreconf -i && ./configure && make check
 before_script:
   - sudo apt-get install libgtest-dev libcurl4-openssl-dev

@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.52])
 AC_INIT([restclient-cpp], [0.1.2], [d@unwiredcouch.com])
 AM_INIT_AUTOMAKE([0.1.2 foreign])
 LT_INIT

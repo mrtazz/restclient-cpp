@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.52])
 AC_INIT([restclient-cpp], [0.1.2], [d@unwiredcouch.com])
-AM_INIT_AUTOMAKE([0.1.2 foreign])
+AM_INIT_AUTOMAKE([0.1.2 foreign subdir-objects])
 LT_INIT
 AC_CONFIG_SRCDIR([include/meta.h])
 AC_CONFIG_HEADERS([config.h])

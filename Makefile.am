@@ -1,3 +1,5 @@
+CPPFLAGS=-Ivendor/gtest-1.6.0/include
+LDFLAGS=-Lvendor/gtest-1.6.0/lib/.libs -lgtest
 include_HEADERS = include/restclient.h
 check_PROGRAMS = test-program
 test_program_SOURCES = test/test_restclient_delete.cpp test/test_restclient_get.cpp test/test_restclient_post.cpp test/test_restclient_put.cpp test/tests.cpp

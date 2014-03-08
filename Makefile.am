@@ -7,3 +7,4 @@ test_program_LDFLAGS=-Lvendor/gtest-1.6.0/lib/.libs -lgtest
 
 lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cpp
+librestclient_cpp_la_CXXFLAGS=-fPIC

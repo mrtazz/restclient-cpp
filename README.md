@@ -1,4 +1,4 @@
-# REST client for C++
+# REST client for C++ [![Build Status](https://travis-ci.org/mrtazz/restclient-cpp.svg?branch=master)](https://travis-ci.org/mrtazz/restclient-cpp)
 
 ## About
 This is a simple REST client for C++. It wraps libcurl for HTTP requests.

@@ -36,11 +36,11 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
 RestClient::response RestClient::get(const std::string& url)
 {
   /** create return struct */
-  RestClient::response ret;
+  RestClient::response ret = {};
 
   // use libcurl
-  CURL *curl;
-  CURLcode res;
+  CURL *curl = NULL;
+  CURLcode res = CURLE_OK;
 
   curl = curl_easy_init();
   if (curl)
@@ -64,7 +64,7 @@ RestClient::response RestClient::get(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** perform the actual query */
     res = curl_easy_perform(curl);
-    if (res != 0)
+    if (res != CURLE_OK)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
@@ -93,13 +93,13 @@ RestClient::response RestClient::post(const std::string& url,
                                       const std::string& data)
 {
   /** create return struct */
-  RestClient::response ret;
+  RestClient::response ret = {};
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
 
   // use libcurl
-  CURL *curl;
-  CURLcode res;
+  CURL *curl = NULL;
+  CURLcode res = CURLE_OK;
 
   curl = curl_easy_init();
   if (curl)
@@ -132,7 +132,7 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
     /** perform the actual query */
     res = curl_easy_perform(curl);
-    if (res != 0)
+    if (res != CURLE_OK)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
@@ -162,7 +162,7 @@ RestClient::response RestClient::put(const std::string& url,
                                      const std::string& data)
 {
   /** create return struct */
-  RestClient::response ret;
+  RestClient::response ret = {};
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
 
@@ -172,8 +172,8 @@ RestClient::response RestClient::put(const std::string& url,
   up_obj.length = data.size();
 
   // use libcurl
-  CURL *curl;
-  CURLcode res;
+  CURL *curl = NULL;
+  CURLcode res = CURLE_OK;
 
   curl = curl_easy_init();
   if (curl)
@@ -212,7 +212,7 @@ RestClient::response RestClient::put(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
     /** perform the actual query */
     res = curl_easy_perform(curl);
-    if (res != 0)
+    if (res != CURLE_OK)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
@@ -238,14 +238,14 @@ RestClient::response RestClient::put(const std::string& url,
 RestClient::response RestClient::del(const std::string& url)
 {
   /** create return struct */
-  RestClient::response ret;
+  RestClient::response ret = {};
 
   /** we want HTTP DELETE */
   const char* http_delete = "DELETE";
 
   // use libcurl
-  CURL *curl;
-  CURLcode res;
+  CURL *curl = NULL;
+  CURLcode res = CURLE_OK;
 
   curl = curl_easy_init();
   if (curl)
@@ -271,7 +271,7 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** perform the actual query */
     res = curl_easy_perform(curl);
-    if (res != 0)
+    if (res != CURLE_OK)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
@@ -309,8 +309,8 @@ size_t RestClient::write_callback(void *data, size_t size, size_t nmemb,
 
 /**
  * @brief header callback for libcurl
- * 
- * @param data returned (header line) 
+ *
+ * @param data returned (header line)
  * @param size of data
  * @param nmemb memblock
  * @param userdata pointer to user data object to save headr data
@@ -323,12 +323,12 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
   r = reinterpret_cast<RestClient::response*>(userdata);
   std::string header(reinterpret_cast<char*>(data), size*nmemb);
   size_t seperator = header.find_first_of(":");
-  if ( std::string::npos == seperator ) { 
-    //roll with non seperated headers... 
-    trim(header); 
-    if ( 0 == header.length() ){ 
+  if ( std::string::npos == seperator ) {
+    //roll with non seperated headers...
+    trim(header);
+    if ( 0 == header.length() ){
 	return (size * nmemb); //blank line;
-    } 
+    }
     r->headers[header] = "present";
   } else {
     std::string key = header.substr(0, seperator);

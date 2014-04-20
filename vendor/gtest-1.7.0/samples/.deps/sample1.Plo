@@ -1,0 +1,3 @@
+samples/sample1.lo: samples/sample1.cc samples/sample1.h
+
+samples/sample1.h:

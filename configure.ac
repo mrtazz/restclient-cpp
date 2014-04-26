@@ -13,6 +13,13 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_INSTALL
 
+# check for headers
+AC_CHECK_HEADERS([curl/curl.h],
+                  [restclient_cpp_curl_headers_found=yes; break;])
+
+AS_IF([test "x$restclient_cpp_curl_headers_found" != "xyes"],
+        [AC_MSG_ERROR([Unable to find the curl headers])])
+
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lcurl':
 AC_CHECK_LIB([curl], [main])

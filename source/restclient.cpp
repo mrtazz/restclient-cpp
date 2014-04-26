@@ -75,6 +75,7 @@ RestClient::response RestClient::get(const std::string& url)
     ret.code = static_cast<int>(http_code);
 
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
   }
 
   return ret;
@@ -144,6 +145,7 @@ RestClient::response RestClient::post(const std::string& url,
 
     curl_slist_free_all(header);
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
   }
 
   return ret;
@@ -224,6 +226,7 @@ RestClient::response RestClient::put(const std::string& url,
 
     curl_slist_free_all(header);
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
   }
 
   return ret;
@@ -282,6 +285,7 @@ RestClient::response RestClient::del(const std::string& url)
     ret.code = static_cast<int>(http_code);
 
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
   }
 
   return ret;

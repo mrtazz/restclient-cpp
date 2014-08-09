@@ -11,4 +11,3 @@
 #define VERSION "0.1.2"
 
 #endif  // INCLUDE_META_H_
-

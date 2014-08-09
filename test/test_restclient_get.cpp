@@ -1,4 +1,4 @@
-#include "include/restclient.h"
+#include "restclient-cpp/restclient.h"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -50,8 +50,8 @@ TEST_F(RestClientGetTest, TestRestClientFailureCode)
   EXPECT_EQ(-1, res.code);
 }
 
-TEST_F(RestClientGetTest, TestRestClientGETHeaders) 
-{ 
+TEST_F(RestClientGetTest, TestRestClientGETHeaders)
+{
   RestClient::response res = RestClient::get(url);
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }

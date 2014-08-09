@@ -1,4 +1,4 @@
-#include "include/restclient.h"
+#include "restclient-cpp/restclient.h"
 #include <gtest/gtest.h>
 #include <string>
 
@@ -61,8 +61,8 @@ TEST_F(RestClientPutTest, TestRestClientFailureCode)
   RestClient::response res = RestClient::put(u, ctype, data);
   EXPECT_EQ(-1, res.code);
 }
-TEST_F(RestClientPutTest, TestRestClientPUTHeaders) 
-{ 
+TEST_F(RestClientPutTest, TestRestClientPUTHeaders)
+{
   RestClient::response res = RestClient::put(url, ctype, data);
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }

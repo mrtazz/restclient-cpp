@@ -20,3 +20,4 @@ vendor/gtest-1.7.0/scripts/gtest-config
 *stamp-h1
 *.dirstamp
 *ltmain.sh
+m4

@@ -7,7 +7,7 @@
 /*========================
          INCLUDES
   ========================*/
-#include "include/restclient.h"
+#include "restclient-cpp/restclient.h"
 
 #include <cstring>
 #include <string>

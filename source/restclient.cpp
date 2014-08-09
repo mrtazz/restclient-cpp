@@ -26,6 +26,34 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
   RestClient::user_pass.clear();
   RestClient::user_pass += user+":"+password;
 }
+
+struct CurlInit
+{
+	CURL* curl;
+	CURLcode res;
+
+	CurlInit()
+	{
+		res = curl_global_init(CURL_GLOBAL_DEFAULT);
+		if ( CURLE_OK == res )
+		{
+			curl = curl_easy_init();
+		}
+	}
+
+	~CurlInit()
+	{
+		if ( curl )
+		{
+			curl_easy_cleanup( curl );
+		}
+		if ( CURLE_OK == res )
+		{
+			curl_global_cleanup();
+		}
+	}
+};
+
 /**
  * @brief HTTP GET method
  *
@@ -36,13 +64,13 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
 RestClient::response RestClient::get(const std::string& url)
 {
   /** create return struct */
-  RestClient::response ret = {};
+  RestClient::response ret;
 
   // use libcurl
-  CURL *curl = NULL;
+  CurlInit init;
+  CURL *curl = init.curl;
   CURLcode res = CURLE_OK;
-
-  curl = curl_easy_init();
+    
   if (curl)
   {
     /** set basic authentication if present*/
@@ -68,14 +96,13 @@ RestClient::response RestClient::get(const std::string& url)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
     }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
-
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+	else
+	{
+      long http_code = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+      ret.code = static_cast<int>(http_code);
+	}
   }
 
   return ret;
@@ -94,15 +121,15 @@ RestClient::response RestClient::post(const std::string& url,
                                       const std::string& data)
 {
   /** create return struct */
-  RestClient::response ret = {};
+  RestClient::response ret;
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
 
   // use libcurl
-  CURL *curl = NULL;
+  CurlInit init;
+  CURL *curl = init.curl;
   CURLcode res = CURLE_OK;
 
-  curl = curl_easy_init();
   if (curl)
   {
     /** set basic authentication if present*/
@@ -137,15 +164,15 @@ RestClient::response RestClient::post(const std::string& url,
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
     }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
+	else
+	{
+	  long http_code = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+      ret.code = static_cast<int>(http_code);
+	}
 
     curl_slist_free_all(header);
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;
@@ -164,7 +191,7 @@ RestClient::response RestClient::put(const std::string& url,
                                      const std::string& data)
 {
   /** create return struct */
-  RestClient::response ret = {};
+  RestClient::response ret;
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
 
@@ -174,10 +201,10 @@ RestClient::response RestClient::put(const std::string& url,
   up_obj.length = data.size();
 
   // use libcurl
-  CURL *curl = NULL;
+  CurlInit init;
+  CURL *curl = init.curl;
   CURLcode res = CURLE_OK;
 
-  curl = curl_easy_init();
   if (curl)
   {
     /** set basic authentication if present*/
@@ -218,15 +245,15 @@ RestClient::response RestClient::put(const std::string& url,
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
     }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
+	else
+	{
+      long http_code = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+      ret.code = static_cast<int>(http_code);
+	}
 
     curl_slist_free_all(header);
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;
@@ -241,16 +268,16 @@ RestClient::response RestClient::put(const std::string& url,
 RestClient::response RestClient::del(const std::string& url)
 {
   /** create return struct */
-  RestClient::response ret = {};
+  RestClient::response ret;
 
   /** we want HTTP DELETE */
   const char* http_delete = "DELETE";
 
   // use libcurl
-  CURL *curl = NULL;
+  CurlInit init;
+  CURL *curl = init.curl;
   CURLcode res = CURLE_OK;
 
-  curl = curl_easy_init();
   if (curl)
   {
     /** set basic authentication if present*/
@@ -278,14 +305,13 @@ RestClient::response RestClient::del(const std::string& url)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
     }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
-
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+	else
+	{
+      long http_code = 0;
+      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+      ret.code = static_cast<int>(http_code);
+	}
   }
 
   return ret;

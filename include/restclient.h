@@ -15,6 +15,8 @@
 #include <cstdlib>
 #include "meta.h"
 #include <algorithm>
+#include <functional>
+#include <cctype>
 
 class RestClient
 {

@@ -13,8 +13,8 @@ Examples:
     #include "restclient.h"
 
     RestClient::response r = RestClient::get("http://url.com")
-    RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{"foo": "bla"}")
-    RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{"foo": "bla"}")
+    RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
+    RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
     RestClient::response r = RestClient::del("http://url.com/delete")
 
 The response is of type RestClient::response and has three attributes:

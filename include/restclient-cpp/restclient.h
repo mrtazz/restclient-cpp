@@ -43,15 +43,15 @@ class RestClient
     static void clearAuth();
     static void setAuth(const std::string& user,const std::string& password);
     // HTTP GET
-    static response get(const std::string& url);
+    static response get(const std::string& url, size_t timeout);
     // HTTP POST
     static response post(const std::string& url, const std::string& ctype,
-                         const std::string& data);
+                         const std::string& data, size_t timeout);
     // HTTP PUT
     static response put(const std::string& url, const std::string& ctype,
-                        const std::string& data);
+                        const std::string& data, size_t timeout);
     // HTTP DELETE
-    static response del(const std::string& url);
+    static response del(const std::string& url, size_t timeout);
 
   private:
     // writedata callback function

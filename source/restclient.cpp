@@ -33,7 +33,7 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
  *
  * @return response struct
  */
-RestClient::response RestClient::get(const std::string& url, size_t timeout)
+RestClient::response RestClient::get(const std::string& url, size_t timeout = 0)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -65,8 +65,10 @@ RestClient::response RestClient::get(const std::string& url, size_t timeout)
     /** perform the actual query */
 
     //set timeout
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
 
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -97,7 +99,7 @@ RestClient::response RestClient::get(const std::string& url, size_t timeout)
 RestClient::response RestClient::post(const std::string& url,
                                       const std::string& ctype,
                                       const std::string& data,
-                                      const size_t timeout)
+                                      const size_t timeout = 0)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -139,8 +141,10 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
 
     //set timeout
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
 
     /** perform the actual query */
     res = curl_easy_perform(curl);
@@ -172,7 +176,7 @@ RestClient::response RestClient::post(const std::string& url,
  */
 RestClient::response RestClient::put(const std::string& url,
                                      const std::string& ctype,
-                                     const std::string& data, size_t timeout)
+                                     const std::string& data, size_t timeout = 0)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -225,8 +229,10 @@ RestClient::response RestClient::put(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
 
     //set timeout
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
 
     /** perform the actual query */
     res = curl_easy_perform(curl);
@@ -254,7 +260,7 @@ RestClient::response RestClient::put(const std::string& url,
  *
  * @return response struct
  */
-RestClient::response RestClient::del(const std::string& url, size_t timeout)
+RestClient::response RestClient::del(const std::string& url, size_t timeout = 0)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -290,8 +296,10 @@ RestClient::response RestClient::del(const std::string& url, size_t timeout)
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
 
     //set timeout
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
 
     /** perform the actual query */
     res = curl_easy_perform(curl);

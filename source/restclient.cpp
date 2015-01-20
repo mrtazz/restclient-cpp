@@ -62,6 +62,9 @@ RestClient::response RestClient::get(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** enable cookies */
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookie");
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookie");
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -127,6 +130,9 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** enable cookies */
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookie");
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookie");
     /** set content-type header */
     curl_slist* header = NULL;
     header = curl_slist_append(header, ctype_header.c_str());
@@ -204,6 +210,9 @@ RestClient::response RestClient::put(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** enable cookies */
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookie");
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookie");
     /** set data size */
     curl_easy_setopt(curl, CURLOPT_INFILESIZE,
                      static_cast<long>(up_obj.length));
@@ -272,6 +281,9 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** enable cookies */
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "cookie");
+    curl_easy_setopt(curl, CURLOPT_COOKIEJAR, "cookie");
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)

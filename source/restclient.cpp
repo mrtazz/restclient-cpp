@@ -8,7 +8,9 @@
          INCLUDES
   ========================*/
 #include "restclient-cpp/restclient.h"
+#include "restclient-cpp/meta.h"
 
+#include <curl/curl.h>
 #include <cstring>
 #include <string>
 #include <iostream>

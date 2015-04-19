@@ -19,7 +19,7 @@ class RestClientPostTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      url = "http://http-test-server.heroku.com";
+      url = "http://http-test-server.herokuapp.com";
       ctype = "Content-Type: text/text";
       data = "data";
     }

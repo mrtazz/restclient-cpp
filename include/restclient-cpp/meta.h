@@ -7,7 +7,7 @@
 #ifndef INCLUDE_META_H_
 #define INCLUDE_META_H_
 
-// version string normally set from makefile
-#define VERSION "0.1.2"
+// version string
+#define VERSION "0.2.0"
 
 #endif  // INCLUDE_META_H_

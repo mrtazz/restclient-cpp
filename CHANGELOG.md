@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.2.0 (???)
+## v0.2.0 (19th April 2015)
 - support basic auth
 - Add header's to response object
 - fix memory leaks related to curl cleanup

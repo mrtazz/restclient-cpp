@@ -143,7 +143,8 @@ RestClient::response RestClient::post(const std::string& url,
 	  long http_code = 0;
 	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 	  ret.code = static_cast<int>(http_code);
-	}
+    }
+    curl_slist_free_all(header);
   }
   curl_easy_cleanup(curl);
   curl_global_cleanup();
@@ -222,13 +223,13 @@ RestClient::response RestClient::put(const std::string& url,
 	  long http_code = 0;
 	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
 	  ret.code = static_cast<int>(http_code);
-	}
+    }
+    curl_slist_free_all(header);
+
   }
 
-  curl_slist_free_all(header);
   curl_easy_cleanup(curl);
   curl_global_cleanup();
-  }
 
   return ret;
 }

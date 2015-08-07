@@ -70,15 +70,14 @@ RestClient::response RestClient::get(const std::string& url)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
-    }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
-
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+    } else {
+	  long http_code = 0;
+	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+	  ret.code = static_cast<int>(http_code);
+	}
   }
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
 
   return ret;
 }
@@ -135,20 +134,20 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
     /** perform the actual query */
     res = curl_easy_perform(curl);
+	
     if (res != CURLE_OK)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
-    }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
-
-    curl_slist_free_all(header);
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+    } else {
+	  long http_code = 0;
+	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+	  ret.code = static_cast<int>(http_code);
+	}
   }
+  curl_slist_free_all(header);
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
 
   return ret;
 }
@@ -220,15 +219,16 @@ RestClient::response RestClient::put(const std::string& url,
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
-    }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
+    } else {
+	  long http_code = 0;
+	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+	  ret.code = static_cast<int>(http_code);
+	}
+  }
 
-    curl_slist_free_all(header);
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+  curl_slist_free_all(header);
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
   }
 
   return ret;
@@ -280,16 +280,16 @@ RestClient::response RestClient::del(const std::string& url)
     {
       ret.body = "Failed to query.";
       ret.code = -1;
-      return ret;
-    }
-    long http_code = 0;
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
-
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+    } else {
+	  long http_code = 0;
+	  curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+	  ret.code = static_cast<int>(http_code);
+	}
   }
 
+  curl_easy_cleanup(curl);
+  curl_global_cleanup();
+  
   return ret;
 }
 
@@ -330,7 +330,7 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
   std::string header(reinterpret_cast<char*>(data), size*nmemb);
   size_t seperator = header.find_first_of(":");
   if ( std::string::npos == seperator ) {
-    //roll with non seperated headers...
+    //roll with non separated headers...
     trim(header);
     if ( 0 == header.length() ){
 	return (size * nmemb); //blank line;

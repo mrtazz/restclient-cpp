@@ -145,7 +145,6 @@ RestClient::response RestClient::post(const std::string& url,
 	  ret.code = static_cast<int>(http_code);
 	}
   }
-  curl_slist_free_all(header);
   curl_easy_cleanup(curl);
   curl_global_cleanup();
 

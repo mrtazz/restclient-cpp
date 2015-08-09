@@ -2,5 +2,10 @@ language: cpp
 # command to install dependencies
 script: ./autogen.sh && ./configure && make check && ./test-program
 before_script:
-  - sudo apt-get install libcurl4-openssl-dev build-essential
   - ./utils/build_gtest.sh
+sudo: false
+addons:
+  apt:
+    packages:
+    - build-essential
+    - libcurl4-openssl-dev

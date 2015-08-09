@@ -19,7 +19,7 @@ class RestClientDeleteTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      url = "http://http-test-server.herokuapp.com";
+      url = "http://httpbin.org/delete";
       ctype = "";
       data = "";
     }
@@ -31,11 +31,6 @@ class RestClientDeleteTest : public ::testing::Test
 };
 
 // Tests
-TEST_F(RestClientDeleteTest, TestRestClientDeleteBody)
-{
-  RestClient::response res = RestClient::del(url);
-  EXPECT_EQ("DELETE", res.body);
-}
 // check return code
 TEST_F(RestClientDeleteTest, TestRestClientDeleteCode)
 {

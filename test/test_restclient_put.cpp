@@ -19,7 +19,7 @@ class RestClientPutTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      url = "http://http-test-server.herokuapp.com";
+      url = "http://httpbin.org/put";
       ctype = "Content-Type: text/text";
       data = "data";
     }
@@ -31,28 +31,11 @@ class RestClientPutTest : public ::testing::Test
 };
 
 // Tests
-TEST_F(RestClientPutTest, TestRestClientPUTSimple)
-{
-  RestClient::response res = RestClient::put(url, ctype, data);
-  EXPECT_EQ("PUT", res.body);
-}
 // check return code
 TEST_F(RestClientPutTest, TestRestClientPUTCode)
 {
   RestClient::response res = RestClient::put(url, ctype, data);
   EXPECT_EQ(200, res.code);
-}
-// check content type
-TEST_F(RestClientPutTest, TestRestClientPUTContentType)
-{
-  RestClient::response res = RestClient::put(url+"/contenttype", ctype, data);
-  EXPECT_EQ(ctype, res.body);
-}
-// check response body
-TEST_F(RestClientPutTest, TestRestClientPUTBody)
-{
-  RestClient::response res = RestClient::put(url+"/body", ctype, data);
-  EXPECT_EQ(data, res.body);
 }
 // check for failure
 TEST_F(RestClientPutTest, TestRestClientFailureCode)

@@ -39,14 +39,7 @@ make install
 ```
 
 
-## Development
-- [Issues][]
-- [Tracker][]
-
-
 [libcurl]: http://curl.haxx.se/libcurl/
 [ruby rest-client]: http://github.com/archiloque/rest-client
 [gtest]: http://code.google.com/p/googletest/
-[Issues]: https://github.com/mrtazz/restclient-cpp/issues
-[Tracker]: https://www.pivotaltracker.com/projects/255177/stories
 [packagecloud]: https://packagecloud.io/mrtazz/restclient-cpp

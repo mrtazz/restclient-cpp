@@ -6,3 +6,9 @@
 - Commit, do not mess with version
 - If you add functionality, document it in the README
 - Send me a pull request. Bonus points for topic branches.
+
+## How to run tests
+
+1. build vendorized gtest: `./utils/build_gtest.sh`
+2. build restclient-cpp: `./autogen.sh && ./configure && make check`
+3. run the unit test suite: `./test-program`

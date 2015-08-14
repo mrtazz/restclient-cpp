@@ -1,5 +1,7 @@
 #include "restclient-cpp/restclient.h"
+#include "restclient-cpp/meta.h"
 #include <gtest/gtest.h>
+#include <json/json.h>
 #include <string>
 
 class RestClientPostTest : public ::testing::Test
@@ -36,6 +38,16 @@ TEST_F(RestClientPostTest, TestRestClientPOSTCode)
 {
   RestClient::response res = RestClient::post(url, ctype, data);
   EXPECT_EQ(200, res.code);
+}
+TEST_F(RestClientPostTest, TestRestClientPostBody)
+{
+  RestClient::response res = RestClient::post(url, ctype, data);
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("http://httpbin.org/post", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 // check for failure
 TEST_F(RestClientPostTest, TestRestClientFailureCode)

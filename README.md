@@ -10,7 +10,7 @@ I tried to keep usage close to the [ruby rest-client][]. So the basic usage is:
 
 Examples:
 
-    #include "restclient.h"
+    #include "restclient-cpp/restclient.h"
 
     RestClient::response r = RestClient::get("http://url.com")
     RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")

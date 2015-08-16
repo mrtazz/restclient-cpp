@@ -6,23 +6,28 @@ This is a simple REST client for C++. It wraps libcurl for HTTP requests.
 ## Usage
 I tried to keep usage close to the [ruby rest-client][]. So the basic usage is:
 
-    RestClient::method(url, content-type, params);
+```cpp
+RestClient::method(url, content-type, params);
+```
 
 Examples:
 
-    #include "restclient-cpp/restclient.h"
+```cpp
+#include "restclient-cpp/restclient.h"
 
-    RestClient::response r = RestClient::get("http://url.com")
-    RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
-    RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
-    RestClient::response r = RestClient::del("http://url.com/delete")
+RestClient::response r = RestClient::get("http://url.com")
+RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
+RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::response r = RestClient::del("http://url.com/delete")
+```
 
 The response is of type RestClient::response and has three attributes:
 
-    RestClient::response.code // HTTP response code
-    RestClient::response.body // HTTP response body
-    RestClient::response.headers // HTTP response headers
-
+```cpp
+RestClient::response.code // HTTP response code
+RestClient::response.body // HTTP response body
+RestClient::response.headers // HTTP response headers
+```
 
 ## Dependencies
 - [libcurl][]
@@ -31,7 +36,7 @@ The response is of type RestClient::response and has three attributes:
 There are some packages available for Linux on [packagecloud][packagecloud].
 Otherwise you can do the regular autotools dance:
 
-```
+```bash
 ./autogen.sh
 ./configure
 make install

@@ -435,7 +435,7 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
     //roll with non seperated headers...
     trim(header);
     if ( 0 == header.length() ){
-    return (size * nmemb); //blank line;
+        return (size * nmemb); //blank line;
     }
     r->headers[header] = "present";
   } else {

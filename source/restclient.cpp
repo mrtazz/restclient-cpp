@@ -83,7 +83,7 @@ RestClient::response RestClient::get(const std::string& url, const headermap& he
     curl_slist* hlist = NULL;
     for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
         header = it->first;
-        header += ':';
+        header += ": ";
         header += it->second;
         hlist = curl_slist_append(hlist, header.c_str());
     }
@@ -179,7 +179,7 @@ RestClient::response RestClient::post(const std::string& url,
     hlist = curl_slist_append(hlist, ctype_header.c_str());
     for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
         header = it->first;
-        header += ':';
+        header += ": ";
         header += it->second;
         hlist = curl_slist_append(hlist, header.c_str());
     }
@@ -286,7 +286,7 @@ RestClient::response RestClient::put(const std::string& url,
     hlist = curl_slist_append(hlist, ctype_header.c_str());
     for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
         header = it->first;
-        header += ':';
+        header += ": ";
         header += it->second;
         hlist = curl_slist_append(hlist, header.c_str());
     }
@@ -370,7 +370,7 @@ RestClient::response RestClient::del(const std::string& url, const headermap& he
     curl_slist* hlist = NULL;
     for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
         header = it->first;
-        header += ':';
+        header += ": ";
         header += it->second;
         hlist = curl_slist_append(hlist, header.c_str());
     }

@@ -37,12 +37,27 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
  */
 RestClient::response RestClient::get(const std::string& url)
 {
+    headermap emptyMap;
+    return RestClient::get(url, emptyMap);
+}
+
+/**
+ * @brief HTTP GET method
+ *
+ * @param url to query
+ * @param headers HTTP headers
+ *
+ * @return response struct
+ */
+RestClient::response RestClient::get(const std::string& url, const headermap& headers)
+{
   /** create return struct */
   RestClient::response ret = {};
 
   // use libcurl
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;
+  std::string header;
 
   curl = curl_easy_init();
   if (curl)
@@ -64,6 +79,15 @@ RestClient::response RestClient::get(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** set http headers */
+    curl_slist* hlist = NULL;
+    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+        header = it->first;
+        header += ':';
+        header += it->second;
+        hlist = curl_slist_append(hlist, header.c_str());
+    }
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -76,6 +100,7 @@ RestClient::response RestClient::get(const std::string& url)
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
 
+    curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
     curl_global_cleanup();
   }
@@ -95,10 +120,30 @@ RestClient::response RestClient::post(const std::string& url,
                                       const std::string& ctype,
                                       const std::string& data)
 {
+    headermap emptyMap;
+    return RestClient::post(url, ctype, data, emptyMap);
+}
+
+/**
+ * @brief HTTP POST method
+ *
+ * @param url to query
+ * @param ctype content type as string
+ * @param data HTTP POST body
+ * @param headers HTTP headers
+ *
+ * @return response struct
+ */
+RestClient::response RestClient::post(const std::string& url,
+                                      const std::string& ctype,
+                                      const std::string& data,
+                                      const headermap& headers)
+{
   /** create return struct */
   RestClient::response ret = {};
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
+  std::string header;
 
   // use libcurl
   CURL *curl = NULL;
@@ -130,9 +175,15 @@ RestClient::response RestClient::post(const std::string& url,
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** set content-type header */
-    curl_slist* header = NULL;
-    header = curl_slist_append(header, ctype_header.c_str());
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+    curl_slist* hlist = NULL;
+    hlist = curl_slist_append(hlist, ctype_header.c_str());
+    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+        header = it->first;
+        header += ':';
+        header += it->second;
+        hlist = curl_slist_append(hlist, header.c_str());
+    }
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -145,7 +196,7 @@ RestClient::response RestClient::post(const std::string& url,
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
 
-    curl_slist_free_all(header);
+    curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
     curl_global_cleanup();
   }
@@ -165,10 +216,30 @@ RestClient::response RestClient::put(const std::string& url,
                                      const std::string& ctype,
                                      const std::string& data)
 {
+    headermap emptyMap;
+    return RestClient::put(url, ctype, data, emptyMap);
+}
+
+/**
+ * @brief HTTP PUT method
+ *
+ * @param url to query
+ * @param ctype content type as string
+ * @param data HTTP PUT body
+ * @param headers HTTP headers
+ *
+ * @return response struct
+ */
+RestClient::response RestClient::put(const std::string& url,
+                                     const std::string& ctype,
+                                     const std::string& data,
+                                     const headermap& headers)
+{
   /** create return struct */
   RestClient::response ret = {};
   /** build content-type header string */
   std::string ctype_header = "Content-Type: " + ctype;
+  std::string header;
 
   /** initialize upload object */
   RestClient::upload_object up_obj;
@@ -211,9 +282,15 @@ RestClient::response RestClient::put(const std::string& url,
                      static_cast<long>(up_obj.length));
 
     /** set content-type header */
-    curl_slist* header = NULL;
-    header = curl_slist_append(header, ctype_header.c_str());
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+    curl_slist* hlist = NULL;
+    hlist = curl_slist_append(hlist, ctype_header.c_str());
+    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+        header = it->first;
+        header += ':';
+        header += it->second;
+        hlist = curl_slist_append(hlist, header.c_str());
+    }
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -226,7 +303,7 @@ RestClient::response RestClient::put(const std::string& url,
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
 
-    curl_slist_free_all(header);
+    curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
     curl_global_cleanup();
   }
@@ -242,6 +319,20 @@ RestClient::response RestClient::put(const std::string& url,
  */
 RestClient::response RestClient::del(const std::string& url)
 {
+    headermap emptyMap;
+    return RestClient::del(url, emptyMap);
+}
+
+/**
+ * @brief HTTP DELETE method
+ *
+ * @param url to query
+ * @param headers HTTP headers
+ *
+ * @return response struct
+ */
+RestClient::response RestClient::del(const std::string& url, const headermap& headers)
+{
   /** create return struct */
   RestClient::response ret = {};
 
@@ -251,6 +342,7 @@ RestClient::response RestClient::del(const std::string& url)
   // use libcurl
   CURL *curl = NULL;
   CURLcode res = CURLE_OK;
+  std::string header;
 
   curl = curl_easy_init();
   if (curl)
@@ -274,6 +366,15 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+    /** set http headers */
+    curl_slist* hlist = NULL;
+    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+        header = it->first;
+        header += ':';
+        header += it->second;
+        hlist = curl_slist_append(hlist, header.c_str());
+    }
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
@@ -286,6 +387,7 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
 
+    curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
     curl_global_cleanup();
   }
@@ -333,7 +435,7 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
     //roll with non seperated headers...
     trim(header);
     if ( 0 == header.length() ){
-	return (size * nmemb); //blank line;
+    return (size * nmemb); //blank line;
     }
     r->headers[header] = "present";
   } else {

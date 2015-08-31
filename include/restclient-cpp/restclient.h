@@ -42,14 +42,20 @@ class RestClient
     static void setAuth(const std::string& user,const std::string& password);
     // HTTP GET
     static response get(const std::string& url);
+    static response get(const std::string& url, const headermap& headers);
     // HTTP POST
     static response post(const std::string& url, const std::string& ctype,
                          const std::string& data);
+    static response post(const std::string& url, const std::string& ctype,
+                         const std::string& data, const headermap& headers);
     // HTTP PUT
     static response put(const std::string& url, const std::string& ctype,
                         const std::string& data);
+    static response put(const std::string& url, const std::string& ctype,
+                        const std::string& data, const headermap& headers);
     // HTTP DELETE
     static response del(const std::string& url);
+    static response del(const std::string& url, const headermap& headers);
 
   private:
     // writedata callback function

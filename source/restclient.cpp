@@ -37,8 +37,8 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
  */
 RestClient::response RestClient::get(const std::string& url)
 {
-    headermap emptyMap;
-    return RestClient::get(url, emptyMap);
+  headermap emptyMap;
+  return RestClient::get(url, emptyMap);
 }
 
 /**
@@ -81,11 +81,11 @@ RestClient::response RestClient::get(const std::string& url, const headermap& he
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** set http headers */
     curl_slist* hlist = NULL;
-    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-        header = it->first;
-        header += ": ";
-        header += it->second;
-        hlist = curl_slist_append(hlist, header.c_str());
+    for (headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+      header = it->first;
+      header += ": ";
+      header += it->second;
+      hlist = curl_slist_append(hlist, header.c_str());
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
@@ -177,11 +177,11 @@ RestClient::response RestClient::post(const std::string& url,
     /** set content-type header */
     curl_slist* hlist = NULL;
     hlist = curl_slist_append(hlist, ctype_header.c_str());
-    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-        header = it->first;
-        header += ": ";
-        header += it->second;
-        hlist = curl_slist_append(hlist, header.c_str());
+    for (headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+      header = it->first;
+      header += ": ";
+      header += it->second;
+      hlist = curl_slist_append(hlist, header.c_str());
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
@@ -284,11 +284,11 @@ RestClient::response RestClient::put(const std::string& url,
     /** set content-type header */
     curl_slist* hlist = NULL;
     hlist = curl_slist_append(hlist, ctype_header.c_str());
-    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-        header = it->first;
-        header += ": ";
-        header += it->second;
-        hlist = curl_slist_append(hlist, header.c_str());
+    for (headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+      header = it->first;
+      header += ": ";
+      header += it->second;
+      hlist = curl_slist_append(hlist, header.c_str());
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
@@ -368,11 +368,11 @@ RestClient::response RestClient::del(const std::string& url, const headermap& he
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** set http headers */
     curl_slist* hlist = NULL;
-    for (std::map<std::string, std::string>::const_iterator it = headers.begin(); it != headers.end(); ++it) {
-        header = it->first;
-        header += ": ";
-        header += it->second;
-        hlist = curl_slist_append(hlist, header.c_str());
+    for (headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+      header = it->first;
+      header += ": ";
+      header += it->second;
+      hlist = curl_slist_append(hlist, header.c_str());
     }
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, hlist);
     /** perform the actual query */
@@ -435,7 +435,7 @@ size_t RestClient::header_callback(void *data, size_t size, size_t nmemb,
     //roll with non seperated headers...
     trim(header);
     if ( 0 == header.length() ){
-        return (size * nmemb); //blank line;
+      return (size * nmemb); //blank line;
     }
     r->headers[header] = "present";
   } else {

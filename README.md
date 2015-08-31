@@ -8,6 +8,8 @@ I tried to keep usage close to the [ruby rest-client][]. So the basic usage is:
 
 ```cpp
 RestClient::method(url, content-type, params);
+// or
+RestClient::method(url, content-type, params, headers);
 ```
 
 Examples:
@@ -19,6 +21,16 @@ RestClient::response r = RestClient::get("http://url.com")
 RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
 RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
 RestClient::response r = RestClient::del("http://url.com/delete")
+
+// add some headers
+
+RestClient::headermap headers;
+headers["Accept"] = "application/json";
+
+RestClient::response r = RestClient::get("http://url.com", headers)
+RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}", headers)
+RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}", headers)
+RestClient::response r = RestClient::del("http://url.com/delete", headers)
 ```
 
 The response is of type RestClient::response and has three attributes:

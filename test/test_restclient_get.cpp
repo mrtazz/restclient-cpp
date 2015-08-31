@@ -49,6 +49,14 @@ TEST_F(RestClientGetTest, TestRestClientGETBodyCode)
   EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
+//check if additional http headers were sent
+TEST_F(RestClientGetTest, TestRestClientGETAdditionalHeaders)
+{
+  RestClient::headermap headers;
+  headers["If-Modified-Since"] = "Sat, 29 Oct 1994 19:43:31 GMT";
+  RestClient::response res = RestClient::get("http://httpbin.org/cache", headers);
+  EXPECT_EQ(304, res.code);
+}
 // check for failure
 TEST_F(RestClientGetTest, TestRestClientFailureCode)
 {

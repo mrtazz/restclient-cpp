@@ -11,3 +11,6 @@ lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cpp
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
+
+test: check
+	./test-program

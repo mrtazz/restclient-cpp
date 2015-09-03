@@ -35,7 +35,7 @@ void RestClient::setAuth(const std::string& user,const std::string& password){
  *
  * @return response struct
  */
-RestClient::response RestClient::get(const std::string& url)
+RestClient::response RestClient::get(const std::string& url, const size_t timeout)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -65,9 +65,22 @@ RestClient::response RestClient::get(const std::string& url)
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
     /** perform the actual query */
+
+    //set timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
+
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
+	  if (res == CURLE_OPERATION_TIMEDOUT) {
+		ret.code = res;
+		ret.body = "Operation Timeout.";
+		return ret;
+	  }
+      
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -93,7 +106,8 @@ RestClient::response RestClient::get(const std::string& url)
  */
 RestClient::response RestClient::post(const std::string& url,
                                       const std::string& ctype,
-                                      const std::string& data)
+                                      const std::string& data,
+                                      const size_t timeout)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -133,10 +147,23 @@ RestClient::response RestClient::post(const std::string& url,
     curl_slist* header = NULL;
     header = curl_slist_append(header, ctype_header.c_str());
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+
+    //set timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
+
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
+	  if (res == CURLE_OPERATION_TIMEDOUT) {
+		ret.code = res;
+		ret.body = "Operation Timeout.";
+		return ret;
+	  }
+	  
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -163,7 +190,7 @@ RestClient::response RestClient::post(const std::string& url,
  */
 RestClient::response RestClient::put(const std::string& url,
                                      const std::string& ctype,
-                                     const std::string& data)
+                                     const std::string& data, const size_t timeout)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -214,10 +241,23 @@ RestClient::response RestClient::put(const std::string& url,
     curl_slist* header = NULL;
     header = curl_slist_append(header, ctype_header.c_str());
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header);
+
+    //set timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
+
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
+	  if (res == CURLE_OPERATION_TIMEDOUT) {
+		ret.code = res;
+		ret.body = "Operation Timeout.";
+		return ret;
+	  }
+	  
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -240,7 +280,7 @@ RestClient::response RestClient::put(const std::string& url,
  *
  * @return response struct
  */
-RestClient::response RestClient::del(const std::string& url)
+RestClient::response RestClient::del(const std::string& url, const size_t timeout)
 {
   /** create return struct */
   RestClient::response ret = {};
@@ -274,10 +314,23 @@ RestClient::response RestClient::del(const std::string& url)
     curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, RestClient::header_callback);
     /** callback object for headers */
     curl_easy_setopt(curl, CURLOPT_HEADERDATA, &ret);
+
+    //set timeout
+    if (timeout) {
+      curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+      curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1); // dont want to get a sig alarm on timeout
+    }
+
     /** perform the actual query */
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
     {
+	  if (res == CURLE_OPERATION_TIMEDOUT) {
+		ret.code = res;
+		ret.body = "Operation Timeout.";
+		return ret;
+	  }
+	  
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;

@@ -63,3 +63,11 @@ TEST_F(RestClientGetTest, TestRestClientGETHeaders)
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
+TEST_F(RestClientGetTest, TestRestClientGETTimeout)
+{
+  std::string u = "http://httpbin.org/delay/10";
+  RestClient::response res = RestClient::get(u, 5);
+  EXPECT_EQ(28, res.code);
+}
+
+

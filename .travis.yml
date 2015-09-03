@@ -1,6 +1,6 @@
 language: cpp
 # command to install dependencies
-script: ./autogen.sh && ./configure && make check && ./test-program
+script: ./autogen.sh && ./configure && make test
 before_script:
   - ./utils/build_gtest.sh
 sudo: false

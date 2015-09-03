@@ -11,4 +11,4 @@
 
 1. build vendorized gtest: `./utils/build_gtest.sh`
 2. build restclient-cpp: `./autogen.sh && ./configure && make check`
-3. run the unit test suite: `./test-program`
+3. run the unit test suite: `make test`

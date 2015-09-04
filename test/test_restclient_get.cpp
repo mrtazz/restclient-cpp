@@ -53,9 +53,24 @@ TEST_F(RestClientGetTest, TestRestClientGETBodyCode)
 TEST_F(RestClientGetTest, TestRestClientGETAdditionalHeaders)
 {
   RestClient::headermap headers;
-  headers["If-Modified-Since"] = "Sat, 29 Oct 1994 19:43:31 GMT";
-  RestClient::response res = RestClient::get("http://httpbin.org/cache", headers);
-  EXPECT_EQ(304, res.code);
+
+  headers["Accept"] = "text/json";
+  headers["Accept-Charset"] = "iso8859-2";
+  headers["Accept-Language"] = "en-US";
+  headers["User-Agent"] = "restclient-cpp";
+  
+  RestClient::response res = RestClient::get("http://httpbin.org/headers", headers);
+  
+  EXPECT_EQ(200, res.code);
+  
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  const Json::Value r_headers = root["headers"];
+  for ( RestClient::headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+	  EXPECT_EQ(it->second, r_headers.get(it->first, "Header " + it->first + " not found").asString());
+  }
 }
 // check for failure
 TEST_F(RestClientGetTest, TestRestClientFailureCode)

@@ -61,3 +61,11 @@ TEST_F(RestClientDeleteTest, TestRestClientDeleteHeaders)
   RestClient::response res = RestClient::del(url);
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
+
+/*TEST_F(RestClientDeleteTest, TestRestClientDeleteTimeout)
+{
+  std::string u = "http://httpbin.org/delay/10";
+  RestClient::response res = RestClient::del(u, 5);
+  EXPECT_EQ(28, res.code);
+}*/
+

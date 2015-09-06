@@ -9,6 +9,8 @@ config*
 *Makefile
 *Makefile.in
 vendor/gtest-1.7.0/scripts/gtest-config
+test-program
+.libs
 
 *autom4te.cache
 *aclocal.m4

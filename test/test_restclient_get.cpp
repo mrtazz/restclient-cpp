@@ -49,6 +49,29 @@ TEST_F(RestClientGetTest, TestRestClientGETBodyCode)
   EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
+//check if additional http headers were sent
+TEST_F(RestClientGetTest, TestRestClientGETAdditionalHeaders)
+{
+  RestClient::headermap headers;
+
+  headers["Accept"] = "text/json";
+  headers["Accept-Charset"] = "iso8859-2";
+  headers["Accept-Language"] = "en-US";
+  headers["User-Agent"] = "restclient-cpp";
+  
+  RestClient::response res = RestClient::get("http://httpbin.org/headers", headers);
+  
+  EXPECT_EQ(200, res.code);
+  
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  const Json::Value r_headers = root["headers"];
+  for ( RestClient::headermap::const_iterator it = headers.begin(); it != headers.end(); ++it) {
+	  EXPECT_EQ(it->second, r_headers.get(it->first, "Header " + it->first + " not found").asString());
+  }
+}
 // check for failure
 TEST_F(RestClientGetTest, TestRestClientFailureCode)
 {

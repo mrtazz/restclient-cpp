@@ -240,6 +240,7 @@ RestClient::response RestClient::post(const std::string& url,
  *
  * @return response struct
  */
+RestClient::response RestClient::put(const std::string& url,
                                      const std::string& ctype,
                                      const std::string& data,
                                      const size_t timeout)

@@ -23,5 +23,9 @@ test-program
 *.dirstamp
 *ltmain.sh
 m4
+
+# coverage related files
 *gcda
 *gcno
+html
+coverage.info

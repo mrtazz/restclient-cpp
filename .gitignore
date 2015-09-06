@@ -21,3 +21,5 @@ vendor/gtest-1.7.0/scripts/gtest-config
 *.dirstamp
 *ltmain.sh
 m4
+*gcda
+*gcno

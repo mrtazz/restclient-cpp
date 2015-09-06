@@ -58,11 +58,11 @@ TEST_F(RestClientGetTest, TestRestClientGETAdditionalHeaders)
   headers["Accept-Charset"] = "iso8859-2";
   headers["Accept-Language"] = "en-US";
   headers["User-Agent"] = "restclient-cpp";
-  
+
   RestClient::response res = RestClient::get("http://httpbin.org/headers", headers);
-  
+
   EXPECT_EQ(200, res.code);
-  
+
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
@@ -93,4 +93,21 @@ TEST_F(RestClientGetTest, TestRestClientGETTimeout)
   EXPECT_EQ(28, res.code);
 }
 
+TEST_F(RestClientGetTest, TestRestClientGETAuth)
+{
+  RestClient::setAuth("foo", "bar");
+  RestClient::response res = RestClient::get("http://httpbin.org/basic-auth/foo/bar");
+  EXPECT_EQ(200, res.code);
+
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("foo", root.get("user", "no user").asString());
+  EXPECT_EQ(true, root.get("authenticated", false).asBool());
+
+  RestClient::clearAuth();
+  res = RestClient::get("http://httpbin.org/basic-auth/foo/bar");
+  EXPECT_EQ(401, res.code);
+}
 

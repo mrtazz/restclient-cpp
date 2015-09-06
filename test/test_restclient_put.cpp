@@ -61,3 +61,10 @@ TEST_F(RestClientPutTest, TestRestClientPUTHeaders)
   RestClient::response res = RestClient::put(url, ctype, data);
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
+
+/*TEST_F(RestClientPutTest, TestRestClientPUTTimeout)
+{
+  std::string u = "http://httpbin.org/delay/10";
+  RestClient::response res = RestClient::put(u, ctype, data, 5);
+  EXPECT_EQ(28, res.code);
+}*/

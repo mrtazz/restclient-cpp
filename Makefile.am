@@ -12,16 +12,17 @@ librestclient_cpp_la_SOURCES=source/restclient.cpp
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 
-.PHONY: check clean-coverage-files coverage-html
+.PHONY: test check clean-coverage-files coverage-html
 
 test: check
 	./test-program
 
-clean-coverage-files:
+clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm
 
-coverage.info:
-	./utils/lcov-1.11/bin/lcov --remove coverage.info "/usr*" -o coverage.info
+coverage.info: test
+	./utils/lcov-1.11/bin/lcov --compat-libtool --capture --directory source --output-file coverage.info
+	./utils/lcov-1.11/bin/lcov --compat-libtool --remove coverage.info "/usr*" -o coverage.info
 
 coverage-html: coverage.info
-	./utils/lcov-1.11/bin/genhtml coverage.info --output-directory html
+	./utils/lcov-1.11/bin/genhtml -t "restclient-cpp coverage report" --legend --show-details coverage.info --output-directory html

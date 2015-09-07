@@ -1,8 +1,12 @@
 language: cpp
 # command to install dependencies
-script: ./autogen.sh && ./configure && make test
+script: ./autogen.sh && ./configure --enable-coverage && make test
 before_script:
   - ./utils/build_gtest.sh
+  - gem install coveralls-lcov
+after_success:
+  - make coverage.info
+  - coveralls-lcov coverage.info
 sudo: false
 addons:
   apt:

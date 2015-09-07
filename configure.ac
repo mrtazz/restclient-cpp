@@ -37,5 +37,5 @@ AC_TYPE_SIZE_T
 
 AC_CONFIG_FILES([Makefile])
 AC_ARG_ENABLE(coverage,
-    AC_HELP_STRING([--enable-coverage],[Enable code coverage]), [CXXFLAGS="$CXXFLAGS -g -ftest-coverage -fprofile-arcs"])
+    AC_HELP_STRING([--enable-coverage],[Enable code coverage]), [CXXFLAGS=" -O0 -g -ftest-coverage -fprofile-arcs"])
 AC_OUTPUT

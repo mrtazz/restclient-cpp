@@ -104,7 +104,7 @@ RestClient::response RestClient::get(const std::string& url, const headermap& he
 		ret.body = "Operation Timeout.";
 		return ret;
 	  }
-      
+
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -115,7 +115,6 @@ RestClient::response RestClient::get(const std::string& url, const headermap& he
 
     curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;
@@ -215,7 +214,7 @@ RestClient::response RestClient::post(const std::string& url,
 		ret.body = "Operation Timeout.";
 		return ret;
 	  }
-	  
+
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -226,7 +225,6 @@ RestClient::response RestClient::post(const std::string& url,
 
     curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;
@@ -337,7 +335,7 @@ RestClient::response RestClient::put(const std::string& url,
 		ret.body = "Operation Timeout.";
 		return ret;
 	  }
-	  
+
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -348,7 +346,6 @@ RestClient::response RestClient::put(const std::string& url,
 
     curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;
@@ -436,7 +433,7 @@ RestClient::response RestClient::del(const std::string& url,
 		ret.body = "Operation Timeout.";
 		return ret;
 	  }
-	  
+
       ret.body = "Failed to query.";
       ret.code = -1;
       return ret;
@@ -447,7 +444,6 @@ RestClient::response RestClient::del(const std::string& url,
 
     curl_slist_free_all(hlist);
     curl_easy_cleanup(curl);
-    curl_global_cleanup();
   }
 
   return ret;

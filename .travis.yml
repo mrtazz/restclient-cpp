@@ -1,15 +1,20 @@
 language: cpp
-# command to install dependencies
 script: ./autogen.sh && ./configure --enable-coverage && make test
 before_script:
-  - ./utils/build_gtest.sh
-  - gem install coveralls-lcov
+- ./utils/build_gtest.sh
+- gem install coveralls-lcov
 after_success:
-  - make coverage.info
-  - coveralls-lcov coverage.info
+- make coverage.info
+- coveralls-lcov coverage.info
+- test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make
+  deploy-docs
 sudo: false
 addons:
   apt:
     packages:
     - build-essential
     - libcurl4-openssl-dev
+    - doxygen
+env:
+  global:
+    secure: RBqsrKEQwH7g4gFKqIDvMIPctt402mxnW36RYg8X5yRZhAyiiF116m9G514coNDYndbnxtNLhtzMI5Vq+vVcDasXsms52VHedVXWTtJ/GfQo4GrTFaPNblG/WsWhwJqU/kSoldkX1G/rLKz6F+ds0ZCEUPy/4rPFlCF+jUJTR/I=

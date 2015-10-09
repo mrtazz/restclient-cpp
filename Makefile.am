@@ -21,11 +21,11 @@ clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm
 
 coverage.info: test
-	./utils/lcov-1.11/bin/lcov --compat-libtool --capture --directory source --output-file coverage.info
-	./utils/lcov-1.11/bin/lcov --compat-libtool --remove coverage.info "/usr*" -o coverage.info
+	lcov --compat-libtool --capture --directory source --output-file coverage.info
+	lcov --compat-libtool --remove coverage.info "/usr*" -o coverage.info
 
 coverage-html: coverage.info
-	./utils/lcov-1.11/bin/genhtml -t "restclient-cpp coverage report" --legend --show-details coverage.info --output-directory html
+	genhtml -t "restclient-cpp coverage report" --legend --show-details coverage.info --output-directory html
 
 local-install:
 	$(MAKE) install PREFIX=usr

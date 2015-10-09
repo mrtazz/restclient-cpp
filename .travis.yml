@@ -18,4 +18,4 @@ addons:
     - lcov
 env:
   global:
-    secure: RBqsrKEQwH7g4gFKqIDvMIPctt402mxnW36RYg8X5yRZhAyiiF116m9G514coNDYndbnxtNLhtzMI5Vq+vVcDasXsms52VHedVXWTtJ/GfQo4GrTFaPNblG/WsWhwJqU/kSoldkX1G/rLKz6F+ds0ZCEUPy/4rPFlCF+jUJTR/I=
+    secure: QIsFsWdOIQiRtaJohAGmFIG5R/HVYxEx3zUnsAQMtiN2xx6mTNwFKSHSMejHLoe3juPXTsh/BhG8KlGZdrbNfYlN1IoCrg3ccnFxUxjojDcOKWEwB1w2+813p3vx2epzeoVUxUhBXMNobEzZKlJIm2lvOTq2tnjzoDDEcn7gLZk=

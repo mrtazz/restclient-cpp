@@ -4,6 +4,8 @@ before_script:
 - ./utils/build_gtest.sh
 - gem install coveralls-lcov
 after_success:
+- curl http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz | tar xz
+- export PATH=$PATH:`pwd`/lcov-1.11/bin
 - make coverage.info
 - coveralls-lcov coverage.info
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make
@@ -15,7 +17,6 @@ addons:
     - build-essential
     - libcurl4-openssl-dev
     - doxygen
-    - lcov
 env:
   global:
   - secure: i+h0SxjrHCfvoaXCJ1b+tK0vvNgoLq7Xl/eh34tb3QokacWO+piyLcbSxvz0IcE50ye0x8CyMn2hyyGCgzwHDgaUCmkILS+3y+9E7FC4nYwLvi2mJ2Q9DI1Q5aXhcMXiEYb9b1LjrorUdgs6DcfJVq7ZSU3CawKU/uBtKfC39iQ=

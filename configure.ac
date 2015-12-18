@@ -24,8 +24,6 @@ AS_IF([test "x$restclient_cpp_curl_headers_found" != "xyes"],
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lcurl':
 AC_CHECK_LIB([curl], [main])
-# FIXME: Replace `main' with a function in `-lgtest':
-AC_CHECK_LIB([gtest], [main])
 
 # Checks for header files.
 

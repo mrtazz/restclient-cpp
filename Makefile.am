@@ -14,7 +14,7 @@ librestclient_cpp_la_SOURCES=source/restclient.cpp
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 
-.PHONY: test check clean-coverage-files coverage-html docs clean-docs deploy-docs doxygen jekyll packages rpm deb include/restclient-cpp/version.h
+.PHONY: test check clean-coverage-files coverage-html docs clean-docs deploy-docs doxygen jekyll packages rpm deb include/restclient-cpp/version.h deploy-packages
 
 test: check
 	./test-program
@@ -49,6 +49,11 @@ deb:
 	  fpm -t deb -s dir $(FPM_FLAGS)
 
 packages: local-install rpm deb
+
+deploy-packages: packages
+	package_cloud push mrtazz/$(NAME)/el/7 *.rpm
+	package_cloud push mrtazz/$(NAME)/debian/wheezy *.deb
+	package_cloud push mrtazz/$(NAME)/ubuntu/trusty *.deb
 
 include/restclient-cpp/version.h:
 	m4 -I m4 --define=M4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@

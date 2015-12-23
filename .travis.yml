@@ -17,6 +17,13 @@ addons:
     - build-essential
     - libcurl4-openssl-dev
     - doxygen
+    - rpm
+deploy:
+  provider: script
+  script: ./autogen.sh && ./configure --prefix=`pwd`/usr && make deploy-packages
+  on:
+    tags: true
 env:
   global:
   - secure: i+h0SxjrHCfvoaXCJ1b+tK0vvNgoLq7Xl/eh34tb3QokacWO+piyLcbSxvz0IcE50ye0x8CyMn2hyyGCgzwHDgaUCmkILS+3y+9E7FC4nYwLvi2mJ2Q9DI1Q5aXhcMXiEYb9b1LjrorUdgs6DcfJVq7ZSU3CawKU/uBtKfC39iQ=
+  - secure: IdA0aOUuazgCVT3X8bmOjC2mJpHIk+eakCUgiPGhsMsg6Nhe+OgYUF9uGLgz3py5qZq3ns+9WV1IVZVhwd1CFz+2wFKHM6WRnvlfFJ/aV+rb10I2tiX8BrepNcZzCvwuTxIgqb3m97DHRmf/s8DnnmF6v5pvUaKb9SjxFQ1d/XY=

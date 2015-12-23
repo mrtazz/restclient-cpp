@@ -1,5 +1,4 @@
 #include "restclient-cpp/restclient.h"
-#include "restclient-cpp/meta.h"
 #include <gtest/gtest.h>
 #include <json/json.h>
 #include <string>
@@ -47,7 +46,7 @@ TEST_F(RestClientPutTest, TestRestClientPutBody)
   str >> root;
 
   EXPECT_EQ("http://httpbin.org/put", root.get("url", "no url set").asString());
-  EXPECT_EQ("restclient-cpp/" VERSION, root["headers"].get("User-Agent", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 // check for failure
 TEST_F(RestClientPutTest, TestRestClientFailureCode)

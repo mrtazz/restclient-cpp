@@ -1,18 +1,20 @@
 ACLOCAL_AMFLAGS=-I m4
-CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist
+CPPFLAGS=-Iinclude
 check_PROGRAMS = test-program
-pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/meta.h
+pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h
+BUILT_SOURCES = include/restclient-cpp/version.h
 
 test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/test_restclient_delete.cpp test/test_restclient_get.cpp test/test_restclient_post.cpp test/test_restclient_put.cpp test/tests.cpp
 test_program_LDADD = .libs/librestclient-cpp.a
 test_program_LDFLAGS=-Lvendor/gtest-1.7.0/lib/.libs -lgtest
+test_program_CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist
 
 lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cpp
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 
-.PHONY: test check clean-coverage-files coverage-html docs clean-docs deploy-docs doxygen jekyll packages rpm deb
+.PHONY: test check clean-coverage-files coverage-html docs clean-docs deploy-docs doxygen jekyll packages rpm deb include/restclient-cpp/version.h
 
 test: check
 	./test-program
@@ -45,8 +47,8 @@ deb:
 
 packages: local-install rpm deb
 
-include/snyder/version.h:
-	m4 -I m4 --define=M4_SNYDER_VERSION=$(VERSION) version.h.m4 > $@
+include/restclient-cpp/version.h:
+	m4 -I m4 --define=M4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
 
 
 GAUGES_CODE="539c6c8de32bb442640005f3"
@@ -61,7 +63,7 @@ jekyll:
 	echo "markdown: redcarpet" >> docs/_config.yml
 	echo "---" > docs/index.md
 	echo "layout: project" >> docs/index.md
-	echo "title: restclient-cpp" >> docs/index.md
+	echo "title: $(NAME)" >> docs/index.md
 	echo "---" >> docs/index.md
 	cat README.md >> docs/index.md
 

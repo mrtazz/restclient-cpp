@@ -14,6 +14,8 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "restclient-cpp/version.h"
+
 class RestClient
 {
   public:

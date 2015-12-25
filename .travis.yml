@@ -2,6 +2,7 @@ language: cpp
 script: ./autogen.sh && ./configure --enable-coverage && make test
 install:
 - gem install fpm
+- gem install package_cloud
 before_script:
 - ./utils/build_gtest.sh
 - gem install coveralls-lcov

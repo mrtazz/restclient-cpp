@@ -38,9 +38,9 @@ BUILDER = $(shell echo "`git config user.name` <`git config user.email`>")
 PKG_RELEASE ?= 1
 PROJECT_URL="https://github.com/mrtazz/$(NAME)"
 FPM_FLAGS= --name $(NAME) --version $(VERSION) --iteration $(PKG_RELEASE) \
-					 --epoch 1 --license MIT --maintainer "$(BUILDER)" --url $(PROJECT_URL) \
-					 --vendor mrtazz --description "C++ client for making HTTP/REST requests" \
-					 usr
+           --epoch 1 --license MIT --maintainer "$(BUILDER)" --url $(PROJECT_URL) \
+           --vendor mrtazz --description "C++ client for making HTTP/REST requests" \
+           --depends curl usr
 
 rpm:
 	  fpm -t rpm -s dir $(FPM_FLAGS)

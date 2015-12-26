@@ -24,14 +24,30 @@ class RestClient
      */
     typedef std::map<std::string, std::string> headermap;
 
-    /** response struct for queries */
+    /** @struct response
+     *  @brief This structure represents the HTTP response data
+     *  @var response::code
+     *  Member 'code' contains the HTTP response code
+     *  @var response::body
+     *  Member 'body' contains the HTTP response body
+     *  @var response::headers
+     *  Member 'headers' contains the HTTP response headers
+     */
     typedef struct
     {
       int code;
       std::string body;
       headermap headers;
     } response;
-    /** struct used for uploading data */
+
+    /** @struct upload_object
+     *  @brief This structure represents the payload to upload on POST
+     *  requests
+     *  @var upload_object::data
+     *  Member 'data' contains the data to upload
+     *  @var upload_object::length
+     *  Member 'length' contains the length of the data to upload
+     */
     typedef struct
     {
       const char* data;
@@ -70,7 +86,7 @@ class RestClient
 
     // header callback function
     static size_t header_callback(void *ptr, size_t size, size_t nmemb,
-				  void *userdata);
+                                  void *userdata);
     // read callback function
     static size_t read_callback(void *ptr, size_t size, size_t nmemb,
                                 void *userdata);

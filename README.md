@@ -36,6 +36,9 @@ RestClient::response r = RestClient::get("http://url.com", headers)
 RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}", headers)
 RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}", headers)
 RestClient::response r = RestClient::del("http://url.com/delete", headers)
+
+RestClient::setAuth("WarMachine68", "WARMACHINEROX");
+
 ```
 
 The response is of type RestClient::response and has three attributes:

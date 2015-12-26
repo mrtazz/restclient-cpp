@@ -20,11 +20,25 @@
 const char* RestClient::user_agent = "restclient-cpp/" RESTCLIENT_VERSION;
 /** initialize authentication variable */
 std::string RestClient::user_pass =  std::string();
-/** Authentication Methods implementation */
+
+/**
+ * @brief method to clear auth set on the static class
+ *
+ * @return void
+ */
 void RestClient::clearAuth(){
   RestClient::user_pass.clear();
 }
-void RestClient::setAuth(const std::string& user,const std::string& password){
+
+/**
+ * @brief method to set basic auth data on the class
+ *
+ * @param user     - user name to use for basic auth
+ * @param password - password to use for basic auth
+ *
+ * @return void
+ */
+void RestClient::setAuth(const std::string& user, const std::string& password){
   RestClient::user_pass.clear();
   RestClient::user_pass += user+":"+password;
 }

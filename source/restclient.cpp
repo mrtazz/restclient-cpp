@@ -42,10 +42,12 @@ void RestClient::setAuth(const std::string& user, const std::string& password){
   RestClient::user_pass.clear();
   RestClient::user_pass += user+":"+password;
 }
+
 /**
  * @brief HTTP GET method
  *
  * @param url to query
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -60,6 +62,7 @@ RestClient::response RestClient::get(const std::string& url, const size_t timeou
  *
  * @param url to query
  * @param headers HTTP headers
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -139,6 +142,7 @@ RestClient::response RestClient::get(const std::string& url, const headermap& he
  * @param url to query
  * @param ctype content type as string
  * @param data HTTP POST body
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -158,6 +162,7 @@ RestClient::response RestClient::post(const std::string& url,
  * @param ctype content type as string
  * @param data HTTP POST body
  * @param headers HTTP headers
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -249,6 +254,7 @@ RestClient::response RestClient::post(const std::string& url,
  * @param url to query
  * @param ctype content type as string
  * @param data HTTP PUT body
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -268,6 +274,7 @@ RestClient::response RestClient::put(const std::string& url,
  * @param ctype content type as string
  * @param data HTTP PUT body
  * @param headers HTTP headers
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -368,6 +375,7 @@ RestClient::response RestClient::put(const std::string& url,
  * @brief HTTP DELETE method
  *
  * @param url to query
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */
@@ -382,6 +390,7 @@ RestClient::response RestClient::del(const std::string& url, const size_t timeou
  *
  * @param url to query
  * @param headers HTTP headers
+ * @param timeout in seconds for this request
  *
  * @return response struct
  */

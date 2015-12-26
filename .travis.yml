@@ -1,5 +1,8 @@
 language: cpp
-script: ./autogen.sh && ./configure --enable-coverage && make test
+script:
+  - ./autogen.sh && ./configure --enable-coverage
+  - make test
+  - make valgrind
 install:
 - gem install fpm
 - gem install package_cloud
@@ -21,6 +24,7 @@ addons:
     - libcurl4-openssl-dev
     - doxygen
     - rpm
+    - valgrind
 deploy:
   provider: script
   script: ./autogen.sh && ./configure --prefix=`pwd`/usr && make deploy-packages

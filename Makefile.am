@@ -19,6 +19,9 @@ librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 test: check
 	./test-program
 
+valgrind: check
+	valgrind --leak-check=full --error-exitcode=0 ./test-program
+
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm
 

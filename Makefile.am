@@ -14,7 +14,12 @@ librestclient_cpp_la_SOURCES=source/restclient.cpp
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 
-.PHONY: test check clean-coverage-files coverage-html docs clean-docs deploy-docs doxygen jekyll packages rpm deb include/restclient-cpp/version.h deploy-packages
+dist_doc_DATA = README.md
+
+.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h
+
+include/restclient-cpp/version.h:
+	m4 -I m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
 
 test: check
 	./test-program
@@ -32,64 +37,7 @@ coverage.info: test
 coverage-html: coverage.info
 	genhtml -t "restclient-cpp coverage report" --legend --show-details coverage.info --output-directory html
 
-local-install:
-	$(MAKE) install PREFIX=usr
-
-NAME=restclient-cpp
-VERSION = $(shell git describe --tags --always --dirty)
-BUILDER = $(shell echo "`git config user.name` <`git config user.email`>")
-PKG_RELEASE ?= 1
-PROJECT_URL="https://github.com/mrtazz/$(NAME)"
-FPM_FLAGS= --name $(NAME) --version $(VERSION) --iteration $(PKG_RELEASE) \
-           --epoch 1 --license MIT --maintainer "$(BUILDER)" --url $(PROJECT_URL) \
-           --vendor mrtazz --description "C++ client for making HTTP/REST requests" \
-           --depends curl usr
-
-rpm:
-	  fpm -t rpm -s dir $(FPM_FLAGS)
-
-deb:
-	  fpm -t deb -s dir $(FPM_FLAGS)
-
-packages: local-install rpm deb
-
-deploy-packages: packages
-	package_cloud push mrtazz/$(NAME)/el/7 *.rpm
-	package_cloud push mrtazz/$(NAME)/debian/wheezy *.deb
-	package_cloud push mrtazz/$(NAME)/ubuntu/trusty *.deb
-
-include/restclient-cpp/version.h:
-	m4 -I m4 --define=M4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
-
-
-GAUGES_CODE="539c6c8de32bb442640005f3"
-
-doxygen:
-	doxygen doxygen.config
-
-jekyll:
-	echo "gaugesid: $(GAUGES_CODE)" > docs/_config.yml
-	echo "projecturl: $(PROJECT_URL)" >> docs/_config.yml
-	echo "basesite: http://www.unwiredcouch.com" >> docs/_config.yml
-	echo "markdown: redcarpet" >> docs/_config.yml
-	echo "---" > docs/index.md
-	echo "layout: project" >> docs/index.md
-	echo "title: $(NAME)" >> docs/index.md
-	echo "---" >> docs/index.md
-	cat README.md >> docs/index.md
-
-docs: doxygen jekyll
-
-clean-docs:
-	rm -rf ./docs
-
-deploy-docs: docs
-	@cd docs && git init && git remote add upstream "https://${GH_TOKEN}@github.com/mrtazz/$(NAME).git" && \
-	git submodule add https://github.com/mrtazz/jekyll-layouts.git ./_layouts && \
-	git submodule update --init && \
-	git fetch upstream && git reset upstream/gh-pages && \
-	git config user.name 'Daniel Schauenberg' && git config user.email d@unwiredcouch.com && \
-	touch . && git add -A . && \
-	git commit -m "rebuild pages at $(VERSION)" && \
-	git push -q upstream HEAD:gh-pages
+# include other make targets in the main Makefile
+include $(srcdir)/Makefile.packaging.mk
+include $(srcdir)/Makefile.docs.mk
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.4.0 (???)
+
+## v0.3.0 (10th January 2016)
+
+### Features
+- added support for connection timeouts (Islam Yasar)
+- Allow for setting additional HTTP headers (Karol Samborski)
+
+### Improvements and Bug fixes
+- improve general documentation and add docs for auth (Daniel Schauenberg)
+- remove calls to curl_global_cleanup (Daniel Schauenberg)
+- add unit test for basic auth (Daniel Schauenberg)
+- switch unit tests to use [http://httpbin.org]() (Daniel Schauenberg)
+- move two include instructions (Jos)
+- added reporting for test coverage (Daniel Schauenberg)
+- cleanup version gen to be driven by git tags (Daniel Schauenberg)
+- clean up build and support building on FreeBSD (Daniel Schauenberg)
+- automate package deployment to packagecloud (Daniel Schauenberg)
+- add automatic doc build & deploy (Daniel Schauenberg)
+- Ensure the built shared library does not have dynamic references to libgtest (Thomas Goetze)
+
 ## v0.2.0 (19th April 2015)
 - support basic auth
 - Add header's to response object

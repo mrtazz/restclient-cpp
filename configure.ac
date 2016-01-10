@@ -1,6 +1,5 @@
 AC_PREREQ([2.52])
-AC_INIT([restclient-cpp], [0.2.0], [d@unwiredcouch.com],
-        [http://code.mrtazz.com/restclient-cpp])
+AC_INIT([restclient-cpp], [0.2.0], [d@unwiredcouch.com])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 AC_CONFIG_HEADERS([config.h])

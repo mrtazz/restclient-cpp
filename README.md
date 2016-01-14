@@ -16,24 +16,17 @@ an API. However the simple way doesn't provide a lot of configuration options
 either. So if you need more than just a simple HTTP call, you will probably
 want to check out the advanced usage.
 
-### Simple API
+### Simple Usage
 The simple API is just some static methods modeled after the most common HTTP
 verbs:
 
 ```cpp
 #include "restclient-cpp/restclient.h"
 
-// initialize RestClient
-RestClient::init()
-
 RestClient::response r = RestClient::get("http://url.com")
 RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
 RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
 RestClient::response r = RestClient::del("http://url.com/delete")
-
-// deinit RestClient. After calling this you have to call RestClient::init()
-// again before you can use it
-RestClient::disable();
 ```
 
 The response is of type [RestClient::response][restclient_response] and has
@@ -108,10 +101,14 @@ by libcurl][curl_threadsafety]. The `RestClient::init()` and
 `RestClient::disable()` methods basically correspond to `curl_global_init` and
 `curl_global_cleanup` and thus need to be called right at the beginning of
 your program and before shutdown respectively. These set up the environment
-and are **not thread-safe**. After that you can create connection objects or
-run the static methods from within your threads. Do not share connection
-objects across threads as this would mean accessing curl handles from multiple
-threads at the same time which is not allowed.
+and are **not thread-safe**. After that you can create connection objects in
+your threads. Do not share connection objects across threads as this would
+mean accessing curl handles from multiple threads at the same time which is
+not allowed.
+
+In order to provide an easy to use API, the simple usage via the static
+methods implicitly calls the curl global functions and is therefore also **not
+thread-safe**.
 
 
 ## Dependencies

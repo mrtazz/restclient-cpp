@@ -39,32 +39,32 @@ namespace Helpers {
   } UploadObject;
 
   // writedata callback function
-  static size_t write_callback(void *ptr, size_t size, size_t nmemb,
+  size_t write_callback(void *ptr, size_t size, size_t nmemb,
                               void *userdata);
 
   // header callback function
-  static size_t header_callback(void *ptr, size_t size, size_t nmemb,
+  size_t header_callback(void *ptr, size_t size, size_t nmemb,
                                 void *userdata);
   // read callback function
-  static size_t read_callback(void *ptr, size_t size, size_t nmemb,
+  size_t read_callback(void *ptr, size_t size, size_t nmemb,
                               void *userdata);
 
   // trim from start
-  static inline std::string &ltrim(const std::string &s) {
+  static inline std::string &ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(),
           std::not1(std::ptr_fun<int, int>(std::isspace))));
     return s;
   }
 
   // trim from end
-  static inline std::string &rtrim(const std::string &s) {
+  static inline std::string &rtrim(std::string &s) {
     s.erase(std::find_if(s.rbegin(), s.rend(),
           std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
     return s;
   }
 
   // trim from both ends
-  static inline std::string &trim(const std::string &s) {
+  static inline std::string &trim(std::string &s) {
     return ltrim(rtrim(s));
   }
 };  // namespace Helpers

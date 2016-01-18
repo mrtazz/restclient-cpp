@@ -14,6 +14,7 @@
 #include "restclient-cpp/restclient.h"
 #include "restclient-cpp/version.h"
 
+#include "restclient-cpp/connection.h"
 
 /**
  * @brief HTTP GET method
@@ -22,8 +23,8 @@
  *
  * @return response struct
  */
-RestClient::response RestClient::get(const std::string& url) {
-  Connection *conn = new Connection("");
+RestClient::Response RestClient::get(const std::string& url) {
+  RestClient::Connection *conn = new RestClient::Connection("");
   return conn->get(url);
 }
 
@@ -36,11 +37,12 @@ RestClient::response RestClient::get(const std::string& url) {
  *
  * @return response struct
  */
-RestClient::response RestClient::post(const std::string& url,
+RestClient::Response RestClient::post(const std::string& url,
                                       const std::string& ctype,
                                       const std::string& data) {
-  Connection *conn = new Connection("");
-  return conn->post(url, ctype, data);
+  RestClient::Connection *conn = new RestClient::Connection("");
+  conn->AppendHeader("Content-Type", ctype);
+  return conn->post(url, data);
 }
 
 /**
@@ -52,11 +54,12 @@ RestClient::response RestClient::post(const std::string& url,
  *
  * @return response struct
  */
-RestClient::response RestClient::put(const std::string& url,
+RestClient::Response RestClient::put(const std::string& url,
                                      const std::string& ctype,
                                      const std::string& data) {
-  Connection *conn = new Connection("");
-  return conn->put(url, ctype, data);
+  RestClient::Connection *conn = new RestClient::Connection("");
+  conn->AppendHeader("Content-Type", ctype);
+  return conn->put(url, data);
 }
 
 /**
@@ -66,8 +69,8 @@ RestClient::response RestClient::put(const std::string& url,
  *
  * @return response struct
  */
-RestClient::response RestClient::del(const std::string& url) {
-  Connection *conn = new Connection("");
+RestClient::Response RestClient::del(const std::string& url) {
+  RestClient::Connection *conn = new RestClient::Connection("");
   return conn->del(url);
 }
 

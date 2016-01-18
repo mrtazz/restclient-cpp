@@ -20,13 +20,12 @@
 
 using namespace RestClient;
 
-Connection::Connection(const std::string baseUrl) {
+Connection::Connection(const std::string baseUrl) : infoStruct(), headerFields() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
     throw std::runtime_error("Couldn't initialize curl handle");
   }
   this->baseUrl = baseUrl;
-  this->infoStruct = new Info();
 }
 
 Connection::~Connection() {
@@ -36,6 +35,21 @@ Connection::~Connection() {
 }
 
 // getters/setters
+
+/**
+ * @brief append a header to the internal map
+ *
+ * @param key for the header field
+ * @param value for the header field
+ *
+ */
+void Connection::AppendHeader(const std::string& key,
+                              const std::string& value) {
+
+  this->headerFields[key] = value;
+}
+
+
 
 
 /**
@@ -51,8 +65,9 @@ Connection::~Connection() {
  *
  * @return 0 on success and 1 on error
  */
-int Connection::performCurlRequest(const std::string& uri,
-                                   RestClient::Response& ret) {
+Response Connection::performCurlRequest(const std::string& uri) {
+
+  Response ret = {};
 
   std::string url = std::string(this->baseUrl + uri);
   std::string headerString;
@@ -106,7 +121,7 @@ int Connection::performCurlRequest(const std::string& uri,
   curl_slist_free_all(headerList);
   // reset curl handle
   curl_easy_reset(this->curlHandle);
-  return 0;
+  return ret;
 }
 
 /**
@@ -117,12 +132,7 @@ int Connection::performCurlRequest(const std::string& uri,
  * @return response struct
  */
 Response Connection::get(const std::string& url) {
-  /** create return struct */
-  Response ret = {};
-  CURLcode res = CURLE_OK;
-
-  this->performCurlRequest(url, &ret);
-  return ret;
+  return this->performCurlRequest(url);
 }
 /**
  * @brief HTTP POST method
@@ -135,17 +145,13 @@ Response Connection::get(const std::string& url) {
  */
 Response Connection::post(const std::string& url,
                           const std::string& data) {
-  /** create return struct */
-  RestClient::Response ret = {};
-
   /** Now specify we want to POST data */
   curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
   /** set post fields */
   curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDS, data.c_str());
   curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDSIZE, data.size());
 
-  this->performCurlRequest(url, &ret);
-  return ret;
+  return this->performCurlRequest(url);
 }
 /**
  * @brief HTTP PUT method
@@ -156,12 +162,8 @@ Response Connection::post(const std::string& url,
  *
  * @return response struct
  */
-RestClient::Response Connection::put(const std::string& url,
+Response Connection::put(const std::string& url,
                                      const std::string& data) {
-  /** create return struct */
-  RestClient::Response ret = {};
-  CURLcode res = CURLE_OK;
-
   /** initialize upload object */
   RestClient::Helpers::UploadObject up_obj;
   up_obj.data = data.c_str();
@@ -179,8 +181,7 @@ RestClient::Response Connection::put(const std::string& url,
   curl_easy_setopt(this->curlHandle, CURLOPT_INFILESIZE,
                      static_cast<int64_t>(up_obj.length));
 
-  this->performCurlRequest(url, ret);
-  return ret;
+  return this->performCurlRequest(url);
 }
 /**
  * @brief HTTP DELETE method
@@ -189,18 +190,13 @@ RestClient::Response Connection::put(const std::string& url,
  *
  * @return response struct
  */
-RestClient::Response Connection::del(const std::string& url) {
-  /** create return struct */
-  RestClient::Response ret = {};
-  CURLcode res = CURLE_OK;
-
+Response Connection::del(const std::string& url) {
   /** we want HTTP DELETE */
   const char* http_delete = "DELETE";
 
   /** set HTTP DELETE METHOD */
   curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_delete);
 
-  this->performCurlRequest(url, ret);
-  return ret;
+  return this->performCurlRequest(url);
 }
 

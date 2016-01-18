@@ -72,8 +72,8 @@ size_t RestClient::Helpers::header_callback(void *data, size_t size,
 size_t RestClient::Helpers::read_callback(void *data, size_t size,
                                           size_t nmemb, void *userdata) {
   /** get upload struct */
-  RestClient::upload_object* u;
-  u = reinterpret_cast<RestClient::upload_object*>(userdata);
+  RestClient::Helpers::UploadObject* u;
+  u = reinterpret_cast<RestClient::Helpers::UploadObject*>(userdata);
   /** set correct sizes */
   size_t curl_size = size * nmemb;
   size_t copy_size = (u->length < curl_size) ? u->length : curl_size;

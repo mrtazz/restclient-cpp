@@ -14,6 +14,7 @@
 #include <map>
 #include <cstdlib>
 
+#include "restclient-cpp/restclient.h"
 #include "restclient-cpp/version.h"
 
 /**
@@ -26,15 +27,6 @@ namespace RestClient {
   */
 class Connection {
  public:
-    /**
-      * @brief enum to hold identifiers for HTTP verbs
-      */
-    enum HttpVerb {
-      GET,
-      POST,
-      PUT,
-      DELETE
-    };
 
     /**
       *  @struct Info
@@ -43,7 +35,7 @@ class Connection {
       */
     typedef struct {
       std::string base_url;
-      RestClients::HeaderFields headers;
+      RestClient::HeaderFields headers;
       int timeout;
       struct {
         std::string username;
@@ -112,10 +104,10 @@ class Connection {
                               const std::string& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
-    RestCLient::Response del(const std::string& uri);
+    RestClient::Response del(const std::string& uri);
 
  private:
-    CURL* curlHandle = NULL;
+    CURL* curlHandle;
     std::string baseUrl;
     RestClient::HeaderFields headerFields;
     int timeout;
@@ -125,8 +117,7 @@ class Connection {
     } basicAuth;
     std::string customUserAgent;
     Info infoStruct;
-    int performCurlRequest(const std::string& uri,
-                           RestClient::Response& ret);
+    RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient
 

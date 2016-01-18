@@ -16,7 +16,7 @@ librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 
 dist_doc_DATA = README.md
 
-.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h
+.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci
 
 include/restclient-cpp/version.h:
 	m4 -I m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
@@ -26,6 +26,11 @@ test: check
 
 valgrind: check
 	valgrind --leak-check=full --error-exitcode=0 ./test-program
+
+lint:
+	./utils/cpplint.py --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc
+
+ci: lint test valgrind
 
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm

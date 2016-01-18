@@ -10,7 +10,7 @@ test_program_LDFLAGS=-Lvendor/gtest-1.7.0/lib/.libs -lgtest
 test_program_CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist
 
 lib_LTLIBRARIES=librestclient-cpp.la
-librestclient_cpp_la_SOURCES=source/restclient.cpp
+librestclient_cpp_la_SOURCES=source/restclient.cc source/connection.cc source/helpers.cc
 librestclient_cpp_la_CXXFLAGS=-fPIC
 librestclient_cpp_la_LDFLAGS=-version-info 1:0:1
 

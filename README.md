@@ -49,7 +49,7 @@ timeouts or authentication, there is also a different, more configurable way.
 RestClient::init();
 
 // get a connection object
-RestClient::Connection conn = new RestClient::Connection();
+RestClient::Connection conn = new RestClient::Connection("http://url.com");
 
 // configure basic auth
 conn->SetBasicAuth("WarMachine68", "WARMACHINEROX");
@@ -69,10 +69,10 @@ conn->SetHeaders(headers)
 // append additional headers
 conn->AppendHeader("X-MY-HEADER", "foo")
 
-RestClient::response r = conn->get("http://url.com")
-RestClient::response r = conn->post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = conn->put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = conn->del("http://url.com/delete")
+RestClient::response r = conn->get("/get")
+RestClient::response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")
+RestClient::response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::response r = conn->del("/delete")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it

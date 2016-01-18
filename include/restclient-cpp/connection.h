@@ -43,17 +43,42 @@ class Connection {
       */
     typedef struct {
       std::string base_url;
-      HeaderFields headers;
+      RestClients::HeaderFields headers;
       int timeout;
       struct {
         std::string username;
         std::string password;
       } basicAuth;
       std::string customUserAgent;
+      struct {
+        // total time of the last request in seconds Total time of previous
+        // transfer. See CURLINFO_TOTAL_TIME
+        int totalTime;
+        // time spent in DNS lookup in seconds Time from start until name
+        // resolving completed. See CURLINFO_NAMELOOKUP_TIME
+        int nameLookupTime;
+        // time it took until Time from start until remote host or proxy
+        // completed. See CURLINFO_CONNECT_TIME
+        int connectTime;
+        // Time from start until SSL/SSH handshake completed. See
+        // CURLINFO_APPCONNECT_TIME
+        int appConnectTime;
+        // Time from start until just before the transfer begins. See
+        // CURLINFO_PRETRANSFER_TIME
+        int preTransferTime;
+        // Time from start until just when the first byte is received. See
+        // CURLINFO_STARTTRANSFER_TIME
+        int startTransferTime;
+        // Time taken for all redirect steps before the final transfer. See
+        // CURLINFO_REDIRECT_TIME
+        int redirectTime;
+        // number of redirects followed. See CURLINFO_REDIRECT_COUNT
+        int redirectCount;
+      } lastRequest;
     } Info;
 
 
-    explicit Connection(const std::string& baseUrl);
+    explicit Connection(const std::string baseUrl);
     ~Connection();
 
     // Instance configuration methods
@@ -61,15 +86,20 @@ class Connection {
     void SetBasicAuth(const std::string& username,
                       const std::string& password);
 
-    // set connection timeout to 5s
+    // set connection timeout to seconds
     void SetTimeout(int seconds);
 
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
     void SetUserAgent(const std::string& userAgent);
 
+    std::string GetUserAgent();
+
     // set headers
-    void SetHeaders(headermap headers);
+    void SetHeaders(RestClient::HeaderFields headers);
+
+    // get headers
+    RestClient::HeaderFields GetHeaders();
 
     // append additional headers
     void AppendHeader(const std::string& key,
@@ -77,25 +107,26 @@ class Connection {
 
 
     // Basic HTTP verb methods
-    response get(const std::string& uri);
-    response post(const std::string& uri,
-                  const std::string& contentType,
-                  const std::string& data);
-    response put(const std::string& uri,
-                  const std::string& contentType,
-                  const std::string& data);
-    response del(const std::string& uri);
+    RestClient::Response get(const std::string& uri);
+    RestClient::Response post(const std::string& uri,
+                              const std::string& data);
+    RestClient::Response put(const std::string& uri,
+                             const std::string& data);
+    RestCLient::Response del(const std::string& uri);
 
  private:
     CURL* curlHandle = NULL;
     std::string baseUrl;
-    headermap headers;
+    RestClient::HeaderFields headerFields;
     int timeout;
     struct {
       std::string username;
       std::string password;
     } basicAuth;
     std::string customUserAgent;
+    Info infoStruct;
+    int performCurlRequest(const std::string& uri,
+                           RestClient::Response& ret);
 };
 };  // namespace RestClient
 

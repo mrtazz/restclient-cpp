@@ -88,6 +88,48 @@ RestClient::response.body // HTTP response body
 RestClient::response.headers // HTTP response headers
 ```
 
+The connection object also provides a simple way to get some diagnostics and
+metrics information via `conn->GetInfo()`. The result is a
+`RestClient::ConnectionInfo` struct and looks like this:
+
+```cpp
+typedef struct {
+  std::string base_url;
+  RestClients::HeaderFields headers;
+  int timeout;
+  struct {
+    std::string username;
+    std::string password;
+  } basicAuth;
+  std::string customUserAgent;
+  struct {
+    // total time of the last request in seconds Total time of previous
+    // transfer. See CURLINFO_TOTAL_TIME
+    int totalTime;
+    // time spent in DNS lookup in seconds Time from start until name
+    // resolving completed. See CURLINFO_NAMELOOKUP_TIME
+    int nameLookupTime;
+    // time it took until Time from start until remote host or proxy
+    // completed. See CURLINFO_CONNECT_TIME
+    int connectTime;
+    // Time from start until SSL/SSH handshake completed. See
+    // CURLINFO_APPCONNECT_TIME
+    int appConnectTime;
+    // Time from start until just before the transfer begins. See
+    // CURLINFO_PRETRANSFER_TIME
+    int preTransferTime;
+    // Time from start until just when the first byte is received. See
+    // CURLINFO_STARTTRANSFER_TIME
+    int startTransferTime;
+    // Time taken for all redirect steps before the final transfer. See
+    // CURLINFO_REDIRECT_TIME
+    int redirectTime;
+    // number of redirects followed. See CURLINFO_REDIRECT_COUNT
+    int redirectCount;
+  } lastRequest;
+} Info;
+```
+
 #### Persistent connections/Keep-Alive
 The connection object stores the curl easy handle in an instance variable and
 uses that for lifetime of the object. This means curl will [automatically

@@ -48,7 +48,19 @@ RestClient::Connection::AppendHeader(const std::string& key,
   this->headerFields[key] = value;
 }
 
-
+/**
+ * @brief get the user agent to add to the request
+ *
+ * @return user agent as std::string
+ */
+std::string
+RestClient::Connection::GetUserAgent() {
+  std::string prefix;
+  if (this->customUserAgent.length() > 0) {
+    prefix = this->customUserAgent + " ";
+  }
+    return std::string(prefix + "restclient-cpp/" + RESTCLIENT_VERSION);
+}
 
 
 /**

@@ -134,10 +134,10 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     if (res == CURLE_OPERATION_TIMEDOUT) {
       ret.code = res;
       ret.body = "Operation Timeout.";
+    } else {
+      ret.body = "Failed to query.";
+      ret.code = -1;
     }
-
-    ret.body = "Failed to query.";
-    ret.code = -1;
   } else {
     int64_t http_code = 0;
     curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);

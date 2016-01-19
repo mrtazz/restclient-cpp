@@ -147,3 +147,18 @@ TEST_F(RestClientTest, TestRestClientPUTHeaders)
   RestClient::Response res = RestClient::put("http://httpbin.org/put", "text/text", "data");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
+TEST_F(RestClientTest, TestRestClientAuth)
+{
+  RestClient::Response res = RestClient::get("http://foo:bar@httpbin.org/basic-auth/foo/bar");
+  EXPECT_EQ(200, res.code);
+
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("foo", root.get("user", "no user").asString());
+  EXPECT_EQ(true, root.get("authenticated", false).asBool());
+
+  res = RestClient::get("http://httpbin.org/basic-auth/foo/bar");
+  EXPECT_EQ(401, res.code);
+}

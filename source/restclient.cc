@@ -24,8 +24,11 @@
  * @return response struct
  */
 RestClient::Response RestClient::get(const std::string& url) {
+  RestClient::Response ret;
   RestClient::Connection *conn = new RestClient::Connection("");
-  return conn->get(url);
+  ret = conn->get(url);
+  delete conn;
+  return ret;
 }
 
 /**
@@ -40,9 +43,12 @@ RestClient::Response RestClient::get(const std::string& url) {
 RestClient::Response RestClient::post(const std::string& url,
                                       const std::string& ctype,
                                       const std::string& data) {
+  RestClient::Response ret;
   RestClient::Connection *conn = new RestClient::Connection("");
   conn->AppendHeader("Content-Type", ctype);
-  return conn->post(url, data);
+  ret = conn->post(url, data);
+  delete conn;
+  return ret;
 }
 
 /**
@@ -57,9 +63,12 @@ RestClient::Response RestClient::post(const std::string& url,
 RestClient::Response RestClient::put(const std::string& url,
                                      const std::string& ctype,
                                      const std::string& data) {
+  RestClient::Response ret;
   RestClient::Connection *conn = new RestClient::Connection("");
   conn->AppendHeader("Content-Type", ctype);
-  return conn->put(url, data);
+  ret = conn->put(url, data);
+  delete conn;
+  return ret;
 }
 
 /**
@@ -70,7 +79,10 @@ RestClient::Response RestClient::put(const std::string& url,
  * @return response struct
  */
 RestClient::Response RestClient::del(const std::string& url) {
+  RestClient::Response ret;
   RestClient::Connection *conn = new RestClient::Connection("");
-  return conn->del(url);
+  ret = conn->del(url);
+  delete conn;
+  return ret;
 }
 

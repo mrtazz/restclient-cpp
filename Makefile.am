@@ -4,7 +4,7 @@ check_PROGRAMS = test-program
 pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h
 BUILT_SOURCES = include/restclient-cpp/version.h
 
-test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/test_restclient_delete.cpp test/test_restclient_get.cpp test/test_restclient_post.cpp test/test_restclient_put.cpp test/tests.cpp
+test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/tests.cpp test/test_restclient.cc
 test_program_LDADD = .libs/librestclient-cpp.a
 test_program_LDFLAGS=-Lvendor/gtest-1.7.0/lib/.libs -lgtest
 test_program_CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist

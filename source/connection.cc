@@ -127,10 +127,11 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
 
     ret.body = "Failed to query.";
     ret.code = -1;
+  } else {
+    int64_t http_code = 0;
+    curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);
+    ret.code = static_cast<int>(http_code);
   }
-  int64_t http_code = 0;
-  curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);
-  ret.code = static_cast<int>(http_code);
 
   // TODO(mrtazz): get metrics from curl handle
   // free header list

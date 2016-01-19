@@ -27,7 +27,6 @@ namespace RestClient {
   */
 class Connection {
  public:
-
     /**
       *  @struct Info
       *  @brief holds some diagnostics information

@@ -18,9 +18,8 @@
 #include "restclient-cpp/helpers.h"
 #include "restclient-cpp/version.h"
 
-using namespace RestClient;
-
-Connection::Connection(const std::string baseUrl) : infoStruct(), headerFields() {
+RestClient::Connection::Connection(const std::string baseUrl)
+                               : infoStruct(), headerFields() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
     throw std::runtime_error("Couldn't initialize curl handle");
@@ -28,7 +27,7 @@ Connection::Connection(const std::string baseUrl) : infoStruct(), headerFields()
   this->baseUrl = baseUrl;
 }
 
-Connection::~Connection() {
+RestClient::Connection::~Connection() {
   if (this->curlHandle) {
     curl_easy_cleanup(this->curlHandle);
   }
@@ -43,9 +42,9 @@ Connection::~Connection() {
  * @param value for the header field
  *
  */
-void Connection::AppendHeader(const std::string& key,
+void
+RestClient::Connection::AppendHeader(const std::string& key,
                               const std::string& value) {
-
   this->headerFields[key] = value;
 }
 
@@ -65,9 +64,10 @@ void Connection::AppendHeader(const std::string& key,
  *
  * @return 0 on success and 1 on error
  */
-Response Connection::performCurlRequest(const std::string& uri) {
-
-  Response ret = {};
+RestClient::Response
+RestClient::Connection::performCurlRequest(const std::string& uri) {
+  // init return type
+  RestClient::Response ret = {};
 
   std::string url = std::string(this->baseUrl + uri);
   std::string headerString;
@@ -77,11 +77,13 @@ Response Connection::performCurlRequest(const std::string& uri) {
   /** set query URL */
   curl_easy_setopt(this->curlHandle, CURLOPT_URL, url.c_str());
   /** set callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEFUNCTION, Helpers::write_callback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEFUNCTION,
+                   Helpers::write_callback);
   /** set data object to pass to callback function */
   curl_easy_setopt(this->curlHandle, CURLOPT_WRITEDATA, &ret);
   /** set the header callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_HEADERFUNCTION, Helpers::header_callback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_HEADERFUNCTION,
+                   Helpers::header_callback);
   /** callback object for headers */
   curl_easy_setopt(this->curlHandle, CURLOPT_HEADERDATA, &ret);
   /** set http headers */
@@ -92,9 +94,11 @@ Response Connection::performCurlRequest(const std::string& uri) {
     headerString += it->second;
     headerList = curl_slist_append(headerList, headerString.c_str());
   }
-  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPHEADER, headerList);
+  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPHEADER,
+      headerList);
   /** set user agent */
-  curl_easy_setopt(this->curlHandle, CURLOPT_USERAGENT, this->GetUserAgent().c_str());
+  curl_easy_setopt(this->curlHandle, CURLOPT_USERAGENT,
+                   this->GetUserAgent().c_str());
 
   // set timeout
   if (this->timeout) {
@@ -116,7 +120,7 @@ Response Connection::performCurlRequest(const std::string& uri) {
   curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);
   ret.code = static_cast<int>(http_code);
 
-  // TODO: get metrics from curl handle
+  // TODO(mrtazz): get metrics from curl handle
   // free header list
   curl_slist_free_all(headerList);
   // reset curl handle
@@ -131,7 +135,8 @@ Response Connection::performCurlRequest(const std::string& uri) {
  *
  * @return response struct
  */
-Response Connection::get(const std::string& url) {
+RestClient::Response
+RestClient::Connection::get(const std::string& url) {
   return this->performCurlRequest(url);
 }
 /**
@@ -143,8 +148,9 @@ Response Connection::get(const std::string& url) {
  *
  * @return response struct
  */
-Response Connection::post(const std::string& url,
-                          const std::string& data) {
+RestClient::Response
+RestClient::Connection::post(const std::string& url,
+                             const std::string& data) {
   /** Now specify we want to POST data */
   curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
   /** set post fields */
@@ -162,8 +168,9 @@ Response Connection::post(const std::string& url,
  *
  * @return response struct
  */
-Response Connection::put(const std::string& url,
-                                     const std::string& data) {
+RestClient::Response
+RestClient::Connection::put(const std::string& url,
+                            const std::string& data) {
   /** initialize upload object */
   RestClient::Helpers::UploadObject up_obj;
   up_obj.data = data.c_str();
@@ -190,7 +197,8 @@ Response Connection::put(const std::string& url,
  *
  * @return response struct
  */
-Response Connection::del(const std::string& url) {
+RestClient::Response
+RestClient::Connection::del(const std::string& url) {
   /** we want HTTP DELETE */
   const char* http_delete = "DELETE";
 

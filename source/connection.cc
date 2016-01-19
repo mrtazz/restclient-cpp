@@ -62,6 +62,17 @@ RestClient::Connection::GetUserAgent() {
     return std::string(prefix + "restclient-cpp/" + RESTCLIENT_VERSION);
 }
 
+/**
+ * @brief set timeout for connection
+ *
+ * @param timeout in seconds
+ *
+ */
+void
+RestClient::Connection::SetTimeout(int seconds) {
+  this->timeout = seconds;
+}
+
 
 /**
  * @brief helper function to get called from the actual request methods to

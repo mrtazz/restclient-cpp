@@ -5,6 +5,9 @@
  */
 
 #include "restclient-cpp/helpers.h"
+
+#include <cstring>
+
 #include "restclient-cpp/restclient.h"
 
 /**
@@ -78,7 +81,7 @@ size_t RestClient::Helpers::read_callback(void *data, size_t size,
   size_t curl_size = size * nmemb;
   size_t copy_size = (u->length < curl_size) ? u->length : curl_size;
   /** copy data to buffer */
-  memcpy(data, u->data, copy_size);
+  std::memcpy(data, u->data, copy_size);
   /** decrement length and increment data pointer */
   u->length -= copy_size;
   u->data += copy_size;

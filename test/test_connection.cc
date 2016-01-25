@@ -63,3 +63,21 @@ TEST_F(ConnectionTest, TestCustomUserAgent)
   EXPECT_EQ("foobar/1.2.3 restclient-cpp/" RESTCLIENT_VERSION,
       root["headers"].get("User-Agent", "nope/nope").asString());
 }
+
+TEST_F(ConnectionTest, TestBasicAuth)
+{
+  RestClient::Response res = conn->get("/basic-auth/foo/bar");
+  EXPECT_EQ(401, res.code);
+
+  conn->SetBasicAuth("foo", "bar");
+  res = conn->get("/basic-auth/foo/bar");
+  EXPECT_EQ(200, res.code);
+
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("foo", root.get("user", "no user").asString());
+  EXPECT_EQ(true, root.get("authenticated", false).asBool());
+
+}

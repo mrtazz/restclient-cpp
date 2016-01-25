@@ -86,6 +86,20 @@ RestClient::Connection::SetTimeout(int seconds) {
 }
 
 /**
+ * @brief set username and password for basic auth
+ *
+ * @param username
+ * @param password
+ *
+ */
+void
+RestClient::Connection::SetBasicAuth(const std::string& username,
+                                     const std::string& password) {
+  this->basicAuth.username = username;
+  this->basicAuth.password = password;
+}
+
+/**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
  * request and record some stats from the last request and then reset the
@@ -130,6 +144,14 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   }
   curl_easy_setopt(this->curlHandle, CURLOPT_HTTPHEADER,
       headerList);
+
+  // set basic auth if configured
+  if (this->basicAuth.username.length() > 0) {
+    std::string authString = std::string(this->basicAuth.username + ":" +
+                                         this->basicAuth.password);
+    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_easy_setopt(this->curlHandle, CURLOPT_USERPWD, authString.c_str());
+  }
   /** set user agent */
   curl_easy_setopt(this->curlHandle, CURLOPT_USERAGENT,
                    this->GetUserAgent().c_str());

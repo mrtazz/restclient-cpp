@@ -49,6 +49,18 @@ RestClient::Connection::AppendHeader(const std::string& key,
 }
 
 /**
+ * @brief set custom user agent for connection. This gets prepended to the
+ * default restclient-cpp/RESTCLIENT_VERSION string
+ *
+ * @param userAgent - custom userAgent prefix
+ *
+ */
+void
+RestClient::Connection::SetUserAgent(const std::string& userAgent) {
+  this->customUserAgent = userAgent;
+}
+
+/**
  * @brief get the user agent to add to the request
  *
  * @return user agent as std::string
@@ -59,7 +71,7 @@ RestClient::Connection::GetUserAgent() {
   if (this->customUserAgent.length() > 0) {
     prefix = this->customUserAgent + " ";
   }
-    return std::string(prefix + "restclient-cpp/" + RESTCLIENT_VERSION);
+  return std::string(prefix + "restclient-cpp/" + RESTCLIENT_VERSION);
 }
 
 /**
@@ -72,7 +84,6 @@ void
 RestClient::Connection::SetTimeout(int seconds) {
   this->timeout = seconds;
 }
-
 
 /**
  * @brief helper function to get called from the actual request methods to

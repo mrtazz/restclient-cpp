@@ -38,3 +38,28 @@ TEST_F(ConnectionTest, TestTimeout)
   RestClient::Response res = conn->get(uri);
   EXPECT_EQ(28, res.code);
 }
+
+TEST_F(ConnectionTest, TestDefaultUserAgent)
+{
+  RestClient::Response res = conn->get("/get");
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION,
+      root["headers"].get("User-Agent", "nope/nope").asString());
+}
+
+TEST_F(ConnectionTest, TestCustomUserAgent)
+{
+  conn->SetUserAgent("foobar/1.2.3");
+  RestClient::Response res = conn->get("/get");
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+
+  EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("foobar/1.2.3 restclient-cpp/" RESTCLIENT_VERSION,
+      root["headers"].get("User-Agent", "nope/nope").asString());
+}

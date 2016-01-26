@@ -41,8 +41,8 @@ typedef struct {
   HeaderFields headers;
 } Response;
 
-// init function
-void init();
+// init and disable functions
+int init();
 void disable();
 
 /**

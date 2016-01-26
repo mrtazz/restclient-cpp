@@ -17,10 +17,12 @@ class RestClientTest : public ::testing::Test
 
     virtual void SetUp()
     {
+      RestClient::init();
     }
 
     virtual void TearDown()
     {
+      RestClient::disable();
     }
 
 };

@@ -12,9 +12,31 @@
  */
 
 #include "restclient-cpp/restclient.h"
-#include "restclient-cpp/version.h"
 
+#include <curl/curl.h>
+
+#include "restclient-cpp/version.h"
 #include "restclient-cpp/connection.h"
+
+/**
+ * @brief global init function. Call this before you start any threads.
+ */
+int RestClient::init() {
+  CURLcode res = curl_global_init(CURL_GLOBAL_ALL);
+  if (res == CURLE_OK) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+/**
+ * @brief global disable function. Call this before you terminate your
+ * program.
+ */
+void RestClient::disable() {
+  curl_global_cleanup();
+}
 
 /**
  * @brief HTTP GET method

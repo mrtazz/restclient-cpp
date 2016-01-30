@@ -44,8 +44,30 @@ RestClient::Connection::~Connection() {
  */
 void
 RestClient::Connection::AppendHeader(const std::string& key,
-                              const std::string& value) {
+                                     const std::string& value) {
   this->headerFields[key] = value;
+}
+
+/**
+ * @brief set the custom headers map. This will replace the currently
+ * configured headers with the provided ones. If you want to add additional
+ * headers, use AppendHeader()
+ *
+ * @param headers to set
+ */
+void
+RestClient::Connection::SetHeaders(RestClient::HeaderFields headers) {
+  this->headerFields = headers;
+}
+
+/**
+ * @brief get all custom headers set on the connection
+ *
+ * @returns a RestClient::HeaderFields map containing the custom headers
+ */
+RestClient::HeaderFields
+RestClient::Connection::GetHeaders() {
+  return this->headerFields;
 }
 
 /**

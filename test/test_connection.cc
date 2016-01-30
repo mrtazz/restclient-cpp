@@ -81,3 +81,47 @@ TEST_F(ConnectionTest, TestBasicAuth)
   EXPECT_EQ(true, root.get("authenticated", false).asBool());
 
 }
+
+TEST_F(ConnectionTest, TestSetHeaders)
+{
+  RestClient::HeaderFields headers;
+  headers["Foo"] = "bar";
+  headers["Bla"] = "lol";
+  conn->SetHeaders(headers);
+  RestClient::Response res = conn->get("/headers");
+  EXPECT_EQ(200, res.code);
+
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+  EXPECT_EQ("bar", root["headers"].get("Foo", "").asString());
+  EXPECT_EQ("lol", root["headers"].get("Bla", "").asString());
+
+  // let's replace the headers now
+  RestClient::HeaderFields headers_again;
+  headers_again["foo"] = "bob";
+  conn->SetHeaders(headers_again);
+  res = conn->get("/headers");
+  EXPECT_EQ(200, res.code);
+
+  std::istringstream str2(res.body);
+  str2 >> root;
+  EXPECT_EQ("bob", root["headers"].get("Foo", "").asString());
+  // this shouldn't be set anymore
+  EXPECT_EQ("", root["headers"].get("Bla", "").asString());
+}
+
+TEST_F(ConnectionTest, TestGetHeaders)
+{
+  RestClient::HeaderFields headers;
+  headers["Foo"] = "bar";
+  headers["Bla"] = "lol";
+  conn->SetHeaders(headers);
+  RestClient::Response res = conn->get("/headers");
+  EXPECT_EQ(200, res.code);
+
+  RestClient::HeaderFields headers_returned = conn->GetHeaders();
+  EXPECT_EQ("bar", headers_returned["Foo"]);
+  EXPECT_EQ("lol", headers_returned["Bla"]);
+
+}

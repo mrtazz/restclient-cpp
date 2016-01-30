@@ -62,7 +62,7 @@ conn->SetTimeout(5);
 conn->SetUserAgent("foo/cool");
 
 // set headers
-RestClient::headermap headers;
+RestClient::HeaderFields headers;
 headers["Accept"] = "application/json";
 conn->SetHeaders(headers)
 

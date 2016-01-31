@@ -88,7 +88,6 @@ class Connection {
     void SetTimeout(int seconds);
 
     // set whether to follow redirects
-    // TODO(mrtazz): implement this
     void FollowRedirects(bool follow);
 
     // set custom user agent

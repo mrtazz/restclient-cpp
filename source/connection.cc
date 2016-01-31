@@ -19,7 +19,7 @@
 #include "restclient-cpp/version.h"
 
 RestClient::Connection::Connection(const std::string baseUrl)
-                               : infoStruct(), headerFields() {
+                               : lastRequest(), headerFields() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
     throw std::runtime_error("Couldn't initialize curl handle");
@@ -34,6 +34,25 @@ RestClient::Connection::~Connection() {
 }
 
 // getters/setters
+
+/**
+ * @brief get diagnostic information about the connection object
+ *
+ * @return RestClient::Connection::Info struct
+ */
+RestClient::Connection::Info
+RestClient::Connection::GetInfo() {
+  RestClient::Connection::Info ret;
+  ret.baseUrl = this->baseUrl;
+  ret.headers = this->GetHeaders();
+  ret.timeout = this->timeout;
+  ret.basicAuth.username = this->basicAuth.username;
+  ret.basicAuth.password = this->basicAuth.password;
+  ret.customUserAgent = this->customUserAgent;
+  ret.lastRequest = this->lastRequest;
+
+  return ret;
+}
 
 /**
  * @brief append a header to the internal map
@@ -199,7 +218,22 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     ret.code = static_cast<int>(http_code);
   }
 
-  // TODO(mrtazz): get metrics from curl handle
+  curl_easy_getinfo(this->curlHandle, CURLINFO_TOTAL_TIME,
+                    &this->lastRequest.totalTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_NAMELOOKUP_TIME,
+                    &this->lastRequest.nameLookupTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_CONNECT_TIME,
+                    &this->lastRequest.connectTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_APPCONNECT_TIME,
+                    &this->lastRequest.appConnectTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_PRETRANSFER_TIME,
+                    &this->lastRequest.preTransferTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_STARTTRANSFER_TIME,
+                    &this->lastRequest.startTransferTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_REDIRECT_TIME,
+                    &this->lastRequest.redirectTime);
+  curl_easy_getinfo(this->curlHandle, CURLINFO_REDIRECT_COUNT,
+                    &this->lastRequest.redirectCount);
   // free header list
   curl_slist_free_all(headerList);
   // reset curl handle

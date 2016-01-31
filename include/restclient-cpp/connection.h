@@ -28,44 +28,51 @@ namespace RestClient {
 class Connection {
  public:
     /**
+      *  @struct RequestInfo
+      *  @brief holds some diagnostics information
+      *  about a request
+      */
+    typedef struct {
+        // total time of the last request in seconds Total time of previous
+        // transfer. See CURLINFO_TOTAL_TIME
+        double totalTime;
+        // time spent in DNS lookup in seconds Time from start until name
+        // resolving completed. See CURLINFO_NAMELOOKUP_TIME
+        double nameLookupTime;
+        // time it took until Time from start until remote host or proxy
+        // completed. See CURLINFO_CONNECT_TIME
+        double connectTime;
+        // Time from start until SSL/SSH handshake completed. See
+        // CURLINFO_APPCONNECT_TIME
+        double appConnectTime;
+        // Time from start until just before the transfer begins. See
+        // CURLINFO_PRETRANSFER_TIME
+        double preTransferTime;
+        // Time from start until just when the first byte is received. See
+        // CURLINFO_STARTTRANSFER_TIME
+        double startTransferTime;
+        // Time taken for all redirect steps before the final transfer. See
+        // CURLINFO_REDIRECT_TIME
+        double redirectTime;
+        // number of redirects followed. See CURLINFO_REDIRECT_COUNT
+        int redirectCount;
+      } RequestInfo;
+    /**
       *  @struct Info
       *  @brief holds some diagnostics information
       *  about the connection object it came from
       */
     typedef struct {
-      std::string base_url;
+      std::string baseUrl;
       RestClient::HeaderFields headers;
       int timeout;
+      bool followRedirects;
       struct {
         std::string username;
         std::string password;
       } basicAuth;
       std::string customUserAgent;
-      struct {
-        // total time of the last request in seconds Total time of previous
-        // transfer. See CURLINFO_TOTAL_TIME
-        int totalTime;
-        // time spent in DNS lookup in seconds Time from start until name
-        // resolving completed. See CURLINFO_NAMELOOKUP_TIME
-        int nameLookupTime;
-        // time it took until Time from start until remote host or proxy
-        // completed. See CURLINFO_CONNECT_TIME
-        int connectTime;
-        // Time from start until SSL/SSH handshake completed. See
-        // CURLINFO_APPCONNECT_TIME
-        int appConnectTime;
-        // Time from start until just before the transfer begins. See
-        // CURLINFO_PRETRANSFER_TIME
-        int preTransferTime;
-        // Time from start until just when the first byte is received. See
-        // CURLINFO_STARTTRANSFER_TIME
-        int startTransferTime;
-        // Time taken for all redirect steps before the final transfer. See
-        // CURLINFO_REDIRECT_TIME
-        int redirectTime;
-        // number of redirects followed. See CURLINFO_REDIRECT_COUNT
-        int redirectCount;
-      } lastRequest;
+      RequestInfo lastRequest;
     } Info;
 
 
@@ -80,11 +87,17 @@ class Connection {
     // set connection timeout to seconds
     void SetTimeout(int seconds);
 
+    // set whether to follow redirects
+    // TODO(mrtazz): implement this
+    void FollowRedirects(bool follow);
+
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
     void SetUserAgent(const std::string& userAgent);
 
     std::string GetUserAgent();
+
+    RestClient::Connection::Info GetInfo();
 
     // set headers
     void SetHeaders(RestClient::HeaderFields headers);
@@ -115,7 +128,7 @@ class Connection {
       std::string password;
     } basicAuth;
     std::string customUserAgent;
-    Info infoStruct;
+    RequestInfo lastRequest;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

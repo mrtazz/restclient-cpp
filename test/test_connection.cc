@@ -21,7 +21,7 @@ class ConnectionTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      conn = new RestClient::Connection("http://httpbin.org");
+      conn = new RestClient::Connection("https://httpbin.org");
     }
 
     virtual void TearDown()
@@ -46,7 +46,7 @@ TEST_F(ConnectionTest, TestDefaultUserAgent)
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION,
       root["headers"].get("User-Agent", "nope/nope").asString());
 }
@@ -59,7 +59,7 @@ TEST_F(ConnectionTest, TestCustomUserAgent)
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
   EXPECT_EQ("foobar/1.2.3 restclient-cpp/" RESTCLIENT_VERSION,
       root["headers"].get("User-Agent", "nope/nope").asString());
 }
@@ -124,4 +124,32 @@ TEST_F(ConnectionTest, TestGetHeaders)
   EXPECT_EQ("bar", headers_returned["Foo"]);
   EXPECT_EQ("lol", headers_returned["Bla"]);
 
+}
+
+TEST_F(ConnectionTest, TestGetInfo)
+{
+  RestClient::HeaderFields headers;
+  headers["Foo"] = "bar";
+  headers["Bla"] = "lol";
+  conn->SetHeaders(headers);
+  conn->SetBasicAuth("foo", "bar");
+  conn->SetTimeout(2);
+  conn->SetUserAgent("foobar/1.2.3");
+  conn->get("/get");
+  RestClient::Connection::Info info = conn->GetInfo();
+  EXPECT_EQ("bar", info.headers["Foo"]);
+  EXPECT_EQ("lol", info.headers["Bla"]);
+  EXPECT_EQ("foo", info.basicAuth.username);
+  EXPECT_EQ("bar", info.basicAuth.password);
+  EXPECT_EQ("foobar/1.2.3", info.customUserAgent);
+  EXPECT_EQ(2, info.timeout);
+  EXPECT_EQ("https://httpbin.org", info.baseUrl);
+  EXPECT_NE(0, info.lastRequest.totalTime);
+  EXPECT_NE(0, info.lastRequest.connectTime);
+  EXPECT_NE(0, info.lastRequest.nameLookupTime);
+  EXPECT_NE(0, info.lastRequest.appConnectTime);
+  EXPECT_NE(0, info.lastRequest.preTransferTime);
+  EXPECT_NE(0, info.lastRequest.startTransferTime);
+  EXPECT_EQ(0, info.lastRequest.redirectTime);
+  EXPECT_EQ(0, info.lastRequest.redirectCount);
 }

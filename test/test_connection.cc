@@ -153,3 +153,22 @@ TEST_F(ConnectionTest, TestGetInfo)
   EXPECT_EQ(0, info.lastRequest.redirectTime);
   EXPECT_EQ(0, info.lastRequest.redirectCount);
 }
+
+TEST_F(ConnectionTest, TestFollowRedirect)
+{
+  RestClient::Response res = conn->get("/redirect/2");
+  EXPECT_EQ(302, res.code);
+  conn->FollowRedirects(true);
+  res = conn->get("/redirect/2");
+  EXPECT_EQ(200, res.code);
+}
+
+TEST_F(ConnectionTest, TestGetInfoFromRedirect)
+{
+  conn->FollowRedirects(true);
+  RestClient::Response res = conn->get("/redirect/2");
+  EXPECT_EQ(200, res.code);
+  RestClient::Connection::Info info = conn->GetInfo();
+  EXPECT_NE(0, info.lastRequest.redirectTime);
+  EXPECT_NE(0, info.lastRequest.redirectCount);
+}

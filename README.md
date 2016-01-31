@@ -61,6 +61,9 @@ conn->SetTimeout(5);
 // (this will result in the UA "foo/cool restclient-cpp/VERSION")
 conn->SetUserAgent("foo/cool");
 
+// enable following of redirects (default is off)
+conn->FollowRedirects(true);
+
 // set headers
 RestClient::HeaderFields headers;
 headers["Accept"] = "application/json";

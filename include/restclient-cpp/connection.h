@@ -123,6 +123,7 @@ class Connection {
     std::string baseUrl;
     RestClient::HeaderFields headerFields;
     int timeout;
+    bool followRedirects;
     struct {
       std::string username;
       std::string password;

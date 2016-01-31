@@ -90,6 +90,16 @@ RestClient::Connection::GetHeaders() {
 }
 
 /**
+ * @brief configure whether to follow redirects on this connection
+ *
+ * @param follow - boolean whether to follow redirects
+ */
+void
+RestClient::Connection::FollowRedirects(bool follow) {
+  this->followRedirects = follow;
+}
+
+/**
  * @brief set custom user agent for connection. This gets prepended to the
  * default restclient-cpp/RESTCLIENT_VERSION string
  *
@@ -202,6 +212,10 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     curl_easy_setopt(this->curlHandle, CURLOPT_TIMEOUT, this->timeout);
     // dont want to get a sig alarm on timeout
     curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+  }
+  // set follow redirect
+  if (this->followRedirects == true) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
   }
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {

@@ -26,13 +26,13 @@ namespace RestClient {
   */
 typedef std::map<std::string, std::string> HeaderFields;
 
-/** @struct response
+/** @struct Response
   *  @brief This structure represents the HTTP response data
-  *  @var response::code
+  *  @var Response::code
   *  Member 'code' contains the HTTP response code
-  *  @var response::body
+  *  @var Response::body
   *  Member 'body' contains the HTTP response body
-  *  @var response::headers
+  *  @var Response::headers
   *  Member 'headers' contains the HTTP response headers
   */
 typedef struct {

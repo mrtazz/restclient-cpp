@@ -31,36 +31,64 @@ class Connection {
       *  @struct RequestInfo
       *  @brief holds some diagnostics information
       *  about a request
+      *  @var RequestInfo::totalTime
+      *  Member 'totalTime' contains the total time of the last request in
+      *  seconds Total time of previous transfer. See CURLINFO_TOTAL_TIME
+      *  @var RequestInfo::nameLookupTime
+      *  Member 'nameLookupTime' contains the time spent in DNS lookup in
+      *  seconds Time from start until name resolving completed. See
+      *  CURLINFO_NAMELOOKUP_TIME
+      *  @var RequestInfo::connectTime
+      *  Member 'connectTime' contains the time it took until Time from start
+      *  until remote host or proxy completed. See CURLINFO_CONNECT_TIME
+      *  @var RequestInfo::appConnectTime
+      *  Member 'appConnectTime' contains the time from start until SSL/SSH
+      *  handshake completed. See CURLINFO_APPCONNECT_TIME
+      *  @var RequestInfo::preTransferTime
+      *  Member 'preTransferTime' contains the total time from start until
+      *  just before the transfer begins. See CURLINFO_PRETRANSFER_TIME
+      *  @var RequestInfo::startTransferTime
+      *  Member 'startTransferTime' contains the total time from start until
+      *  just when the first byte is received. See CURLINFO_STARTTRANSFER_TIME
+      *  @var RequestInfo::redirectTime
+      *  Member 'redirectTime' contains the total time taken for all redirect
+      *  steps before the final transfer. See CURLINFO_REDIRECT_TIME
+      *  @var RequestInfo::redirectCount
+      *  Member 'redirectCount' contains the number of redirects followed. See
+      *  CURLINFO_REDIRECT_COUNT
       */
     typedef struct {
-        // total time of the last request in seconds Total time of previous
-        // transfer. See CURLINFO_TOTAL_TIME
         double totalTime;
-        // time spent in DNS lookup in seconds Time from start until name
-        // resolving completed. See CURLINFO_NAMELOOKUP_TIME
         double nameLookupTime;
-        // time it took until Time from start until remote host or proxy
-        // completed. See CURLINFO_CONNECT_TIME
         double connectTime;
-        // Time from start until SSL/SSH handshake completed. See
-        // CURLINFO_APPCONNECT_TIME
         double appConnectTime;
-        // Time from start until just before the transfer begins. See
-        // CURLINFO_PRETRANSFER_TIME
         double preTransferTime;
-        // Time from start until just when the first byte is received. See
-        // CURLINFO_STARTTRANSFER_TIME
         double startTransferTime;
-        // Time taken for all redirect steps before the final transfer. See
-        // CURLINFO_REDIRECT_TIME
         double redirectTime;
-        // number of redirects followed. See CURLINFO_REDIRECT_COUNT
         int redirectCount;
       } RequestInfo;
     /**
       *  @struct Info
       *  @brief holds some diagnostics information
       *  about the connection object it came from
+      *  @var Info::baseUrl
+      *  Member 'baseUrl' contains the base URL for the connection object
+      *  @var Info::headers
+      *  Member 'headers' contains the HeaderFields map
+      *  @var Info::timeout
+      *  Member 'timeout' contains the configured timeout
+      *  @var Info::followRedirects
+      *  Member 'followRedirects' contains whether or not to follow redirects
+      *  @var Info::basicAuth
+      *  Member 'basicAuth' contains information about basic auth
+      *  @var basicAuth::username
+      *  Member 'username' contains the basic auth username
+      *  @var basicAuth::password
+      *  Member 'password' contains the basic auth password
+      *  @var Info::customUserAgent
+      *  Member 'customUserAgent' contains the custom user agent
+      *  @var Info::lastRequest
+      *  Member 'lastRequest' contains metrics about the last request
       */
     typedef struct {
       std::string baseUrl;

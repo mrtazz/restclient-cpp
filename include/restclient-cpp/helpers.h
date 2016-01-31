@@ -25,12 +25,12 @@ namespace RestClient {
   */
 namespace Helpers {
 
-  /** @struct upload_object
+  /** @struct UploadObject
     *  @brief This structure represents the payload to upload on POST
     *  requests
-    *  @var upload_object::data
+    *  @var UploadObject::data
     *  Member 'data' contains the data to upload
-    *  @var upload_object::length
+    *  @var UploadObject::length
     *  Member 'length' contains the length of the data to upload
     */
   typedef struct {

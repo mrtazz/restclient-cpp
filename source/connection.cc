@@ -18,6 +18,12 @@
 #include "restclient-cpp/helpers.h"
 #include "restclient-cpp/version.h"
 
+/**
+ * @brief constructor for the Connection object
+ *
+ * @param baseUrl - base URL for the connection to use
+ *
+ */
 RestClient::Connection::Connection(const std::string baseUrl)
                                : lastRequest(), headerFields() {
   this->curlHandle = curl_easy_init();
@@ -128,7 +134,7 @@ RestClient::Connection::GetUserAgent() {
 /**
  * @brief set timeout for connection
  *
- * @param timeout in seconds
+ * @param seconds - timeout in seconds
  *
  */
 void
@@ -270,7 +276,6 @@ RestClient::Connection::get(const std::string& url) {
  * @brief HTTP POST method
  *
  * @param url to query
- * @param ctype content type as string
  * @param data HTTP POST body
  *
  * @return response struct
@@ -290,7 +295,6 @@ RestClient::Connection::post(const std::string& url,
  * @brief HTTP PUT method
  *
  * @param url to query
- * @param ctype content type as string
  * @param data HTTP PUT body
  *
  * @return response struct

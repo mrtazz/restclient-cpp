@@ -65,7 +65,7 @@ size_t RestClient::Helpers::header_callback(void *data, size_t size,
 /**
  * @brief read callback function for libcurl
  *
- * @param pointer of max size (size*nmemb) to write data to
+ * @param data pointer of max size (size*nmemb) to write data to
  * @param size size parameter
  * @param nmemb memblock parameter
  * @param userdata pointer to user data to read data from

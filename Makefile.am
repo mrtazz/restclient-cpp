@@ -28,7 +28,7 @@ valgrind: check
 	valgrind --leak-check=full --error-exitcode=0 ./test-program
 
 lint:
-	./utils/cpplint.py --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc
+	cpplint --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc
 
 ci: lint test valgrind
 

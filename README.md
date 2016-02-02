@@ -23,19 +23,19 @@ verbs:
 ```cpp
 #include "restclient-cpp/restclient.h"
 
-RestClient::response r = RestClient::get("http://url.com")
-RestClient::response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = RestClient::del("http://url.com/delete")
+RestClient::Response r = RestClient::get("http://url.com")
+RestClient::Response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::del("http://url.com/delete")
 ```
 
-The response is of type [RestClient::response][restclient_response] and has
+The response is of type [RestClient::Response][restclient_response] and has
 three attributes:
 
 ```cpp
-RestClient::response.code // HTTP response code
-RestClient::response.body // HTTP response body
-RestClient::response.headers // HTTP response headers
+RestClient::Response.code // HTTP response code
+RestClient::Response.body // HTTP response body
+RestClient::Response.headers // HTTP response headers
 ```
 
 ### Advanced Usage
@@ -72,10 +72,10 @@ conn->SetHeaders(headers)
 // append additional headers
 conn->AppendHeader("X-MY-HEADER", "foo")
 
-RestClient::response r = conn->get("/get")
-RestClient::response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
-RestClient::response r = conn->del("/delete")
+RestClient::Response r = conn->get("/get")
+RestClient::Response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->del("/delete")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it
@@ -86,9 +86,9 @@ The responses are again of type [RestClient::response][restclient_response]
 and have three attributes:
 
 ```cpp
-RestClient::response.code // HTTP response code
-RestClient::response.body // HTTP response body
-RestClient::response.headers // HTTP response headers
+RestClient::Response.code // HTTP response code
+RestClient::Response.body // HTTP response body
+RestClient::Response.headers // HTTP response headers
 ```
 
 The connection object also provides a simple way to get some diagnostics and

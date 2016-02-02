@@ -25,7 +25,7 @@ test: check
 	./test-program
 
 valgrind: check
-	valgrind --leak-check=full --error-exitcode=0 ./test-program
+	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
 lint:
 	cpplint --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc

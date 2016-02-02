@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS=-I m4
 CPPFLAGS=-Iinclude
 check_PROGRAMS = test-program
-pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h
+pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h include/restclient-cpp/connection.h include/restclient-cpp/helpers.h
 BUILT_SOURCES = include/restclient-cpp/version.h
 
 test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/tests.cpp test/test_restclient.cc test/test_connection.cc

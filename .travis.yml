@@ -1,12 +1,14 @@
 language: cpp
 script:
   - ./autogen.sh && ./configure --enable-coverage
-  - make test
-  - make valgrind
+  - make ci
 install:
 - gem install fpm
 - gem install package_cloud
 before_script:
+- curl https://raw.githubusercontent.com/google/styleguide/gh-pages/cpplint/cpplint.py -o cpplint
+- chmod +x cpplint
+- export PATH=$PATH:`pwd`
 - ./utils/build_gtest.sh
 - gem install coveralls-lcov
 after_success:

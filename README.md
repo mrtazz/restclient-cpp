@@ -82,7 +82,7 @@ RestClient::Response r = conn->del("/delete")
 RestClient::disable();
 ```
 
-The responses are again of type [RestClient::response][restclient_response]
+The responses are again of type [RestClient::Response][restclient_response]
 and have three attributes:
 
 ```cpp
@@ -182,4 +182,4 @@ merged as fast as possible.
 [contributing]: https://github.com/mrtazz/restclient-cpp/blob/master/CONTRIBUTING.md
 [curl_keepalive]: http://curl.haxx.se/docs/faq.html#What_about_Keep_Alive_or_persist
 [curl_threadsafety]: http://curl.haxx.se/libcurl/c/threadsafe.html
-[restclient_response]: http://code.mrtazz.com/restclient-cpp/ref/struct_rest_client_1_1response.html
+[restclient_response]: http://code.mrtazz.com/restclient-cpp/ref/struct_rest_client_1_1_response.html

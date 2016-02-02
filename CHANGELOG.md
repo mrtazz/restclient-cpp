@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.1 (2nd February 2016)
+- fix package build to include new header files from refactoring
+
 ## v0.4.0 (2nd February 2016)
 
 ### Features

@@ -93,7 +93,7 @@ RestClient::response.headers // HTTP response headers
 
 The connection object also provides a simple way to get some diagnostics and
 metrics information via `conn->GetInfo()`. The result is a
-`RestClient::ConnectionInfo` struct and looks like this:
+`RestClient::Connection::Info` struct and looks like this:
 
 ```cpp
 typedef struct {
@@ -135,7 +135,7 @@ typedef struct {
 
 #### Persistent connections/Keep-Alive
 The connection object stores the curl easy handle in an instance variable and
-uses that for lifetime of the object. This means curl will [automatically
+uses that for the lifetime of the object. This means curl will [automatically
 reuse connections][curl_keepalive] made with that handle.
 
 

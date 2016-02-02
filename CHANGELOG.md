@@ -1,6 +1,24 @@
 # Changelog
 
-## v0.4.0 (???)
+## v0.4.0 (2nd February 2016)
+
+### Features
+**This is a major backwards-incompatible API refactor please read carefully**
+
+- split out into a simple and an advanced API
+  - simple API via static methods
+  - advanced usage via a connection object
+- support for custom user agent strings
+- support for connection pooling and keep-alive
+- support for following redirects
+- support for getting request metrics from the Connection object
+
+### Improvements and fixes
+- increased test coverage
+- addition of valgrind and lint runs on CI
+- fixed some memory leaks
+- improved documentation coverage
+
 
 ## v0.3.0 (10th January 2016)
 

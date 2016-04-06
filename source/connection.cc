@@ -119,7 +119,6 @@ RestClient::Connection::SetUserAgent(const std::string& userAgent) {
 
 /**
  * @brief set custom Certificate Authority (CA) path
- * default restclient-cpp/RESTCLIENT_VERSION string
  *
  * @param caInfo - The path to a file holding the certificates used to
  * verify the peer with. See CURLOPT_CAINFO

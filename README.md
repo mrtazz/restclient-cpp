@@ -43,13 +43,14 @@ However if you want more sophisticated features like connection reuse,
 timeouts or authentication, there is also a different, more configurable way.
 
 ```cpp
+#include "restclient-cpp/connection.h"
 #include "restclient-cpp/restclient.h"
 
 // initialize RestClient
 RestClient::init();
 
 // get a connection object
-RestClient::Connection conn = new RestClient::Connection("http://url.com");
+RestClient::Connection conn* = new RestClient::Connection("http://url.com");
 
 // configure basic auth
 conn->SetBasicAuth("WarMachine68", "WARMACHINEROX");

@@ -31,6 +31,8 @@ RestClient::Connection::Connection(const std::string baseUrl)
     throw std::runtime_error("Couldn't initialize curl handle");
   }
   this->baseUrl = baseUrl;
+  this->timeout = 0;
+  this->followRedirects = false;
 }
 
 RestClient::Connection::~Connection() {

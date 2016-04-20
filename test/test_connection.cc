@@ -42,7 +42,7 @@ TEST_F(ConnectionTest, TestTimeout)
 TEST_F(ConnectionTest, TestFailForInvalidCA)
 {
   // set a non-existing file for the CA file and it should fail to verify the peer
-  conn->SetCAInfo("non-existent file");
+  conn->SetCAInfoFilePath("non-existent file");
   RestClient::Response res = conn->get("/get");
 
   EXPECT_EQ("Failed to query.", res.body);

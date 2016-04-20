@@ -43,6 +43,7 @@ However if you want more sophisticated features like connection reuse,
 timeouts or authentication, there is also a different, more configurable way.
 
 ```cpp
+#include "restclient-cpp/connection.h"
 #include "restclient-cpp/restclient.h"
 
 // initialize RestClient

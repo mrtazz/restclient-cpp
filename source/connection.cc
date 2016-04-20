@@ -120,6 +120,18 @@ RestClient::Connection::SetUserAgent(const std::string& userAgent) {
 }
 
 /**
+ * @brief set custom Certificate Authority (CA) path
+ *
+ * @param caInfoFilePath - The path to a file holding the certificates used to
+ * verify the peer with. See CURLOPT_CAINFO
+ *
+ */
+void
+RestClient::Connection::SetCAInfoFilePath(const std::string& caInfoFilePath) {
+  this->caInfoFilePath = caInfoFilePath;
+}
+
+/**
  * @brief get the user agent to add to the request
  *
  * @return user agent as std::string
@@ -224,6 +236,11 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   // set follow redirect
   if (this->followRedirects == true) {
     curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
+  }
+  // if provided, supply CA path
+  if (!this->caInfoFilePath.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_CAINFO,
+                     this->caInfoFilePath.c_str());
   }
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {

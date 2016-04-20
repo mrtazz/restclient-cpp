@@ -39,6 +39,16 @@ TEST_F(ConnectionTest, TestTimeout)
   EXPECT_EQ(28, res.code);
 }
 
+TEST_F(ConnectionTest, TestFailForInvalidCA)
+{
+  // set a non-existing file for the CA file and it should fail to verify the peer
+  conn->SetCAInfoFilePath("non-existent file");
+  RestClient::Response res = conn->get("/get");
+
+  EXPECT_EQ("Failed to query.", res.body);
+  EXPECT_EQ(-1, res.code);
+}
+
 TEST_F(ConnectionTest, TestDefaultUserAgent)
 {
   RestClient::Response res = conn->get("/get");

@@ -122,6 +122,10 @@ class Connection {
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
     void SetUserAgent(const std::string& userAgent);
 
+    // set the Certificate Authority (CA) Info which is the path to file holding
+    // certificates to be used to verify peers. See CURLOPT_CAINFO
+    void SetCAInfoFilePath(const std::string& caInfoFilePath);
+
     std::string GetUserAgent();
 
     RestClient::Connection::Info GetInfo();
@@ -156,6 +160,7 @@ class Connection {
       std::string password;
     } basicAuth;
     std::string customUserAgent;
+    std::string caInfoFilePath;
     RequestInfo lastRequest;
     RestClient::Response performCurlRequest(const std::string& uri);
 };

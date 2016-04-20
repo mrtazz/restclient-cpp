@@ -50,7 +50,7 @@ timeouts or authentication, there is also a different, more configurable way.
 RestClient::init();
 
 // get a connection object
-RestClient::Connection conn* = new RestClient::Connection("http://url.com");
+RestClient::Connection* conn = new RestClient::Connection("http://url.com");
 
 // configure basic auth
 conn->SetBasicAuth("WarMachine68", "WARMACHINEROX");
@@ -72,6 +72,9 @@ conn->SetHeaders(headers)
 
 // append additional headers
 conn->AppendHeader("X-MY-HEADER", "foo")
+
+// if using a non-standard Certificate Authority (CA) trust file
+conn->SetCAInfoFilePath("/etc/custom-ca.crt")
 
 RestClient::Response r = conn->get("/get")
 RestClient::Response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")

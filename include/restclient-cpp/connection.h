@@ -124,7 +124,7 @@ class Connection {
 
     // set the Certificate Authority (CA) Info which is the path to file holding
     // certificates to be used to verify peers. See CURLOPT_CAINFO
-    void SetCAInfo(const std::string& caInfo);
+    void SetCAInfoFilePath(const std::string& caInfoFilePath);
 
     std::string GetUserAgent();
 
@@ -160,7 +160,7 @@ class Connection {
       std::string password;
     } basicAuth;
     std::string customUserAgent;
-    std::string caInfo;
+    std::string caInfoFilePath;
     RequestInfo lastRequest;
     RestClient::Response performCurlRequest(const std::string& uri);
 };

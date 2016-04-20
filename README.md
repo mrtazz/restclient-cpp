@@ -74,7 +74,7 @@ conn->SetHeaders(headers)
 conn->AppendHeader("X-MY-HEADER", "foo")
 
 // if using a non-standard Certificate Authority (CA) trust file
-conn->SetCAInfo("/etc/custom-ca.crt")
+conn->SetCAInfoFilePath("/etc/custom-ca.crt")
 
 RestClient::Response r = conn->get("/get")
 RestClient::Response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")

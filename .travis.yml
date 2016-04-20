@@ -1,4 +1,7 @@
 language: cpp
+compiler:
+  - gcc
+  - clang
 script:
   - ./autogen.sh && ./configure --enable-coverage
   - make ci

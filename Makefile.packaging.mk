@@ -12,6 +12,7 @@ PROJECT_URL="https://github.com/mrtazz/$(NAME)"
 FPM_FLAGS= --name $(NAME) --version $(VERSION) --iteration $(PKG_RELEASE) \
            --epoch 1 --license MIT --maintainer "$(BUILDER)" --url $(PROJECT_URL) \
            --vendor mrtazz --description "C++ client for making HTTP/REST requests" \
+           --after-install utils/runldconfig.sh --after-remove utils/runldconfig.sh \
            --depends curl usr
 
 rpm:

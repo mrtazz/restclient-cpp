@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.4 (13th May 2016)
+- bump version because v0.4.3 was mistagged
+
+## v0.4.3 (13th May 2016)
+- only release packages from gcc builds (Daniel Schauenberg)
+
 ## v0.4.2 (13th May 2016)
 - add an ldconfig script to package builds (Daniel Schauenberg)
 - Add option to set the Certificate Authority (CA) Info option. (tgoetze)

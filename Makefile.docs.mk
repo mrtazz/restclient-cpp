@@ -11,7 +11,7 @@ jekyll:
 	echo "gaugesid: $(GAUGES_CODE)" > docs/_config.yml
 	echo "projecturl: $(PROJECT_URL)" >> docs/_config.yml
 	echo "basesite: http://www.unwiredcouch.com" >> docs/_config.yml
-	echo "markdown: redcarpet" >> docs/_config.yml
+	echo "markdown: kramdown" >> docs/_config.yml
 	echo "---" > docs/index.md
 	echo "layout: project" >> docs/index.md
 	echo "title: $(NAME)" >> docs/index.md

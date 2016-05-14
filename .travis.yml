@@ -35,6 +35,7 @@ deploy:
   script: ./autogen.sh && ./configure --prefix=`pwd`/usr && make deploy-packages
   on:
     tags: true
+    condition: $CXX = g++
 env:
   global:
   - secure: i+h0SxjrHCfvoaXCJ1b+tK0vvNgoLq7Xl/eh34tb3QokacWO+piyLcbSxvz0IcE50ye0x8CyMn2hyyGCgzwHDgaUCmkILS+3y+9E7FC4nYwLvi2mJ2Q9DI1Q5aXhcMXiEYb9b1LjrorUdgs6DcfJVq7ZSU3CawKU/uBtKfC39iQ=

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.4.2 (13th May 2016)
+- add an ldconfig script to package builds (Daniel Schauenberg)
+- Add option to set the Certificate Authority (CA) Info option. (tgoetze)
+- add clang to the travis build matrix (Daniel Schauenberg)
+- README: Update Advanced Example (Marc Zych)
+- Connection: Initialize timeout and followRedirects (Marc Zych)
+
 ## v0.4.1 (2nd February 2016)
 - fix package build to include new header files from refactoring
 

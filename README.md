@@ -165,6 +165,13 @@ thread-safe**.
 
 ## Installation
 There are some packages available for Linux on [packagecloud][packagecloud].
+And for OSX you can get it from the mrtazz/oss homebrew tap:
+
+```bash
+brew tap mrtazz/oss
+brew install restclient-cpp
+```
+
 Otherwise you can do the regular autotools dance:
 
 ```bash

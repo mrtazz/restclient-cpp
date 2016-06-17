@@ -99,6 +99,10 @@ class Connection {
         std::string username;
         std::string password;
       } basicAuth;
+
+      std::string certPath;
+      std::string certType;
+      std::string keyPath;
       std::string customUserAgent;
       RequestInfo lastRequest;
     } Info;
@@ -125,6 +129,15 @@ class Connection {
     // set the Certificate Authority (CA) Info which is the path to file holding
     // certificates to be used to verify peers. See CURLOPT_CAINFO
     void SetCAInfoFilePath(const std::string& caInfoFilePath);
+
+    // set CURLOPT_SSLCERT
+    void SetCertPath(const std::string& cert);
+
+    // set CURLOPT_SSLCERTTYPE
+    void SetCertType(const std::string& type);
+
+    // set CURLOPT_SSLKEY. Default format is PEM
+    void SetKeyPath(const std::string& keyPath);
 
     std::string GetUserAgent();
 
@@ -162,6 +175,9 @@ class Connection {
     std::string customUserAgent;
     std::string caInfoFilePath;
     RequestInfo lastRequest;
+    std::string certPath;
+    std::string certType;
+    std::string keyPath;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

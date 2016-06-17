@@ -60,6 +60,10 @@ RestClient::Connection::GetInfo() {
   ret.customUserAgent = this->customUserAgent;
   ret.lastRequest = this->lastRequest;
 
+  ret.certPath = this->certPath;
+  ret.certType = this->certType;
+  ret.keyPath = this->keyPath;
+
   return ret;
 }
 
@@ -175,6 +179,21 @@ RestClient::Connection::SetBasicAuth(const std::string& username,
   this->basicAuth.password = password;
 }
 
+void
+RestClient::Connection::SetCertPath(const std::string& cert) {
+  this->certPath = cert;
+}
+
+void
+RestClient::Connection::SetCertType(const std::string& certType) {
+  this->certType = certType;
+}
+
+void
+RestClient::Connection::SetKeyPath(const std::string& keyPath) {
+  this->keyPath = keyPath;
+}
+
 /**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
@@ -247,14 +266,38 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     curl_easy_setopt(this->curlHandle, CURLOPT_CAINFO,
                      this->caInfoFilePath.c_str());
   }
+
+  // set cert file path
+  if (!this->certPath.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_SSLCERT,
+                     this->certPath.c_str());
+  }
+
+  // set cert type
+  if (!this->certType.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_SSLCERTTYPE,
+                     this->certType.c_str());
+  }
+  // set key file path
+  if (!this->keyPath.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_SSLKEY,
+                     this->keyPath.c_str());
+  }
+
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {
-    if (res == CURLE_OPERATION_TIMEDOUT) {
-      ret.code = res;
-      ret.body = "Operation Timeout.";
-    } else {
-      ret.body = "Failed to query.";
-      ret.code = -1;
+    switch (res) {
+      case CURLE_OPERATION_TIMEDOUT:
+        ret.code = res;
+        ret.body = "Operation Timeout.";
+        break;
+      case CURLE_SSL_CERTPROBLEM:
+        ret.code = res;
+        ret.body = curl_easy_strerror(res);
+        break;
+      default:
+        ret.body = "Failed to query.";
+        ret.code = -1;
     }
   } else {
     int64_t http_code = 0;

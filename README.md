@@ -77,9 +77,12 @@ conn->AppendHeader("X-MY-HEADER", "foo")
 conn->SetCAInfoFilePath("/etc/custom-ca.crt")
 
 RestClient::Response r = conn->get("/get")
-RestClient::Response r = conn->post("/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::Response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = conn->del("/delete")
+
+// set different content header for POST and PUT
+conn->AppendHeader("Content-Type", "text/json")
+RestClient::Response r = conn->post("/post", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it

@@ -59,6 +59,6 @@ Response put(const std::string& url,
               const std::string& data);
 Response del(const std::string& url);
 
-};  // namespace RestClient
+}  // namespace RestClient
 
 #endif  // INCLUDE_RESTCLIENT_CPP_RESTCLIENT_H_

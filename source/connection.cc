@@ -268,7 +268,7 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
                      this->certPath.c_str());
   }
 
-  // set cert type 
+  // set cert type
   if (!this->certType.empty()) {
     curl_easy_setopt(this->curlHandle, CURLOPT_SSLCERTTYPE,
                      this->certType.c_str());

@@ -182,3 +182,18 @@ TEST_F(ConnectionTest, TestGetInfoFromRedirect)
   EXPECT_NE(0, info.lastRequest.redirectTime);
   EXPECT_NE(0, info.lastRequest.redirectCount);
 }
+
+TEST_F(ConnectionTest, TestHeadHeaders)
+{
+  RestClient::HeaderFields headers;
+  headers["Foo"] = "bar";
+  headers["Bla"] = "lol";
+  conn->SetHeaders(headers);
+  RestClient::Response res = conn->head("/headers");
+  EXPECT_EQ(200, res.code);
+  EXPECT_EQ("", res.body);
+
+  RestClient::HeaderFields headers_returned = conn->GetHeaders();
+  EXPECT_EQ("bar", headers_returned["Foo"]);
+  EXPECT_EQ("lol", headers_returned["Bla"]);
+}

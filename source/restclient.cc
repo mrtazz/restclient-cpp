@@ -108,3 +108,17 @@ RestClient::Response RestClient::del(const std::string& url) {
   return ret;
 }
 
+/**
+ * @brief HTTP HEAD method
+ *
+ * @param url to query
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::head(const std::string& url) {
+  RestClient::Response ret;
+  RestClient::Connection *conn = new RestClient::Connection("");
+  ret = conn->head(url);
+  delete conn;
+  return ret;
+}

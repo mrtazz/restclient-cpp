@@ -358,3 +358,21 @@ RestClient::Connection::del(const std::string& url) {
   return this->performCurlRequest(url);
 }
 
+/**
+ * @brief HTTP HEAD method
+ *
+ * @param url to query
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::head(const std::string& url) {
+    /** we want HTTP HEAD */
+    const char* http_head = "HEAD";
+
+    /** set HTTP HEAD METHOD */
+    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_head);
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
+
+    return this->performCurlRequest(url);
+}

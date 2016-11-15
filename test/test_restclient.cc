@@ -164,3 +164,9 @@ TEST_F(RestClientTest, TestRestClientAuth)
   res = RestClient::get("http://httpbin.org/basic-auth/foo/bar");
   EXPECT_EQ(401, res.code);
 }
+TEST_F(RestClientTest, TestRestClientHeadCode)
+{
+  RestClient::Response res = RestClient::head("http://httpbin.org/get");
+  EXPECT_EQ(200, res.code);
+  EXPECT_EQ("", res.body);
+}

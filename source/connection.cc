@@ -196,10 +196,41 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   /** set query URL */
   curl_easy_setopt(this->curlHandle, CURLOPT_URL, url.c_str());
   /** set callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEFUNCTION,
-                   Helpers::write_callback);
-  /** set data object to pass to callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEDATA, &ret);
+  // stream downloads to files instead of keeping them in memory
+  if (!this->outputFileName.empty()) {
+    // make the output go to a file
+    outFile = fopen(this->outputFileName.c_str(), "w");
+    if (outFile == NULL) {
+      ret.body = "Failed to open output file '" + this->outputFileName + "'.";
+      ret.code = - CURLE_WRITE_ERROR;
+      return ret;
+    }
+    curl_easy_setopt(this->curlHandle, CURLOPT_WRITEDATA, outFile);
+  } else {
+    // accumulate output in memory
+    curl_easy_setopt(this->curlHandle, CURLOPT_WRITEFUNCTION,
+            Helpers::write_callback);
+    /** set data object to pass to callback function */
+    curl_easy_setopt(this->curlHandle, CURLOPT_WRITEDATA, &ret);
+  }
+  // stream uploads from files instead of keeping them in memory
+  if (!this->inputFileName.empty()) {
+    // post data from a file
+    inFile = fopen(this->inputFileName.c_str(), "r");
+    if (inFile == NULL) {
+        ret.body = "Failed to open input file '" + this->inputFileName + "'.";
+        ret.code = - CURLE_READ_ERROR;
+        return ret;
+    }
+    // get file size
+    fseek(inFile, 0L, SEEK_END);
+    auto fsize = ftell(inFile);
+    rewind(inFile);
+    curl_easy_setopt(this->curlHandle, CURLOPT_READDATA, inFile);
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDS, NULL);
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDSIZE, fsize);
+  }
+
   /** set the header callback function */
   curl_easy_setopt(this->curlHandle, CURLOPT_HEADERFUNCTION,
                    Helpers::header_callback);
@@ -244,12 +275,11 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   }
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {
+    ret.code = - res; // use negative curl error code as response code
     if (res == CURLE_OPERATION_TIMEDOUT) {
-      ret.code = res;
       ret.body = "Operation Timeout.";
     } else {
-      ret.body = "Failed to query.";
-      ret.code = -1;
+      ret.body = "Failed to query; curl error code: " + std::to_string(res);
     }
   } else {
     int64_t http_code = 0;
@@ -277,6 +307,21 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   curl_slist_free_all(headerList);
   // reset curl handle
   curl_easy_reset(this->curlHandle);
+
+  // close output file if necessary
+  if (!this->outputFileName.empty() && outFile != NULL) {
+      fclose(outFile);
+  }
+  this->outputFileName = "";
+  // close input file if necessary
+  if (!this->inputFileName.empty() && inFile != NULL) {
+      fclose(inFile);
+  }
+  this->inputFileName = "";
+
+  // clear the progress callback
+  this->progressCallback = nullptr;
+
   return ret;
 }
 
@@ -356,5 +401,49 @@ RestClient::Connection::del(const std::string& url) {
   curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_delete);
 
   return this->performCurlRequest(url);
+}
+
+/**
+ * @brief Redirects response body to a file instead of keeping it in memory.
+ * Useful for fetching files.
+ *
+ * @param outputFileName path to the output file
+ */
+void RestClient::Connection::OutputToFile(const std::string &outputFileName) {
+  this->outputFileName = outputFileName;
+}
+
+/**
+ * @brief Reads the request body from a file instead of keeping it in memory.
+ * Useful for uploading files.
+ *
+ * @param outputFileName path to the input file
+ */
+void RestClient::Connection::InputFromFile(const std::string &inputFileName) {
+  this->inputFileName = inputFileName;
+}
+
+/**
+ * @brief Sets a proxy for debugging requests and disables SSL certificate verification.
+ * Should be used only for debugging!
+ *
+ * @param proxyUrl proxy URL
+ */
+void RestClient::Connection::UseDebugProxy(const std::string &proxyUrl) {
+  curl_easy_setopt(this->curlHandle, CURLOPT_PROXY, proxyUrl.c_str());
+  // for debug only!! disable SSL certificate verification
+  curl_easy_setopt(this->curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+}
+
+/**
+ * @brief Installs a progress callback function.
+ *
+ * @param callback the callback function
+ */
+void RestClient::Connection::SetProgressCallback(RestClient::ProgressCallback && callback) {
+  progressCallback = std::move(callback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_XFERINFOFUNCTION, RestClient::Helpers::progress_callback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_XFERINFODATA, &progressCallback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_NOPROGRESS, 0L);
 }
 

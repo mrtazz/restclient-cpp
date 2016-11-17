@@ -3,6 +3,8 @@
 #include <gtest/gtest.h>
 #include <json/json.h>
 #include <string>
+#include <fstream>
+#include <cstdio>
 
 class ConnectionTest : public ::testing::Test
 {
@@ -36,7 +38,7 @@ TEST_F(ConnectionTest, TestTimeout)
   std::string uri = "/delay/5";
   conn->SetTimeout(2);
   RestClient::Response res = conn->get(uri);
-  EXPECT_EQ(28, res.code);
+  EXPECT_EQ(-CURLE_OPERATION_TIMEDOUT, res.code);
 }
 
 TEST_F(ConnectionTest, TestFailForInvalidCA)
@@ -45,8 +47,8 @@ TEST_F(ConnectionTest, TestFailForInvalidCA)
   conn->SetCAInfoFilePath("non-existent file");
   RestClient::Response res = conn->get("/get");
 
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ("Failed to query; curl error code: 77", res.body);
+  EXPECT_EQ(-CURLE_SSL_CACERT_BADFILE, res.code);
 }
 
 TEST_F(ConnectionTest, TestDefaultUserAgent)
@@ -182,3 +184,188 @@ TEST_F(ConnectionTest, TestGetInfoFromRedirect)
   EXPECT_NE(0, info.lastRequest.redirectTime);
   EXPECT_NE(0, info.lastRequest.redirectCount);
 }
+
+TEST_F(ConnectionTest, TestPostToFile)
+{
+  std::string testFile = "outfile";
+  remove(testFile.c_str()); // make sure we have a clean setup
+  conn->OutputToFile(testFile);
+  RestClient::Response res = conn->post("/post", "data");
+  EXPECT_EQ(200, res.code);
+  // the response body should be empty
+  EXPECT_TRUE(res.body.empty());
+  // the response should be in the file
+  Json::Value root;
+  std::fstream str(testFile, std::ios::in);
+  str >> root;
+  EXPECT_EQ("https://httpbin.org/post", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
+  // clean up
+  remove(testFile.c_str());
+}
+
+TEST_F(ConnectionTest, TestPostToFileError)
+{
+  std::string testFile = "/no/such/path/exists!/";
+  conn->OutputToFile(testFile);
+  RestClient::Response res = conn->post("/post", "data");
+  EXPECT_EQ(-CURLE_WRITE_ERROR, res.code);
+}
+
+
+TEST_F(ConnectionTest, TestGetToFile)
+{
+  std::string testFile = "outfile";
+  remove(testFile.c_str()); // make sure we have a clean setup
+  conn->OutputToFile(testFile);
+  RestClient::Response res = conn->get("/get");
+  EXPECT_EQ(200, res.code);
+  // the response body should be empty
+  EXPECT_TRUE(res.body.empty());
+  // the response should be in the file
+  Json::Value root;
+  std::fstream str(testFile, std::ios::in);
+  str >> root;
+  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
+  // clean up
+  remove(testFile.c_str());
+}
+
+TEST_F(ConnectionTest, TestGetToFileProgress)
+{
+  std::string testFile = "outfile";
+  remove(testFile.c_str()); // make sure we have a clean setup
+  conn->OutputToFile(testFile);
+  // add a progress callback
+  long long int lastDownloadedBytes = 0;
+  conn->SetProgressCallback([&lastDownloadedBytes](long long totalDownloadBytes, long long downloadedBytes, long long totalUploadBytes, long long uploadedBytes) mutable {
+    // the progress should be increasing
+    EXPECT_TRUE(downloadedBytes >= lastDownloadedBytes);
+    lastDownloadedBytes = downloadedBytes;
+  });
+  RestClient::Response res = conn->get("/image/png");
+  EXPECT_EQ(200, res.code);
+  // check whether the progress reached the total file size
+  EXPECT_EQ(8090, lastDownloadedBytes);
+  // clean up
+  remove(testFile.c_str());
+}
+
+TEST_F(ConnectionTest, TestPutToFile)
+{
+  std::string testFile = "outfile";
+  remove(testFile.c_str()); // make sure we have a clean setup
+  conn->OutputToFile(testFile);
+  RestClient::Response res = conn->put("/put", "data");
+  EXPECT_EQ(200, res.code);
+  // the response body should be empty
+  EXPECT_TRUE(res.body.empty());
+  // the response should be in the file
+  Json::Value root;
+  std::fstream str(testFile, std::ios::in);
+  str >> root;
+  EXPECT_EQ("https://httpbin.org/put", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
+  // clean up
+  remove(testFile.c_str());
+}
+
+TEST_F(ConnectionTest, TestPostFromFile)
+{
+  std::string testFile = "test/testdata.txt";
+  conn->AppendHeader("Content-Type", "text/text");
+  conn->InputFromFile(testFile);
+  RestClient::Response res = conn->post("/post", "");
+  EXPECT_EQ(200, res.code);
+  // get the test data from file
+  std::ifstream fstr(testFile);
+  std::stringstream buffer;
+  buffer << fstr.rdbuf();
+  std::string testData = buffer.str();
+  // check response
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+  EXPECT_EQ(testData, root.get("data", "no data set").asString());
+  EXPECT_EQ("https://httpbin.org/post", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no user agent set").asString());
+}
+
+TEST_F(ConnectionTest, TestPostFromFileError)
+{
+  std::string testFile = "no-such-file";
+  conn->AppendHeader("Content-Type", "text/text");
+  conn->InputFromFile(testFile);
+  RestClient::Response res = conn->post("/post", "");
+  EXPECT_EQ(-CURLE_READ_ERROR, res.code);
+}
+
+TEST_F(ConnectionTest, TestPostFromFileProgress)
+{
+  std::string testFile = "test/testdata.txt";
+  conn->InputFromFile(testFile);
+  // add a progress callback
+  long long int lastUploadedBytes = 0;
+  conn->SetProgressCallback([&lastUploadedBytes](long long totalDownloadBytes, long long downloadedBytes, long long totalUploadBytes, long long uploadedBytes) mutable {
+    // the progress should be increasing
+    EXPECT_TRUE(uploadedBytes >= lastUploadedBytes);
+    lastUploadedBytes = uploadedBytes;
+  });
+  RestClient::Response res = conn->post("/post", "");
+  EXPECT_EQ(200, res.code);
+  // get the test data size
+  std::ifstream fstr(testFile, std::ifstream::ate | std::ifstream::binary);
+  long dataSize = fstr.tellg();
+  // check whether the progress reached the upload size
+  EXPECT_EQ(dataSize, lastUploadedBytes);
+}
+
+TEST_F(ConnectionTest, TestPutFromFile)
+{
+  std::string testFile = "test/testdata.txt";
+  conn->InputFromFile(testFile);
+  RestClient::Response res = conn->put("/put", "");
+  EXPECT_EQ(200, res.code);
+  // get the test data from file
+  std::ifstream fstr(testFile);
+  std::stringstream buffer;
+  buffer << fstr.rdbuf();
+  std::string testData = buffer.str();
+  // check response
+  Json::Value root;
+  std::istringstream str(res.body);
+  str >> root;
+  EXPECT_EQ(testData, root.get("data", "no data set").asString());
+  EXPECT_EQ("https://httpbin.org/put", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no user agent set").asString());
+}
+
+TEST_F(ConnectionTest, TestPostFromFileToFile)
+{
+  std::string testInFile = "test/testdata.txt";
+  conn->AppendHeader("Content-Type", "text/text");
+  conn->InputFromFile(testInFile);
+  std::string testOutFile = "outfile";
+  remove(testOutFile.c_str()); // make sure we have a clean setup
+  conn->OutputToFile(testOutFile);
+  RestClient::Response res = conn->post("/post", "");
+  EXPECT_EQ(200, res.code);
+  // get the test data from file
+  std::ifstream fstr(testInFile);
+  std::stringstream buffer;
+  buffer << fstr.rdbuf();
+  std::string testData = buffer.str();
+  // check response
+  EXPECT_TRUE(res.body.empty());
+  // the response should be in the file
+  Json::Value root;
+  std::fstream str(testOutFile, std::ios::in);
+  str >> root;
+  EXPECT_EQ(testData, root.get("data", "no data set").asString());
+  EXPECT_EQ("https://httpbin.org/post", root.get("url", "no url set").asString());
+  EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no user agent set").asString());
+  // clean up
+  remove(testOutFile.c_str());
+}
+

@@ -44,3 +44,4 @@ usr
 # generated files
 docs
 include/restclient-cpp/version.h
+vendor/gtest-1.7.0

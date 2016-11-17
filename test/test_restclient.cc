@@ -50,7 +50,7 @@ TEST_F(RestClientTest, TestRestClientDeleteFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::del(u);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ(-CURLE_COULDNT_RESOLVE_HOST, res.code);
 }
 TEST_F(RestClientTest, TestRestClientDeleteHeaders)
 {
@@ -80,8 +80,8 @@ TEST_F(RestClientTest, TestRestClientGETFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::get(u);
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ("Failed to query; curl error code: 6", res.body);
+  EXPECT_EQ(-CURLE_COULDNT_RESOLVE_HOST, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientGETHeaders)
@@ -112,7 +112,7 @@ TEST_F(RestClientTest, TestRestClientPOSTFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::post(u, "text/text", "data");
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ(-CURLE_COULDNT_RESOLVE_HOST, res.code);
 }
 TEST_F(RestClientTest, TestRestClientPOSTHeaders)
 {
@@ -142,7 +142,8 @@ TEST_F(RestClientTest, TestRestClientPUTFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::put(u, "text/text", "data");
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ(-CURLE_COULDNT_RESOLVE_HOST, res.code);
+
 }
 TEST_F(RestClientTest, TestRestClientPUTHeaders)
 {

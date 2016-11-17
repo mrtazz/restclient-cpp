@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS=-I m4
-CPPFLAGS=-Iinclude
+CPPFLAGS=-Iinclude -std=c++11
 check_PROGRAMS = test-program
 pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h include/restclient-cpp/connection.h include/restclient-cpp/helpers.h
 BUILT_SOURCES = include/restclient-cpp/version.h

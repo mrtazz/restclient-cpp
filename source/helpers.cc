@@ -9,6 +9,7 @@
 #include <cstring>
 
 #include "restclient-cpp/restclient.h"
+#include "restclient-cpp/connection.h"
 
 /**
  * @brief write callback function for libcurl
@@ -87,4 +88,20 @@ size_t RestClient::Helpers::read_callback(void *data, size_t size,
   u->data += copy_size;
   /** return copied size */
   return copy_size;
+}
+
+
+/**
+ * @brief Progress callback for libcurl.
+ *
+ * @param clientp user data
+ * @param dltotal total download size in bytes
+ * @param dlnow already downloaded bytes
+ * @param ultotal total upload size in bytes
+ * @param ulnow already downloaded bytes
+ */
+int RestClient::Helpers::progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
+  RestClient::ProgressCallback *callBackPtr = (RestClient::ProgressCallback *)clientp;
+  (*callBackPtr)(dltotal, dlnow, ultotal, ulnow);
+  return 0;
 }

@@ -140,11 +140,38 @@ typedef struct {
 } Info;
 ```
 
+#### Transferring Large Data
+By default the client keeps the request and response body in memory. Alternatively 
+you can instruct it to read the data to be sent from a file or to write the response 
+body to a file instead of a memory buffer. This is useful for downloading or uploading 
+files.
+A progress indicator can be installed to track the amounts of data being transferred.
+
+```cpp
+// to upload data from a file, use:
+conn->InputFromFile("/path/to/input/file");
+
+// to download data to a file, use:
+conn->OutputToFile("/path/to/output/file");
+
+// to track upload / download progress, you can install a std::function to be called, e.g.:
+conn->SetProgressCallback([](long long totalDownloadBytes, long long downloadedBytes, long long totalUploadBytes, long long uploadedBytes) {
+    std::cout << "Fetched bytes: " << downloadedBytes << std::endl;
+});
+
+```
+
 #### Persistent connections/Keep-Alive
 The connection object stores the curl easy handle in an instance variable and
 uses that for the lifetime of the object. This means curl will [automatically
 reuse connections][curl_keepalive] made with that handle.
 
+#### Debugging
+A proxy can be configured for debugging.
+
+```cpp
+conn->UseDebugProxy("localhost:8080");
+```
 
 ## Thread Safety
 restclient-cpp leans heavily on libcurl as it aims to provide a thin wrapper

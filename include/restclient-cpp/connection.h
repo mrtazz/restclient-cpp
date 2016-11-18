@@ -23,7 +23,8 @@
 namespace RestClient {
 
 // progress callback function type
-typedef std::function<void(long long totalDownloadBytes, long long  downloadedBytes, long long totalUploadBytes, long long uploadedBytes)> ProgressCallback;
+typedef std::function<void(int64_t totalDownloadBytes, int64_t downloadedBytes,
+        int64_t totalUploadBytes, int64_t uploadedBytes)> ProgressCallback;
 
     /**
   * @brief Connection object for advanced usage
@@ -146,7 +147,7 @@ class Connection {
 
     // stream response body to file instead of using memory
     void OutputToFile(const std::string& outputFileName);
-    // stream request body from file instead of using memory (tested only with POST)
+    // stream request body from file instead of using memory
     void InputFromFile(const std::string& inputFileName);
     // use a proxy and do not check SSL certificate; for debugging only!
     void UseDebugProxy(const std::string &proxyUrl);

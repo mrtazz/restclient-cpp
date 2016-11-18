@@ -100,8 +100,10 @@ size_t RestClient::Helpers::read_callback(void *data, size_t size,
  * @param ultotal total upload size in bytes
  * @param ulnow already downloaded bytes
  */
-int RestClient::Helpers::progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow) {
-  RestClient::ProgressCallback *callBackPtr = (RestClient::ProgressCallback *)clientp;
+int RestClient::Helpers::progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow,
+        curl_off_t ultotal, curl_off_t ulnow) {
+  RestClient::ProgressCallback *callBackPtr =
+          (RestClient::ProgressCallback *)clientp;
   (*callBackPtr)(dltotal, dlnow, ultotal, ulnow);
   return 0;
 }

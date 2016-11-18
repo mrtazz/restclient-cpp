@@ -262,7 +262,7 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (this->timeout) {
     curl_easy_setopt(this->curlHandle, CURLOPT_TIMEOUT, this->timeout);
     // dont want to get a sig alarm on timeout
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 0); // 0 is required for MacOS
   }
   // set follow redirect
   if (this->followRedirects == true) {
@@ -275,7 +275,8 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   }
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {
-    ret.code = - res; // use negative curl error code as response code
+    // use negative curl error code as response code
+    ret.code = - res;
     if (res == CURLE_OPERATION_TIMEDOUT) {
       ret.body = "Operation Timeout.";
     } else {
@@ -440,9 +441,11 @@ void RestClient::Connection::UseDebugProxy(const std::string &proxyUrl) {
  *
  * @param callback the callback function
  */
-void RestClient::Connection::SetProgressCallback(RestClient::ProgressCallback && callback) {
+void RestClient::Connection::SetProgressCallback(
+        RestClient::ProgressCallback && callback) {
   progressCallback = std::move(callback);
-  curl_easy_setopt(this->curlHandle, CURLOPT_XFERINFOFUNCTION, RestClient::Helpers::progress_callback);
+  curl_easy_setopt(this->curlHandle, CURLOPT_XFERINFOFUNCTION,
+          RestClient::Helpers::progress_callback);
   curl_easy_setopt(this->curlHandle, CURLOPT_XFERINFODATA, &progressCallback);
   curl_easy_setopt(this->curlHandle, CURLOPT_NOPROGRESS, 0L);
 }

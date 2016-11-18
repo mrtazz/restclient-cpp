@@ -9,10 +9,10 @@
 #ifndef INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 #define INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 
+#include <curl/curlbuild.h>
 #include <string>
 #include <algorithm>
 #include <functional>
-#include <curl/curlbuild.h>
 
 #include "restclient-cpp/version.h"
 
@@ -50,7 +50,8 @@ namespace Helpers {
   size_t read_callback(void *ptr, size_t size, size_t nmemb,
                               void *userdata);
   // progress callback
-  int progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
+  int progress_callback(void *clientp, curl_off_t dltotal, curl_off_t dlnow,
+          curl_off_t ultotal, curl_off_t ulnow);
 
   // trim from start
   static inline std::string &ltrim(std::string &s) {  // NOLINT

@@ -262,7 +262,7 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (this->timeout) {
     curl_easy_setopt(this->curlHandle, CURLOPT_TIMEOUT, this->timeout);
     // dont want to get a sig alarm on timeout
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 0); // 0 is required for MacOS
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
   }
   // set follow redirect
   if (this->followRedirects == true) {

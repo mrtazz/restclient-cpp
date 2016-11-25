@@ -13,6 +13,7 @@
 #include <iostream>
 #include <map>
 #include <stdexcept>
+#include <utility>
 
 #include "restclient-cpp/restclient.h"
 #include "restclient-cpp/helpers.h"
@@ -24,7 +25,7 @@
  * @param baseUrl - base URL for the connection to use
  *
  */
-RestClient::Connection::Connection(const std::string baseUrl)
+RestClient::Connection::Connection(const std::string& baseUrl)
                                : lastRequest(), headerFields() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
@@ -84,7 +85,11 @@ RestClient::Connection::AppendHeader(const std::string& key,
  */
 void
 RestClient::Connection::SetHeaders(RestClient::HeaderFields headers) {
+#if __cplusplus >= 201103L
+  this->headerFields = std::move(headers);
+#else
   this->headerFields = headers;
+#endif
 }
 
 /**

@@ -104,7 +104,7 @@ class Connection {
     } Info;
 
 
-    explicit Connection(const std::string baseUrl);
+    explicit Connection(const std::string& baseUrl);
     ~Connection();
 
     // Instance configuration methods

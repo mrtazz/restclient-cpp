@@ -43,7 +43,7 @@ size_t RestClient::Helpers::header_callback(void *data, size_t size,
   RestClient::Response* r;
   r = reinterpret_cast<RestClient::Response*>(userdata);
   std::string header(reinterpret_cast<char*>(data), size*nmemb);
-  size_t seperator = header.find_first_of(":");
+  size_t seperator = header.find_first_of(':');
   if ( std::string::npos == seperator ) {
     // roll with non seperated headers...
     trim(header);

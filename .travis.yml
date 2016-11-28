@@ -1,4 +1,7 @@
 language: cpp
+dist: trusty
+sudo: false
+group: beta
 compiler:
   - gcc
   - clang
@@ -21,7 +24,6 @@ after_success:
 - coveralls-lcov coverage.info
 - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && make
   deploy-docs
-sudo: false
 addons:
   apt:
     packages:

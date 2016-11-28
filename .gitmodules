@@ -1,0 +1,3 @@
+[submodule "docs/_layouts"]
+	path = docs/_layouts
+	url = https://github.com/mrtazz/jekyll-layouts.git

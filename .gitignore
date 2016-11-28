@@ -42,5 +42,4 @@ coverage.info
 usr
 
 # generated files
-docs
 include/restclient-cpp/version.h

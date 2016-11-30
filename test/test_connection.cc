@@ -92,6 +92,17 @@ TEST_F(ConnectionTest, TestBasicAuth)
 
 }
 
+TEST_F(ConnectionTest, TestSSLCert)
+{
+  conn->SetCertPath("non-existent file");
+  conn->SetKeyPath("invalid cert type");
+  conn->SetCertType("invalid cert type");
+  RestClient::Response res = conn->get("/get");
+
+  EXPECT_EQ("Failed to query.", res.body);
+  EXPECT_EQ(-1, res.code);
+}
+
 TEST_F(ConnectionTest, TestSetHeaders)
 {
   RestClient::HeaderFields headers;

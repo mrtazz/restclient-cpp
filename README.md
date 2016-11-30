@@ -108,6 +108,10 @@ typedef struct {
     std::string username;
     std::string password;
   } basicAuth;
+
+  std::string certPath;
+  std::string certType;
+  std::string keyPath;
   std::string customUserAgent;
   struct {
     // total time of the last request in seconds Total time of previous
@@ -159,6 +163,19 @@ In order to provide an easy to use API, the simple usage via the static
 methods implicitly calls the curl global functions and is therefore also **not
 thread-safe**.
 
+## HTTPS User Certificate
+
+Simple wrapper functions are provided to allow clients to authenticate using certificates.
+Under the hood these wrappers set cURL options, e.g. `CURLOPT_SSLCERT`, using `curl_easy_setopt`.
+
+```cpp
+// set CURLOPT_SSLCERT
+conn->SetCertPath(certPath);
+// set CURLOPT_SSLCERTTYPE
+conn->SetCertType(type);
+// set CURLOPT_SSLKEY
+conn->SetKeyPath(keyPath);
+``` 
 
 ## Dependencies
 - [libcurl][]

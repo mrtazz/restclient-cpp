@@ -1,6 +1,6 @@
 language: cpp
 dist: trusty
-sudo: false
+sudo: required
 group: beta
 compiler:
   - gcc
@@ -11,6 +11,9 @@ script:
 install:
 - gem install fpm
 - gem install package_cloud
+- apt-get install -qq doxygen
+- apt-get install -qq rpm
+- apt-get install -qq valgrind
 before_script:
 - curl https://raw.githubusercontent.com/google/styleguide/gh-pages/cpplint/cpplint.py -o cpplint
 - chmod +x cpplint
@@ -22,14 +25,6 @@ after_success:
 - export PATH=$PATH:`pwd`/lcov-1.11/bin
 - make coverage.info
 - coveralls-lcov coverage.info
-addons:
-  apt:
-    packages:
-    - build-essential
-    - libcurl4-openssl-dev
-    - doxygen
-    - rpm
-    - valgrind
 deploy:
   provider: script
   script: ./autogen.sh && ./configure --prefix=`pwd`/usr && make deploy-packages

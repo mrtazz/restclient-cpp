@@ -11,9 +11,9 @@ script:
 install:
 - gem install fpm
 - gem install package_cloud
-- apt-get install -qq doxygen
-- apt-get install -qq rpm
-- apt-get install -qq valgrind
+- sudo apt-get install -qq doxygen
+- sudo apt-get install -qq rpm
+- sudo apt-get install -qq valgrind
 before_script:
 - curl https://raw.githubusercontent.com/google/styleguide/gh-pages/cpplint/cpplint.py -o cpplint
 - chmod +x cpplint

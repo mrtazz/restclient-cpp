@@ -15,6 +15,7 @@ install:
 - sudo apt-get install -qq rpm
 - sudo apt-get install -qq valgrind
 before_script:
+- curl --version
 - curl https://raw.githubusercontent.com/google/styleguide/gh-pages/cpplint/cpplint.py -o cpplint
 - chmod +x cpplint
 - export PATH=$PATH:`pwd`

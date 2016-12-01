@@ -14,6 +14,7 @@ install:
 - sudo apt-get install -qq doxygen
 - sudo apt-get install -qq rpm
 - sudo apt-get install -qq valgrind
+- sudo apt-get install -qq libcurl4-openssl-dev
 before_script:
 - curl --version
 - curl https://raw.githubusercontent.com/google/styleguide/gh-pages/cpplint/cpplint.py -o cpplint

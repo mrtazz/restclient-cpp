@@ -167,6 +167,8 @@ thread-safe**.
 
 Simple wrapper functions are provided to allow clients to authenticate using certificates.
 Under the hood these wrappers set cURL options, e.g. `CURLOPT_SSLCERT`, using `curl_easy_setopt`.
+Note: currently `libcurl` compiled with `gnutls` (e.g. `libcurl4-gnutls-dev` on
+ubuntu) is buggy in that it returns a wrong error code when these options are set to invalid values.
 
 ```cpp
 // set CURLOPT_SSLCERT

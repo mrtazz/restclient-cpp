@@ -207,3 +207,10 @@ TEST_F(ConnectionTest, TestHeadHeaders)
   EXPECT_EQ("bar", headers_returned["Foo"]);
   EXPECT_EQ("lol", headers_returned["Bla"]);
 }
+
+TEST_F(ConnectionTest, TestNoSignal)
+{
+  conn->SetNoSignal(true);
+  RestClient::Response res = conn->get("/get");
+  EXPECT_EQ(200, res.code);
+}

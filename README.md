@@ -164,6 +164,8 @@ your threads. Do not share connection objects across threads as this would
 mean accessing curl handles from multiple threads at the same time which is
 not allowed.
 
+The connection level method SetNoSignal can be set to skip all signal handling. This is important in multi-threaded applications as DNS resolution timeouts use signals. The signal handlers quite readily get executed on other threads. Note that with this option DNS resolution timeouts do not work. If you have crashes in your multi-threaded executable that appear to be in DNS resolution, this is probably why.
+
 In order to provide an easy to use API, the simple usage via the static
 methods implicitly calls the curl global functions and is therefore also **not
 thread-safe**.

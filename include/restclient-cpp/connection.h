@@ -95,6 +95,7 @@ class Connection {
       RestClient::HeaderFields headers;
       int timeout;
       bool followRedirects;
+      bool noSignal;
       struct {
         std::string username;
         std::string password;
@@ -118,6 +119,9 @@ class Connection {
 
     // set connection timeout to seconds
     void SetTimeout(int seconds);
+
+    // set to not use signals
+    void SetNoSignal(bool no);
 
     // set whether to follow redirects
     void FollowRedirects(bool follow);
@@ -169,6 +173,7 @@ class Connection {
     RestClient::HeaderFields headerFields;
     int timeout;
     bool followRedirects;
+    bool noSignal;
     struct {
       std::string username;
       std::string password;

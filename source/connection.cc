@@ -34,6 +34,7 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->baseUrl = baseUrl;
   this->timeout = 0;
   this->followRedirects = false;
+  this->noSignal = false;
 }
 
 RestClient::Connection::~Connection() {
@@ -55,6 +56,8 @@ RestClient::Connection::GetInfo() {
   ret.baseUrl = this->baseUrl;
   ret.headers = this->GetHeaders();
   ret.timeout = this->timeout;
+  ret.followRedirects = this->followRedirects;
+  ret.noSignal = this->noSignal;
   ret.basicAuth.username = this->basicAuth.username;
   ret.basicAuth.password = this->basicAuth.password;
   ret.customUserAgent = this->customUserAgent;
@@ -166,6 +169,18 @@ RestClient::Connection::SetTimeout(int seconds) {
 }
 
 /**
+ * @brief switch off curl signals for connection (see CURLOPT_NONSIGNAL). By
+ * default signals are used, except when timeout is given.
+ *
+ * @param no - set to true switches signals off
+ *
+ */
+void
+RestClient::Connection::SetNoSignal(bool no) {
+  this->noSignal = no;
+}
+
+/**
  * @brief set username and password for basic auth
  *
  * @param username
@@ -261,6 +276,12 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (this->followRedirects == true) {
     curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
   }
+
+  if (this->noSignal) {
+    // multi-threaded and prevent entering foreign signal handler (e.g. JNI)
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+  }
+
   // if provided, supply CA path
   if (!this->caInfoFilePath.empty()) {
     curl_easy_setopt(this->curlHandle, CURLOPT_CAINFO,

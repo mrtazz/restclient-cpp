@@ -66,6 +66,9 @@ RestClient::Connection::GetInfo() {
   ret.certPath = this->certPath;
   ret.certType = this->certType;
   ret.keyPath = this->keyPath;
+  ret.keyPassword = this->keyPassword;
+
+  ret.uriProxy = this->uriProxy;
 
   return ret;
 }
@@ -194,19 +197,72 @@ RestClient::Connection::SetBasicAuth(const std::string& username,
   this->basicAuth.password = password;
 }
 
+/**
+ * @brief set certificate path
+ *
+ * @param path to certificate file
+ *
+ */
 void
 RestClient::Connection::SetCertPath(const std::string& cert) {
   this->certPath = cert;
 }
 
+/**
+ * @brief set certificate type
+ *
+ * @param certificate type (e.g. "PEM" or "DER")
+ *
+ */
 void
 RestClient::Connection::SetCertType(const std::string& certType) {
   this->certType = certType;
 }
 
+/**
+ * @brief set key path
+ *
+ * @param path to key file
+ *
+ */
 void
 RestClient::Connection::SetKeyPath(const std::string& keyPath) {
   this->keyPath = keyPath;
+}
+
+/**
+ * @brief set key password
+ *
+ * @param key password
+ *
+ */
+void
+RestClient::Connection::SetKeyPassword(const std::string& keyPassword) {
+  this->keyPassword = keyPassword;
+}
+
+/**
+ * @brief set HTTP proxy address and port
+ *
+ * @param proxy address with port number
+ *
+ */
+void
+RestClient::Connection::SetProxy(const std::string& uriProxy) {
+  if (uriProxy.empty()) {
+    return;
+  }
+
+  std::string uriProxyUpper = uriProxy;
+  // check if the provided address is prefixed with "http"
+  std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),
+    uriProxyUpper.begin(), ::toupper);
+
+  if (uriProxyUpper.compare(0, 4, "HTTP") != 0) {
+    this->uriProxy = "http://" + uriProxy;
+  } else {
+    this->uriProxy = uriProxy;
+  }
 }
 
 /**
@@ -303,6 +359,19 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (!this->keyPath.empty()) {
     curl_easy_setopt(this->curlHandle, CURLOPT_SSLKEY,
                      this->keyPath.c_str());
+  }
+  // set key password
+  if (!this->keyPassword.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_KEYPASSWD,
+                     this->keyPassword.c_str());
+  }
+
+  // set web proxy address
+  if (!this->uriProxy.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_PROXY,
+                     uriProxy.c_str());
+    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
+                     1L);
   }
 
   res = curl_easy_perform(this->curlHandle);

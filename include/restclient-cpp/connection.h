@@ -85,8 +85,18 @@ class Connection {
       *  Member 'username' contains the basic auth username
       *  @var basicAuth::password
       *  Member 'password' contains the basic auth password
+      *  @var Info::certPath
+      *  Member 'certPath' contains the certificate file path
+      *  @var Info::certType
+      *  Member 'certType' contains the certificate type
+      *  @var Info::keyPath
+      *  Member 'keyPath' contains the SSL key file path
+      *  @var Info::keyPassword
+      *  Member 'keyPassword' contains the SSL key password
       *  @var Info::customUserAgent
       *  Member 'customUserAgent' contains the custom user agent
+      *  @var Info::uriProxy
+      *  Member 'uriProxy' contains the HTTP proxy address
       *  @var Info::lastRequest
       *  Member 'lastRequest' contains metrics about the last request
       */
@@ -104,7 +114,9 @@ class Connection {
       std::string certPath;
       std::string certType;
       std::string keyPath;
+      std::string keyPassword;
       std::string customUserAgent;
+      std::string uriProxy;
       RequestInfo lastRequest;
     } Info;
 
@@ -142,6 +154,12 @@ class Connection {
 
     // set CURLOPT_SSLKEY. Default format is PEM
     void SetKeyPath(const std::string& keyPath);
+
+    // set CURLOPT_KEYPASSWD.
+    void SetKeyPassword(const std::string& keyPassword);
+
+    // set CURLOPT_PROXY
+    void SetProxy(const std::string& uriProxy);
 
     std::string GetUserAgent();
 
@@ -184,6 +202,8 @@ class Connection {
     std::string certPath;
     std::string certType;
     std::string keyPath;
+    std::string keyPassword;
+    std::string uriProxy;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

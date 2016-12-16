@@ -217,7 +217,8 @@ RestClient::Connection::SetProxy(const std::string& uriProxy) {
     return;
 
   std::string uriProxyUpper = uriProxy;
-  std::transform(uriProxyUpper.begin(), uriProxyUpper.end(), uriProxyUpper.begin(), ::toupper);
+  std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),
+    uriProxyUpper.begin(), ::toupper);
 
   if (uriProxyUpper.compare(0, 4, "HTTP") != 0)
     this->uriProxy = "http://" + uriProxy;

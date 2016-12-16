@@ -105,6 +105,7 @@ class Connection {
       std::string certType;
       std::string keyPath;
       std::string customUserAgent;
+      std::string uriProxy;
       RequestInfo lastRequest;
     } Info;
 
@@ -142,6 +143,9 @@ class Connection {
 
     // set CURLOPT_SSLKEY. Default format is PEM
     void SetKeyPath(const std::string& keyPath);
+
+    // set CURLOPT_PROXY
+    void SetProxy(const std::string& uriProxy);
 
     std::string GetUserAgent();
 
@@ -184,6 +188,7 @@ class Connection {
     std::string certPath;
     std::string certType;
     std::string keyPath;
+    std::string uriProxy;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

@@ -67,6 +67,8 @@ RestClient::Connection::GetInfo() {
   ret.certType = this->certType;
   ret.keyPath = this->keyPath;
 
+  ret.uriProxy = this->uriProxy;
+
   return ret;
 }
 
@@ -209,6 +211,20 @@ RestClient::Connection::SetKeyPath(const std::string& keyPath) {
   this->keyPath = keyPath;
 }
 
+void
+RestClient::Connection::SetProxy(const std::string& uriProxy) {
+  if (uriProxy.empty())
+    return;
+
+  std::string uriProxyUpper = uriProxy;
+  std::transform(uriProxyUpper.begin(), uriProxyUpper.end(), uriProxyUpper.begin(), ::toupper);
+
+  if (uriProxyUpper.compare(0, 4, "HTTP") != 0)
+    this->uriProxy = "http://" + uriProxy;
+  else
+    this->uriProxy = uriProxy;
+}
+
 /**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
@@ -303,6 +319,14 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (!this->keyPath.empty()) {
     curl_easy_setopt(this->curlHandle, CURLOPT_SSLKEY,
                      this->keyPath.c_str());
+  }
+
+  // set web proxy address
+  if (!this->uriProxy.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_PROXY,
+                     uriProxy.c_str());
+    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
+                     1L);
   }
 
   res = curl_easy_perform(this->curlHandle);

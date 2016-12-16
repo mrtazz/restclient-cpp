@@ -88,6 +88,23 @@ RestClient::Response RestClient::post(const std::string& url,
 }
 
 /**
+ * @brief HTTP POST Form method
+ *
+ * @param url to query
+ * @param data post form information
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::postForm(const std::string& url,
+                    const RestClient::Helpers::PostFormInfo& data) {
+  RestClient::Response ret;
+  RestClient::Connection *conn = new RestClient::Connection("");
+  ret = conn->postForm(url, data);
+  delete conn;
+  return ret;
+}
+
+/**
  * @brief HTTP PUT method
  *
  * @param url to query

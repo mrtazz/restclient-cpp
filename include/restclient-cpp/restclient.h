@@ -13,6 +13,7 @@
 #include <map>
 #include <cstdlib>
 
+#include "restclient-cpp/helpers.h"
 #include "restclient-cpp/version.h"
 
 /**
@@ -53,6 +54,8 @@ Response get(const std::string& url);
 Response post(const std::string& url,
               const std::string& content_type,
               const std::string& data);
+Response postForm(const std::string& url,
+                  const RestClient::Helpers::PostFormInfo& data);
 Response put(const std::string& url,
               const std::string& content_type,
               const std::string& data);

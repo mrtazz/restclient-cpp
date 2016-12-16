@@ -221,3 +221,11 @@ TEST_F(ConnectionTest, TestProxy)
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
+
+TEST_F(ConnectionTest, TestInvalidProxy)
+{
+  conn->SetProxy("127.0.0.1:666");
+  RestClient::Response res = conn->get("/get");
+  EXPECT_EQ("Failed to query.", res.body);
+  EXPECT_EQ(-1, res.code);
+}

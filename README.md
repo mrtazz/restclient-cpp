@@ -117,7 +117,9 @@ typedef struct {
   std::string certPath;
   std::string certType;
   std::string keyPath;
+  std::string keyPassword;
   std::string customUserAgent;
+  std::string uriProxy;
   struct {
     // total time of the last request in seconds Total time of previous
     // transfer. See CURLINFO_TOTAL_TIME

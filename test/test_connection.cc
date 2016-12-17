@@ -96,6 +96,7 @@ TEST_F(ConnectionTest, TestSSLCert)
 {
   conn->SetCertPath("non-existent file");
   conn->SetKeyPath("non-existent key path");
+  conn->SetKeyPassword("imaginary_password");
   conn->SetCertType("invalid cert type");
   RestClient::Response res = conn->get("/get");
 

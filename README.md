@@ -184,6 +184,8 @@ conn->SetCertPath(certPath);
 conn->SetCertType(type);
 // set CURLOPT_SSLKEY
 conn->SetKeyPath(keyPath);
+// set CURLOPT_KEYPASSWD
+conn->SetKeyPassword(keyPassword);
 ```
 
 ## HTTP Proxy Tunneling Support

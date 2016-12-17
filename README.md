@@ -186,6 +186,23 @@ conn->SetCertType(type);
 conn->SetKeyPath(keyPath);
 ```
 
+## HTTP Proxy Tunneling Support
+
+An HTTP Proxy can be set to use for the upcoming request.
+To specify a port number, append :[port] to the end of the host name. If not specified, `libcurl` will default to using port 1080 for proxies. The proxy string may be prefixed with `http://` or `https://`. If no HTTP(S) scheme is specified, the address provided to `libcurl` will be prefixed with `http://` to specify an HTTP proxy. A proxy host string can embedded user + password.
+The operation will be tunneled through the proxy as curl option `CURLOPT_HTTPPROXYTUNNEL` is enabled by default.
+A numerical IPv6 address must be written within [brackets].
+
+```cpp
+// set CURLOPT_PROXY
+conn->SetProxy("https://37.187.100.23:3128");
+/* or you can set it without the protocol scheme and
+http:// will be prefixed by default */
+conn->SetProxy("37.187.100.23:3128");
+/* the following request will be tunneled through the proxy */
+RestClient::Response res = conn->get("/get");
+```
+
 ## Dependencies
 - [libcurl][]
 

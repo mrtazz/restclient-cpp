@@ -225,7 +225,7 @@ class Connection {
     RestClient::Response post(const std::string& uri,
                               const std::string& data);
     RestClient::Response postForm(const std::string& uri,
-                                  const Helpers::PostFormInfo& data);
+                                  const PostFormInfo& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
     RestClient::Response patch(const std::string& uri,

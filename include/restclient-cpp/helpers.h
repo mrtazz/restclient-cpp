@@ -28,24 +28,6 @@ namespace RestClient {
   */
 namespace Helpers {
 
-/** @struct PostFormInfo
-  * @brief This struct represents the form information to send on
-  * POST Form requests
-  */
-struct PostFormInfo {
-  PostFormInfo();
-  ~PostFormInfo();
-  /* Fill in the file upload field */
-  void addFormFile(const std::string& fieldName,
-                   const std::string& fieldValue);
-  /* Fill in the filename or the submit field */
-  void addFormContent(const std::string& fieldName,
-                        const std::string& fieldValue);
-
-  struct curl_httppost* formPtr;
-  struct curl_httppost* lastFormPtr;
-};
-
   /** @struct UploadObject
     *  @brief This structure represents the payload to upload on POST
     *  requests

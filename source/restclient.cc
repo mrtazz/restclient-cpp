@@ -105,6 +105,23 @@ RestClient::Response RestClient::postForm(const std::string& url,
 }
 
 /**
+ * @brief HTTP POST Form method
+ *
+ * @param url to query
+ * @param data post form information
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::postForm(const std::string& url,
+                    const PostFormInfo& data) {
+  RestClient::Response ret;
+  RestClient::Connection *conn = new RestClient::Connection("");
+  ret = conn->postForm(url, data);
+  delete conn;
+  return ret;
+}
+
+/**
  * @brief HTTP PUT method
  *
  * @param url to query
@@ -203,4 +220,52 @@ RestClient::Response RestClient::options(const std::string& url) {
   ret = conn->options(url);
   delete conn;
   return ret;
+}
+
+/**
+ * @brief PostFormInfo constructor
+ */
+RestClient::PostFormInfo::PostFormInfo()
+        : formPtr(NULL), lastFormPtr(NULL) {
+}
+
+/**
+ * @brief PostFormInfo destructor
+ */
+RestClient::PostFormInfo::~PostFormInfo() {
+  // cleanup the formpost chain
+  if (this->formPtr) {
+    curl_formfree(this->formPtr);
+    this->formPtr = NULL;
+    this->lastFormPtr = NULL;
+  }
+}
+
+/**
+ * @brief set the name and the value of the HTML "file" form's input
+ *
+ * @param fieldName name of the "file" input
+ * @param fieldValue path to the file to upload
+ */
+void RestClient::PostFormInfo::addFormFile(
+          const std::string& fieldName, const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_FILE, fieldValue.c_str(),
+               CURLFORM_END);
+}
+
+/**
+ * @brief set the name and the value of an HTML form's input 
+ * (other than "file" like "text", "hidden" or "submit")
+ *
+ * @param fieldName name of the input element
+ * @param fieldValue value to be assigned to the input element
+ */
+void RestClient::PostFormInfo::addFormContent(
+          const std::string& fieldName, const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_COPYCONTENTS, fieldValue.c_str(),
+               CURLFORM_END);
 }

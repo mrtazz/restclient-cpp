@@ -668,6 +668,26 @@ RestClient::Connection::postForm(const std::string& url,
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP POST Form method
+ *
+ * @param url to query
+ * @param data form info
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::postForm(const std::string& url,
+                             const PostFormInfo& data) {
+  /** Now specify we want to POST data */
+  curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
+  /* stating that Expect: 100-continue is not wanted */
+  AppendHeader("Expect", "");
+  /** set post form */
+  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPOST, data.GetFormPtr());
+
+  return this->performCurlRequest(url);
+}
+/**
  * @brief HTTP PUT method
  *
  * @param url to query

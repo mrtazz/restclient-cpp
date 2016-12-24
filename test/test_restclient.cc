@@ -1,5 +1,4 @@
 #include "restclient-cpp/restclient.h"
-#include "restclient-cpp/helpers.h"
 #include <gtest/gtest.h>
 #include <json/json.h>
 #include <cstdio>
@@ -123,6 +122,36 @@ TEST_F(RestClientTest, TestRestClientPOSTBody)
 
   EXPECT_EQ(RestClient::TestUrl+"/post", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
+}
+TEST_F(RestClientTest, TestRestClientPostForm)
+{
+  // generating a file name with a timestamp
+  std::ostringstream fileName;
+  time_t rawtime;
+  tm * timeinfo;
+  time(&rawtime);
+  timeinfo = localtime( &rawtime );
+  
+  fileName << "TestPostForm_" << (timeinfo->tm_year)+1900 << "_" << timeinfo->tm_mon+1
+  << "_" << timeinfo->tm_mday << "-" << timeinfo->tm_hour
+  << "_"<< timeinfo->tm_min << "_" << timeinfo->tm_sec << ".txt";
+
+  // creating a dummy file to upload via a post form request
+  std::ofstream ofDummyFile(fileName.str().c_str());
+  ASSERT_TRUE(static_cast<bool>(ofDummyFile));
+  ofDummyFile << "Dummy file for the unit test 'TestRestClientPostForm' of the restclient-cpp Project.";
+  ASSERT_TRUE(static_cast<bool>(ofDummyFile));
+  ofDummyFile.close();
+
+  // uploading the dummy file
+  RestClient::PostFormInfo UploadInfo;
+  UploadInfo.addFormFile("submitted", fileName.str());
+  UploadInfo.addFormContent("filename", fileName.str());
+  RestClient::Response res = RestClient::postForm("http://posttestserver.com/post.php?dir=restclientcpptests", UploadInfo);
+  EXPECT_EQ(200, res.code);
+
+  // remove dummy file
+  remove(fileName.str().c_str());
 }
 TEST_F(RestClientTest, TestRestClientPostForm)
 {

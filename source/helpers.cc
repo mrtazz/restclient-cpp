@@ -115,8 +115,8 @@ RestClient::Helpers::PostFormInfo::~PostFormInfo() {
  * @param fieldName name of the "file" input
  * @param fieldValue path to the file to upload
  */
-void RestClient::Helpers::PostFormInfo::addFormFile(const std::string& fieldName,
-                                                    const std::string& fieldValue) {
+void RestClient::Helpers::PostFormInfo::addFormFile(
+          const std::string& fieldName, const std::string& fieldValue) {
   curl_formadd(&this->formPtr, &this->lastFormPtr,
                CURLFORM_COPYNAME, fieldName.c_str(),
                CURLFORM_FILE, fieldValue.c_str(),
@@ -130,8 +130,8 @@ void RestClient::Helpers::PostFormInfo::addFormFile(const std::string& fieldName
  * @param fieldName name of the input element
  * @param fieldValue value to be assigned to the input element
  */
-void RestClient::Helpers::PostFormInfo::addFormContent(const std::string& fieldName,
-                                                       const std::string& fieldValue) {
+void RestClient::Helpers::PostFormInfo::addFormContent(
+          const std::string& fieldName, const std::string& fieldValue) {
   curl_formadd(&this->formPtr, &this->lastFormPtr,
                CURLFORM_COPYNAME, fieldName.c_str(),
                CURLFORM_COPYCONTENTS, fieldValue.c_str(),

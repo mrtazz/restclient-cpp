@@ -36,6 +36,7 @@ size_t RestClient::Helpers::write_callback(void *data, size_t size,
  * @param size of data
  * @param nmemb memblock
  * @param userdata pointer to user data object to save headr data
+ *
  * @return size * nmemb;
  */
 size_t RestClient::Helpers::header_callback(void *data, size_t size,
@@ -87,4 +88,52 @@ size_t RestClient::Helpers::read_callback(void *data, size_t size,
   u->data += copy_size;
   /** return copied size */
   return copy_size;
+}
+
+/**
+ * @brief PostFormInfo constructor
+ */
+RestClient::Helpers::PostFormInfo::PostFormInfo()
+        : formPtr(NULL), lastFormPtr(NULL) {
+}
+
+/**
+ * @brief PostFormInfo destructor
+ */
+RestClient::Helpers::PostFormInfo::~PostFormInfo() {
+  // cleanup the formpost chain
+  if (this->formPtr) {
+    curl_formfree(this->formPtr);
+    this->formPtr = NULL;
+    this->lastFormPtr = NULL;
+  }
+}
+
+/**
+ * @brief set the name and the value of the HTML "file" form's input
+ *
+ * @param fieldName name of the "file" input
+ * @param fieldValue path to the file to upload
+ */
+void RestClient::Helpers::PostFormInfo::addFormFile(const std::string& fieldName,
+                                                    const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_FILE, fieldValue.c_str(),
+               CURLFORM_END);
+}
+
+/**
+ * @brief set the name and the value of an HTML form's input 
+ * (other than "file" like "text", "hidden" or "submit")
+ *
+ * @param fieldName name of the input element
+ * @param fieldValue value to be assigned to the input element
+ */
+void RestClient::Helpers::PostFormInfo::addFormContent(const std::string& fieldName,
+                                                       const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_COPYCONTENTS, fieldValue.c_str(),
+               CURLFORM_END);
 }

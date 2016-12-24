@@ -28,6 +28,25 @@ RestClient::Response r = RestClient::post("http://url.com/post", "text/json", "{
 RestClient::Response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
+
+// Post Form Upload
+/* Filling information about the form in a Helpers::PostFormInfo object */
+Helpers::PostFormInfo uploadInfo;
+/* "submitted" is the name of the "file" input and "TestPostForm.txt"
+is the location of the file to submit.
+<input type="file" name="submitted">
+*/
+uploadInfo.addFormFile("submitted", "TestPostForm.txt");
+/* In some rare cases, some fields related to the form can be filled with
+addFormContent(), the 1st argument is the name of the input element and
+the 2nd argument is the value assigned to it.
+<input type="text" name="filename" value=""/>
+<input type="submit" name="submit" value="send">
+*/
+uploadInfo.addFormContent("filename", "myfile.cpp");
+uploadInfo.addFormContent("submit", "send");
+/* Performing a post form upload with the information provided above */
+RestClient::Response res = RestClient::postForm("http://posttestserver.com/post.php?dir=restclientcpptests", uploadInfo);
 ```
 
 The response is of type [RestClient::Response][restclient_response] and has

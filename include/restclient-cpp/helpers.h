@@ -9,6 +9,8 @@
 #ifndef INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 #define INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 
+#include <curl/curl.h>
+
 #include <string>
 #include <algorithm>
 #include <functional>
@@ -37,6 +39,22 @@ namespace Helpers {
     const char* data;
     size_t length;
   } UploadObject;
+
+  /** @struct PostFormInfo
+    *  @brief This struct represents the form information to send on
+    *  POST Form requests
+    */
+  struct PostFormInfo{
+    PostFormInfo();
+    ~PostFormInfo();
+    /* Fill in the file upload field */
+    void addFormFile(const std::string& fieldName, const std::string& fieldValue);
+    /* Fill in the filename or the submit field (even if this last is rarely needed) */ 
+    void addFormContent(const std::string& fieldName, const std::string& fieldValue);
+
+    struct curl_httppost* formPtr;
+    struct curl_httppost* lastFormPtr;
+  };
 
   // writedata callback function
   size_t write_callback(void *ptr, size_t size, size_t nmemb,

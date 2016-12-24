@@ -180,6 +180,8 @@ class Connection {
     RestClient::Response get(const std::string& uri);
     RestClient::Response post(const std::string& uri,
                               const std::string& data);
+    RestClient::Response postForm(const std::string& uri,
+                                  const Helpers::PostFormInfo& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
     RestClient::Response del(const std::string& uri);

@@ -22,6 +22,7 @@ class ConnectionTest : public ::testing::Test
     virtual void SetUp()
     {
       conn = new RestClient::Connection("https://httpbin.org");
+      conn->SetTimeout(10);
     }
 
     virtual void TearDown()

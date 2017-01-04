@@ -2,12 +2,21 @@ language: cpp
 dist: trusty
 sudo: required
 group: beta
+
+services:
+  - docker
+
 compiler:
   - gcc
   - clang
 script:
   - ./autogen.sh && ./configure --enable-coverage
   - make ci
+
+before_install:
+  - docker pull chrisdaish/squid
+  - docker run -d -p 3128:3128 chrisdaish/squid
+  - docker ps -a
 install:
 - gem install fpm
 - gem install package_cloud

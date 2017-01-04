@@ -219,14 +219,14 @@ TEST_F(ConnectionTest, TestNoSignal)
 
 TEST_F(ConnectionTest, TestProxy)
 {
-  conn->SetProxy("37.187.100.23:3128");
+  conn->SetProxy("127.0.0.1:3128");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
 
 TEST_F(ConnectionTest, TestProxyAddressPrefixed)
 {
-  conn->SetProxy("https://37.187.100.23:3128");
+  conn->SetProxy("https://127.0.0.1:3128");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }

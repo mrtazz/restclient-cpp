@@ -11,4 +11,5 @@
 
 1. build vendorized gtest: `./utils/build_gtest.sh`
 2. build restclient-cpp: `./autogen.sh && ./configure && make check`
-3. run the unit test suite: `make test`
+3. run the proxy server used in testing: `docker run -d -p 3128:3128 chrisdaish/squid`
+4. run the unit test suite: `make test`

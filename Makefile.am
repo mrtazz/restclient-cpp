@@ -16,7 +16,7 @@ librestclient_cpp_la_LDFLAGS=-version-info 2:1:1
 
 dist_doc_DATA = README.md
 
-.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci
+.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci docker-services
 
 include/restclient-cpp/version.h:
 	m4 -I m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
@@ -30,7 +30,11 @@ valgrind: check
 lint:
 	cpplint --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc
 
-ci: lint test valgrind
+docker-services:
+	docker inspect --format="{{ .State.Running }}" restclient-proxy &> /dev/null || docker run -d --name restclient-proxy -p 3128:3128 chrisdaish/squid
+	docker ps -a
+
+ci: lint docker-services test valgrind
 
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm

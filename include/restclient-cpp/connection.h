@@ -106,6 +106,8 @@ class Connection {
       int timeout;
       bool followRedirects;
       bool noSignal;
+      curl_progress_callback progressFn;
+      void* progressFnData;
       struct {
         std::string username;
         std::string password;
@@ -131,6 +133,12 @@ class Connection {
 
     // set connection timeout to seconds
     void SetTimeout(int seconds);
+
+    // set file progress callback
+    void SetFileProgressCallback(curl_progress_callback progressFn);
+
+    // set file progress callback data
+    void SetFileProgressCallbackData(void* data);
 
     // set to not use signals
     void SetNoSignal(bool no);
@@ -192,6 +200,8 @@ class Connection {
     int timeout;
     bool followRedirects;
     bool noSignal;
+    curl_progress_callback progressFn;
+    void* progressFnData;
     struct {
       std::string username;
       std::string password;

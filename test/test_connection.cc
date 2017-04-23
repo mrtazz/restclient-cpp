@@ -226,7 +226,7 @@ TEST_F(ConnectionTest, TestProxy)
 
 TEST_F(ConnectionTest, TestProxyAddressPrefixed)
 {
-  conn->SetProxy("https://127.0.0.1:3128");
+  conn->SetProxy("http://127.0.0.1:3128");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }

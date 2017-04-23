@@ -249,7 +249,6 @@ RestClient::Connection::SetKeyPassword(const std::string& keyPassword) {
  */
 void
 RestClient::Connection::SetProxy(const std::string& uriProxy) {
-
   std::string uriProxyUpper = uriProxy;
   // check if the provided address is prefixed with "http"
   std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),

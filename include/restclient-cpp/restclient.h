@@ -42,6 +42,28 @@ typedef struct {
   HeaderFields headers;
 } Response;
 
+/** @class PostFormInfo
+  * @brief This class represents the form information to send on
+  * POST Form requests
+  */
+class PostFormInfo {
+public:
+  PostFormInfo();
+  ~PostFormInfo();
+  /* Fill in the file upload field */
+  void addFormFile(const std::string& fieldName,
+                   const std::string& fieldValue);
+  /* Fill in the filename or the submit field */
+  void addFormContent(const std::string& fieldName,
+                        const std::string& fieldValue);
+  /* Get Form pointer */
+  struct curl_httppost* GetFormPtr() const { return formPtr; }
+
+private:
+  struct curl_httppost* formPtr;
+  struct curl_httppost* lastFormPtr;
+};
+
 // init and disable functions
 int init();
 void disable();
@@ -56,7 +78,7 @@ Response post(const std::string& url,
               const std::string& content_type,
               const std::string& data);
 Response postForm(const std::string& url,
-                  const RestClient::Helpers::PostFormInfo& data);
+                  const PostFormInfo& data);
 Response put(const std::string& url,
               const std::string& content_type,
               const std::string& data);

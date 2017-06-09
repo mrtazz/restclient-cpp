@@ -30,8 +30,8 @@ RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
 
 // Post Form Upload
-/* Filling information about the form in a Helpers::PostFormInfo object */
-Helpers::PostFormInfo uploadInfo;
+/* Filling information about the form in a RestClient::PostFormInfo object */
+RestClient::PostFormInfo uploadInfo;
 /* "submitted" is the name of the "file" input and "TestPostForm.txt"
 is the location of the file to submit.
 <input type="file" name="submitted">

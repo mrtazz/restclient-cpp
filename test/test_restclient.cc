@@ -1,5 +1,4 @@
 #include "restclient-cpp/restclient.h"
-#include "restclient-cpp/helpers.h"
 #include <gtest/gtest.h>
 #include <json/json.h>
 #include <cstdio>
@@ -132,7 +131,7 @@ TEST_F(RestClientTest, TestRestClientPostForm)
   ofDummyFile.close();
 
   // uploading the dummy file
-  RestClient::Helpers::PostFormInfo UploadInfo;
+  RestClient::PostFormInfo UploadInfo;
   UploadInfo.addFormFile("submitted", fileName.str());
   UploadInfo.addFormContent("filename", fileName.str());
   RestClient::Response res = RestClient::postForm("http://posttestserver.com/post.php?dir=restclientcpptests", UploadInfo);

@@ -47,7 +47,9 @@ typedef struct {
   * POST Form requests
   */
 class PostFormInfo {
-public:
+  struct curl_httppost* formPtr;
+  struct curl_httppost* lastFormPtr;
+ public:
   PostFormInfo();
   ~PostFormInfo();
   /* Fill in the file upload field */
@@ -58,10 +60,6 @@ public:
                         const std::string& fieldValue);
   /* Get Form pointer */
   struct curl_httppost* GetFormPtr() const { return formPtr; }
-
-private:
-  struct curl_httppost* formPtr;
-  struct curl_httppost* lastFormPtr;
 };
 
 // init and disable functions

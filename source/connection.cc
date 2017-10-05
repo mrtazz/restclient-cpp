@@ -33,6 +33,7 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   }
   this->baseUrl = baseUrl;
   this->timeout = 0;
+  this->verbose = 0;
   this->followRedirects = false;
   this->noSignal = false;
 }

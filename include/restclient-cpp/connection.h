@@ -129,6 +129,9 @@ class Connection {
     void SetBasicAuth(const std::string& username,
                       const std::string& password);
 
+    // set connection verbose, optionally log to file
+    void SetVerbose(bool verbose, const std::string filePath = "");
+
     // set connection timeout to seconds
     void SetTimeout(int seconds);
 
@@ -190,6 +193,8 @@ class Connection {
     std::string baseUrl;
     RestClient::HeaderFields headerFields;
     int timeout;
+    long verbose;
+    std::string verbosePath;
     bool followRedirects;
     bool noSignal;
     struct {

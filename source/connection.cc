@@ -161,6 +161,19 @@ RestClient::Connection::GetUserAgent() {
 }
 
 /**
+ * @brief set verbose for connection
+ *
+ * @param verbose - enable/disable
+ *
+ */
+void RestClient::Connection::SetVerbose(bool verbose, const std::string filePath)
+{
+      this->verbose = (verbose ? 1 : 0);
+
+      if(this->verbose)
+          this->verbosePath = filePath;
+}
+/**
  * @brief set timeout for connection
  *
  * @param seconds - timeout in seconds
@@ -284,6 +297,19 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   CURLcode res = CURLE_OK;
   curl_slist* headerList = NULL;
 
+  FILE* stdErr(0L);
+
+  if(this->verbose) {
+      curl_easy_setopt(this->curlHandle, CURLOPT_VERBOSE, this->verbose);
+
+      if(this->verbosePath.size())
+      {
+          stdErr = fopen(this->verbosePath.c_str(), "wb");
+          if(stdErr)
+              curl_easy_setopt(this->curlHandle, CURLOPT_STDERR, stdErr);
+      }
+  }
+
   /** set query URL */
   curl_easy_setopt(this->curlHandle, CURLOPT_URL, url.c_str());
   /** set callback function */
@@ -382,8 +408,8 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
         ret.body = curl_easy_strerror(res);
         break;
       default:
-        ret.body = "Failed to query.";
-        ret.code = -1;
+        ret.body = curl_easy_strerror(res);
+        ret.code = res;
     }
   } else {
     int64_t http_code = 0;

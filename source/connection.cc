@@ -167,12 +167,13 @@ RestClient::Connection::GetUserAgent() {
  * @param verbose - enable/disable
  *
  */
-void RestClient::Connection::SetVerbose(bool verbose, const std::string filePath)
-{
+void RestClient::Connection::SetVerbose(bool verbose,
+                                        const std::string filePath) {
       this->verbose = (verbose ? 1 : 0);
 
-      if(this->verbose)
+      if (this->verbose) {
           this->verbosePath = filePath;
+      }
 }
 /**
  * @brief set timeout for connection
@@ -300,14 +301,15 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
 
   FILE* stdErr(0L);
 
-  if(this->verbose) {
+  if (this->verbose) {
       curl_easy_setopt(this->curlHandle, CURLOPT_VERBOSE, this->verbose);
 
-      if(this->verbosePath.size())
-      {
+      if (this->verbosePath.size()) {
           stdErr = fopen(this->verbosePath.c_str(), "wb");
-          if(stdErr)
+
+          if (stdErr) {
               curl_easy_setopt(this->curlHandle, CURLOPT_STDERR, stdErr);
+          }
       }
   }
 

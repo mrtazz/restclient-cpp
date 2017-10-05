@@ -193,7 +193,7 @@ class Connection {
     std::string baseUrl;
     RestClient::HeaderFields headerFields;
     int timeout;
-    long verbose;
+    int verbose;
     std::string verbosePath;
     bool followRedirects;
     bool noSignal;

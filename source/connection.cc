@@ -504,6 +504,26 @@ RestClient::Connection::put(const std::string& url,
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP PATCH method
+ *
+ * @param url to query
+ * @param data HTTP PATCH body
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::patch(const std::string& uri,
+                              const std::string& data)
+{
+    //curl_easy_setopt(this->curlHandle, CURLOPT_RETURNTRANSFER, 1);
+    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, "PATCH");
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDS, data.c_str());
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDSIZE, data.size());
+
+    return this->performCurlRequest(uri);
+}
+
+/**
  * @brief HTTP DELETE method
  *
  * @param url to query

@@ -93,6 +93,18 @@ RestClient::Response RestClient::put(const std::string& url,
   return ret;
 }
 
+RestClient::Response RestClient::patch(const std::string& url,
+                                       const std::string& content_type,
+                                       const std::string& data)
+{
+    RestClient::Response ret;
+    RestClient::Connection *conn = new RestClient::Connection("");
+    conn->AppendHeader("Content-Type", content_type);
+    ret = conn->patch(url, data);
+    delete conn;
+    return ret;
+}
+
 /**
  * @brief HTTP DELETE method
  *

@@ -185,6 +185,8 @@ class Connection {
                               const std::string& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
+    RestClient::Response patch(const std::string& uri,
+                               const std::string& data);
     RestClient::Response del(const std::string& uri);
     RestClient::Response head(const std::string& uri);
 

@@ -18,6 +18,8 @@ vendor/jsoncpp-0.10.5/dist/.deps/jsoncpp.Po
 test-program
 .libs
 
+restclient-cpp.pc
+
 *autom4te.cache
 *aclocal.m4
 *compile

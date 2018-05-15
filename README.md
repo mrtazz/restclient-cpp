@@ -24,8 +24,8 @@ verbs:
 #include "restclient-cpp/restclient.h"
 
 RestClient::Response r = RestClient::get("http://url.com")
-RestClient::Response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::Response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::post("http://url.com/post", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::put("http://url.com/put", "application/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
 ```
@@ -82,9 +82,9 @@ RestClient::Response r = conn->head("/get")
 RestClient::Response r = conn->del("/delete")
 
 // set different content header for POST and PUT
-conn->AppendHeader("Content-Type", "text/json")
+conn->AppendHeader("Content-Type", "application/json")
 RestClient::Response r = conn->post("/post", "{\"foo\": \"bla\"}")
-RestClient::Response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->put("/put", "application/json", "{\"foo\": \"bla\"}")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it

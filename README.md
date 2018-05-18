@@ -65,6 +65,8 @@ conn->SetUserAgent("foo/cool");
 
 // enable following of redirects (default is off)
 conn->FollowRedirects(true);
+// and limit the number of redirects (default is -1, unlimited)
+conn->FollowRedirects(true, 3);
 
 // set headers
 RestClient::HeaderFields headers;

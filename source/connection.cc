@@ -34,6 +34,7 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->baseUrl = baseUrl;
   this->timeout = 0;
   this->followRedirects = false;
+  this->maxRedirects = -1l;
   this->noSignal = false;
 }
 
@@ -57,6 +58,7 @@ RestClient::Connection::GetInfo() {
   ret.headers = this->GetHeaders();
   ret.timeout = this->timeout;
   ret.followRedirects = this->followRedirects;
+  ret.maxRedirects = this->maxRedirects;
   ret.noSignal = this->noSignal;
   ret.basicAuth.username = this->basicAuth.username;
   ret.basicAuth.password = this->basicAuth.password;
@@ -120,6 +122,19 @@ RestClient::Connection::GetHeaders() {
 void
 RestClient::Connection::FollowRedirects(bool follow) {
   this->followRedirects = follow;
+  this->maxRedirects = -1l;
+}
+
+/**
+ * @brief configure whether to follow redirects on this connection
+ *
+ * @param follow - boolean whether to follow redirects
+ * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited)
+ */
+void
+RestClient::Connection::FollowRedirects(bool follow, int maxRedirects) {
+  this->followRedirects = follow;
+  this->maxRedirects = maxRedirects;
 }
 
 /**
@@ -327,6 +342,8 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   // set follow redirect
   if (this->followRedirects == true) {
     curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(this->curlHandle, CURLOPT_MAXREDIRS,
+                     static_cast<int64_t>(this->maxRedirects));
   }
 
   if (this->noSignal) {

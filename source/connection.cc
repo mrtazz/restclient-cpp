@@ -36,8 +36,8 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->followRedirects = false;
   this->maxRedirects = -1l;
   this->noSignal = false;
-  this->progressFn = nullptr;
-  this->progressFnData = nullptr;
+  this->progressFn = NULL;
+  this->progressFnData = NULL;
 }
 
 RestClient::Connection::~Connection() {

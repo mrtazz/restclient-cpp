@@ -34,6 +34,7 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->baseUrl = baseUrl;
   this->timeout = 0;
   this->followRedirects = false;
+  this->maxRedirects = -1l;
   this->noSignal = false;
   this->progressFn = nullptr;
   this->progressFnData = nullptr;
@@ -59,6 +60,7 @@ RestClient::Connection::GetInfo() {
   ret.headers = this->GetHeaders();
   ret.timeout = this->timeout;
   ret.followRedirects = this->followRedirects;
+  ret.maxRedirects = this->maxRedirects;
   ret.noSignal = this->noSignal;
   ret.progressFn = this->progressFn;
   ret.progressFnData = this->progressFnData;
@@ -124,6 +126,19 @@ RestClient::Connection::GetHeaders() {
 void
 RestClient::Connection::FollowRedirects(bool follow) {
   this->followRedirects = follow;
+  this->maxRedirects = -1l;
+}
+
+/**
+ * @brief configure whether to follow redirects on this connection
+ *
+ * @param follow - boolean whether to follow redirects
+ * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited)
+ */
+void
+RestClient::Connection::FollowRedirects(bool follow, int maxRedirects) {
+  this->followRedirects = follow;
+  this->maxRedirects = maxRedirects;
 }
 
 /**
@@ -276,16 +291,12 @@ RestClient::Connection::SetKeyPassword(const std::string& keyPassword) {
  */
 void
 RestClient::Connection::SetProxy(const std::string& uriProxy) {
-  if (uriProxy.empty()) {
-    return;
-  }
-
   std::string uriProxyUpper = uriProxy;
   // check if the provided address is prefixed with "http"
   std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),
     uriProxyUpper.begin(), ::toupper);
 
-  if (uriProxyUpper.compare(0, 4, "HTTP") != 0) {
+  if ((uriProxy.length() > 0) && (uriProxyUpper.compare(0, 4, "HTTP") != 0)) {
     this->uriProxy = "http://" + uriProxy;
   } else {
     this->uriProxy = uriProxy;
@@ -358,6 +369,8 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   // set follow redirect
   if (this->followRedirects == true) {
     curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(this->curlHandle, CURLOPT_MAXREDIRS,
+                     static_cast<int64_t>(this->maxRedirects));
   }
 
   if (this->noSignal) {

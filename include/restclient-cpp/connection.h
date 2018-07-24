@@ -83,6 +83,8 @@ class Connection {
       *  Member 'progressFn' file progress callback function
       *  @var Info::progressFnData
       *  Member 'progressFnData' file progress callback data
+      *  @var Info::maxRedirects
+      *  Member 'maxRedirects' contains the maximum number of redirect to follow (-1 unlimited)
       *  @var Info::basicAuth
       *  Member 'basicAuth' contains information about basic auth
       *  @var basicAuth::username
@@ -109,6 +111,7 @@ class Connection {
       RestClient::HeaderFields headers;
       int timeout;
       bool followRedirects;
+      int maxRedirects;
       bool noSignal;
       curl_progress_callback progressFn;
       void* progressFnData;
@@ -149,6 +152,9 @@ class Connection {
 
     // set whether to follow redirects
     void FollowRedirects(bool follow);
+
+    // set whether to follow redirects (-1 for unlimited)
+    void FollowRedirects(bool follow, int maxRedirects);
 
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
@@ -203,6 +209,7 @@ class Connection {
     RestClient::HeaderFields headerFields;
     int timeout;
     bool followRedirects;
+    int maxRedirects;
     bool noSignal;
     curl_progress_callback progressFn;
     void* progressFnData;

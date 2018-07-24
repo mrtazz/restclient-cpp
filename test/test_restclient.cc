@@ -64,6 +64,11 @@ TEST_F(RestClientTest, TestRestClientGETCode)
   RestClient::Response res = RestClient::get("http://httpbin.org/get");
   EXPECT_EQ(200, res.code);
 }
+TEST_F(RestClientTest, TestRestClientGETHTTP2Code)
+{
+  RestClient::Response res = RestClient::get("https://http2.golang.org/reqinfo");
+  EXPECT_EQ(200, res.code);
+}
 TEST_F(RestClientTest, TestRestClientGETBodyCode)
 {
   RestClient::Response res = RestClient::get("http://httpbin.org/get");

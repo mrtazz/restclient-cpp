@@ -10,6 +10,7 @@
 #define INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 
 #include <string>
+#include <cctype>
 #include <algorithm>
 #include <functional>
 

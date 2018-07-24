@@ -207,6 +207,20 @@ conn->SetProxy("37.187.100.23:3128");
 RestClient::Response res = conn->get("/get");
 ```
 
+## Progress callback
+
+Two simple wrapper functions are provided to setup progress callback for uploads/downloads;
+Calling `conn->SetFileProgressCallback(callback)` with a callback parameter matching the prototype `int progress_callback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)` will setup the progress callback.
+Calling `conn->SetFileProgressCallbackData(data)` is optional. This will set the data pointer which is the first parameter fed back to the progress callback - `clientp`. If this isn't set then `clientp` will default to the connection object `conn`.
+
+```cpp
+// set CURLOPT_NOPROGRESS
+// set CURLOPT_PROGRESSFUNCTION
+conn->SetFileProgressCallback(progressFunc);
+// set CURLOPT_PROGRESSDATA
+conn->SetFileProgressCallbackData(data);
+```
+
 ## Dependencies
 - [libcurl][]
 

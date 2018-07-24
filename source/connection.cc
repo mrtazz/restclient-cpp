@@ -194,8 +194,9 @@ RestClient::Connection::SetNoSignal(bool no) {
  *
  */
 void
-RestClient::Connection::SetFileProgressCallback(curl_progress_callback progressFn) {
-	this->progressFn = progressFn;
+RestClient::Connection::SetFileProgressCallback(curl_progress_callback
+                                                progressFn) {
+  this->progressFn = progressFn;
 }
 
 /**
@@ -206,7 +207,7 @@ RestClient::Connection::SetFileProgressCallback(curl_progress_callback progressF
  */
 void
 RestClient::Connection::SetFileProgressCallbackData(void* data) {
-	this->progressFnData = data;
+  this->progressFnData = data;
 }
 
 /**
@@ -365,15 +366,19 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   }
 
   // set file progress callback
-  if (this->progressFn)
-  {
+  if (this->progressFn) {
     curl_easy_setopt(this->curlHandle, CURLOPT_NOPROGRESS, 0);
-    curl_easy_setopt(this->curlHandle, CURLOPT_PROGRESSFUNCTION, this->progressFn);
+    curl_easy_setopt(this->curlHandle,
+                     CURLOPT_PROGRESSFUNCTION,
+                    this->progressFn);
     if (this->progressFnData) {
-      curl_easy_setopt(this->curlHandle, CURLOPT_PROGRESSDATA, this->progressFnData);
-    }
-    else {
-      curl_easy_setopt(this->curlHandle, CURLOPT_PROGRESSDATA, this);
+      curl_easy_setopt(this->curlHandle,
+                       CURLOPT_PROGRESSDATA,
+                       this->progressFnData);
+    } else {
+      curl_easy_setopt(this->curlHandle,
+                       CURLOPT_PROGRESSDATA,
+                       this);
     }
   }
 

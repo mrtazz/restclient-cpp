@@ -79,6 +79,10 @@ class Connection {
       *  Member 'timeout' contains the configured timeout
       *  @var Info::followRedirects
       *  Member 'followRedirects' contains whether or not to follow redirects
+      *  @var Info::progressFn
+      *  Member 'progressFn' file progress callback function
+      *  @var Info::progressFnData
+      *  Member 'progressFnData' file progress callback data
       *  @var Info::basicAuth
       *  Member 'basicAuth' contains information about basic auth
       *  @var basicAuth::username

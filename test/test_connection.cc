@@ -244,7 +244,7 @@ TEST_F(ConnectionTest, TestSetProgress)
 	};
 
 	conn->SetFileProgressCallback(progressCallback);
-	conn->SetFileProgressCallbackData(nullptr);
+	conn->SetFileProgressCallbackData(NULL);
 
   RestClient::Response res = conn->get("/anything/{test_data}");
 	EXPECT_EQ(200, res.code);

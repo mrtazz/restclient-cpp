@@ -248,8 +248,8 @@ TEST_F(ConnectionTest, TestSetProgress)
 
   RestClient::Response res = conn->get("/anything/{test_data}");
 	EXPECT_EQ(200, res.code);
-  EXPECT_EQ(totalToDownload, 267);
-  EXPECT_EQ(totalDownloaded, 267);
+  EXPECT_GT(totalDownloaded, 0);
+  EXPECT_EQ(totalDownloaded, totalToDownload);
 }
 
 TEST_F(ConnectionTest, TestProxy)

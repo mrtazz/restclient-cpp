@@ -94,6 +94,26 @@ RestClient::Response RestClient::put(const std::string& url,
 }
 
 /**
+ * @brief HTTP PATCH method
+ *
+ * @param url to query
+ * @param ctype content type as string
+ * @param data HTTP PATCH body
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::patch(const std::string& url,
+                                     const std::string& ctype,
+                                     const std::string& data) {
+  RestClient::Response ret;
+  RestClient::Connection *conn = new RestClient::Connection("");
+  conn->AppendHeader("Content-Type", ctype);
+  ret = conn->patch(url, data);
+  delete conn;
+  return ret;
+}
+
+/**
  * @brief HTTP DELETE method
  *
  * @param url to query
@@ -119,6 +139,21 @@ RestClient::Response RestClient::head(const std::string& url) {
   RestClient::Response ret;
   RestClient::Connection *conn = new RestClient::Connection("");
   ret = conn->head(url);
+  delete conn;
+  return ret;
+}
+
+/**
+ * @brief HTTP OPTIONS method
+ *
+ * @param url to query
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::options(const std::string& url) {
+  RestClient::Response ret;
+  RestClient::Connection *conn = new RestClient::Connection("");
+  ret = conn->options(url);
   delete conn;
   return ret;
 }

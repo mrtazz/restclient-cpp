@@ -118,18 +118,7 @@ RestClient::Connection::GetHeaders() {
  * @brief configure whether to follow redirects on this connection
  *
  * @param follow - boolean whether to follow redirects
- */
-void
-RestClient::Connection::FollowRedirects(bool follow) {
-  this->followRedirects = follow;
-  this->maxRedirects = -1l;
-}
-
-/**
- * @brief configure whether to follow redirects on this connection
- *
- * @param follow - boolean whether to follow redirects
- * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited)
+ * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited, default)
  */
 void
 RestClient::Connection::FollowRedirects(bool follow, int maxRedirects) {

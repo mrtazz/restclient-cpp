@@ -481,6 +481,39 @@ RestClient::Connection::put(const std::string& url,
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP PATCH method
+ *
+ * @param url to query
+ * @param data HTTP PATCH body
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::patch(const std::string& url,
+                            const std::string& data) {
+  /** initialize upload object */
+  RestClient::Helpers::UploadObject up_obj;
+  up_obj.data = data.c_str();
+  up_obj.length = data.size();
+
+  /** we want HTTP PATCH */
+  const char* http_patch = "PATCH";
+
+  /** set HTTP PATCH METHOD */
+  curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_patch);
+  curl_easy_setopt(this->curlHandle, CURLOPT_UPLOAD, 1L);
+  /** set read callback function */
+  curl_easy_setopt(this->curlHandle, CURLOPT_READFUNCTION,
+                   RestClient::Helpers::read_callback);
+  /** set data object to pass to callback function */
+  curl_easy_setopt(this->curlHandle, CURLOPT_READDATA, &up_obj);
+  /** set data size */
+  curl_easy_setopt(this->curlHandle, CURLOPT_INFILESIZE,
+                     static_cast<int64_t>(up_obj.length));
+
+  return this->performCurlRequest(url);
+}
+/**
  * @brief HTTP DELETE method
  *
  * @param url to query
@@ -512,6 +545,25 @@ RestClient::Connection::head(const std::string& url) {
 
     /** set HTTP HEAD METHOD */
     curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_head);
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
+
+    return this->performCurlRequest(url);
+}
+
+/**
+ * @brief HTTP OPTIONS method
+ *
+ * @param url to query
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::options(const std::string& url) {
+    /** we want HTTP OPTIONS */
+    const char* http_options = "OPTIONS";
+
+    /** set HTTP HEAD METHOD */
+    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_options);
     curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
 
     return this->performCurlRequest(url);

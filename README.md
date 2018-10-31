@@ -26,8 +26,10 @@ verbs:
 RestClient::Response r = RestClient::get("http://url.com")
 RestClient::Response r = RestClient::post("http://url.com/post", "application/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = RestClient::put("http://url.com/put", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::patch("http://url.com/patch", "application/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
+RestClient::Response r = RestClient::options("http://url.com")
 ```
 
 The response is of type [RestClient::Response][restclient_response] and has
@@ -82,11 +84,13 @@ conn->SetCAInfoFilePath("/etc/custom-ca.crt")
 RestClient::Response r = conn->get("/get")
 RestClient::Response r = conn->head("/get")
 RestClient::Response r = conn->del("/delete")
+RestClient::Response r = conn->options("/options")
 
-// set different content header for POST and PUT
+// set different content header for POST, PUT and PATCH
 conn->AppendHeader("Content-Type", "application/json")
 RestClient::Response r = conn->post("/post", "{\"foo\": \"bla\"}")
 RestClient::Response r = conn->put("/put", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->patch("/patch", "text/plain", "foobar")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it

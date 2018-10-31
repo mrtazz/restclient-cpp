@@ -138,11 +138,9 @@ class Connection {
     // set to not use signals
     void SetNoSignal(bool no);
 
-    // set whether to follow redirects
-    void FollowRedirects(bool follow);
-
-    // set whether to follow redirects (-1 for unlimited)
-    void FollowRedirects(bool follow, int maxRedirects);
+    // set whether to follow redirects, maxRedirects indicitng the maximum
+    // number of redirects to follow
+    void FollowRedirects(bool follow, int maxRedirects = -1l);
 
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")

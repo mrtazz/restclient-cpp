@@ -19,7 +19,7 @@ dist_doc_DATA = README.md
 .PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci docker-services
 
 include/restclient-cpp/version.h:
-	m4 -I ${top_srcdir}/m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > ${top_srcdir}/$@ 
+	m4 -I ${top_srcdir}/m4 -DM4_RESTCLIENT_VERSION=$(PACKAGE_VERSION) version.h.m4 > ${top_srcdir}/$@ 
  
 
 

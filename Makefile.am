@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS=-I m4
-CPPFLAGS=-Iinclude
+CPPFLAGS=-I${top_srcdir}/include
 check_PROGRAMS = test-program
 pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h include/restclient-cpp/connection.h include/restclient-cpp/helpers.h
 BUILT_SOURCES = include/restclient-cpp/version.h
@@ -19,7 +19,9 @@ dist_doc_DATA = README.md
 .PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci docker-services
 
 include/restclient-cpp/version.h:
-	m4 -I m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > $@
+	m4 -I ${top_srcdir}/m4 -DM4_RESTCLIENT_VERSION=$(VERSION) version.h.m4 > ${top_srcdir}/$@ 
+ 
+
 
 test: check
 	./test-program

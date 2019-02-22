@@ -37,12 +37,12 @@ TEST_F(RestClientTest, TestRestClientDELETECode)
 
 TEST_F(RestClientTest, TestRestClientDELETEBody)
 {
-  RestClient::Response res = RestClient::del("http://httpbin.org/delete");
+  RestClient::Response res = RestClient::del("https://httpbin.org/delete");
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/delete", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/delete", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 
@@ -56,14 +56,14 @@ TEST_F(RestClientTest, TestRestClientDELETEFailureCode)
 
 TEST_F(RestClientTest, TestRestClientDELETEHeaders)
 {
-  RestClient::Response res = RestClient::del("http://httpbin.org/delete");
+  RestClient::Response res = RestClient::del("https://httpbin.org/delete");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
 // GET Tests
 TEST_F(RestClientTest, TestRestClientGETCode)
 {
-  RestClient::Response res = RestClient::get("http://httpbin.org/get");
+  RestClient::Response res = RestClient::get("https://httpbin.org/get");
   EXPECT_EQ(200, res.code);
 }
 
@@ -75,12 +75,12 @@ TEST_F(RestClientTest, TestRestClientGETHTTP2Code)
 
 TEST_F(RestClientTest, TestRestClientGETBodyCode)
 {
-  RestClient::Response res = RestClient::get("http://httpbin.org/get");
+  RestClient::Response res = RestClient::get("https://httpbin.org/get");
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 
@@ -95,7 +95,7 @@ TEST_F(RestClientTest, TestRestClientGETFailureCode)
 
 TEST_F(RestClientTest, TestRestClientGETHeaders)
 {
-  RestClient::Response res = RestClient::get("http://httpbin.org/get");
+  RestClient::Response res = RestClient::get("https://httpbin.org/get");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
@@ -103,18 +103,18 @@ TEST_F(RestClientTest, TestRestClientGETHeaders)
 // check return code
 TEST_F(RestClientTest, TestRestClientPOSTCode)
 {
-  RestClient::Response res = RestClient::post("http://httpbin.org/post", "text/text", "data");
+  RestClient::Response res = RestClient::post("https://httpbin.org/post", "text/text", "data");
   EXPECT_EQ(200, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPOSTBody)
 {
-  RestClient::Response res = RestClient::post("http://httpbin.org/post", "text/text", "data");
+  RestClient::Response res = RestClient::post("https://httpbin.org/post", "text/text", "data");
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/post", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/post", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 
@@ -128,7 +128,7 @@ TEST_F(RestClientTest, TestRestClientPOSTFailureCode)
 
 TEST_F(RestClientTest, TestRestClientPOSTHeaders)
 {
-  RestClient::Response res = RestClient::post("http://httpbin.org/post", "text/text", "data");
+  RestClient::Response res = RestClient::post("https://httpbin.org/post", "text/text", "data");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
@@ -136,18 +136,18 @@ TEST_F(RestClientTest, TestRestClientPOSTHeaders)
 // check return code
 TEST_F(RestClientTest, TestRestClientPUTCode)
 {
-  RestClient::Response res = RestClient::put("http://httpbin.org/put", "text/text", "data");
+  RestClient::Response res = RestClient::put("https://httpbin.org/put", "text/text", "data");
   EXPECT_EQ(200, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPUTBody)
 {
-  RestClient::Response res = RestClient::put("http://httpbin.org/put", "text/text", "data");
+  RestClient::Response res = RestClient::put("https://httpbin.org/put", "text/text", "data");
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/put", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/put", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 
@@ -161,7 +161,7 @@ TEST_F(RestClientTest, TestRestClientPUTFailureCode)
 
 TEST_F(RestClientTest, TestRestClientPUTHeaders)
 {
-  RestClient::Response res = RestClient::put("http://httpbin.org/put", "text/text", "data");
+  RestClient::Response res = RestClient::put("https://httpbin.org/put", "text/text", "data");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
@@ -169,18 +169,18 @@ TEST_F(RestClientTest, TestRestClientPUTHeaders)
 // check return code
 TEST_F(RestClientTest, TestRestClientPATCHCode)
 {
-  RestClient::Response res = RestClient::patch("http://httpbin.org/patch", "text/text", "data");
+  RestClient::Response res = RestClient::patch("https://httpbin.org/patch", "text/text", "data");
   EXPECT_EQ(200, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPATCHBody)
 {
-  RestClient::Response res = RestClient::patch("http://httpbin.org/patch", "text/text", "data");
+  RestClient::Response res = RestClient::patch("https://httpbin.org/patch", "text/text", "data");
   Json::Value root;
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("http://httpbin.org/patch", root.get("url", "no url set").asString());
+  EXPECT_EQ("https://httpbin.org/patch", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION, root["headers"].get("User-Agent", "no url set").asString());
 }
 
@@ -194,7 +194,7 @@ TEST_F(RestClientTest, TestRestClientPATCHFailureCode)
 
 TEST_F(RestClientTest, TestRestClientPATCHHeaders)
 {
-  RestClient::Response res = RestClient::patch("http://httpbin.org/put", "text/text", "data");
+  RestClient::Response res = RestClient::patch("https://httpbin.org/put", "text/text", "data");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
@@ -203,7 +203,7 @@ TEST_F(RestClientTest, TestRestClientPATCHHeaders)
 // Disabled as httpbin does not support options requests for now
 TEST_F(RestClientTest, DISABLED_TestRestClientOPTIONSCode)
 {
-  RestClient::Response res = RestClient::options("http://httpbin.org/options");
+  RestClient::Response res = RestClient::options("https://httpbin.org/options");
   EXPECT_EQ(200, res.code);
 }
 
@@ -217,13 +217,13 @@ TEST_F(RestClientTest, TestRestClientOPTIONSFailureCode)
 
 TEST_F(RestClientTest, TestRestClientOPTIONSHeaders)
 {
-  RestClient::Response res = RestClient::options("http://httpbin.org/options");
+  RestClient::Response res = RestClient::options("https://httpbin.org/options");
   EXPECT_EQ("keep-alive", res.headers["Connection"]);
 }
 
 TEST_F(RestClientTest, TestRestClientAuth)
 {
-  RestClient::Response res = RestClient::get("http://foo:bar@httpbin.org/basic-auth/foo/bar");
+  RestClient::Response res = RestClient::get("https://foo:bar@httpbin.org/basic-auth/foo/bar");
   EXPECT_EQ(200, res.code);
 
   Json::Value root;
@@ -233,13 +233,13 @@ TEST_F(RestClientTest, TestRestClientAuth)
   EXPECT_EQ("foo", root.get("user", "no user").asString());
   EXPECT_EQ(true, root.get("authenticated", false).asBool());
 
-  res = RestClient::get("http://httpbin.org/basic-auth/foo/bar");
+  res = RestClient::get("https://httpbin.org/basic-auth/foo/bar");
   EXPECT_EQ(401, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientHeadCode)
 {
-  RestClient::Response res = RestClient::head("http://httpbin.org/get");
+  RestClient::Response res = RestClient::head("https://httpbin.org/get");
   EXPECT_EQ(200, res.code);
   EXPECT_EQ("", res.body);
 }

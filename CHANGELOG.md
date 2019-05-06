@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.5.0 (31st October 2018
+## v0.5.1 (6th May 2019)
+- add initial cmake build
+- switch httpbin tests over to https
+
+## v0.5.0 (31st October 2018)
 
 ### Features
 * Add PATCH and OPTIONS methods (#106) (drodil)

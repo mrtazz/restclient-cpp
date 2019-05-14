@@ -213,6 +213,23 @@ conn->SetProxy("37.187.100.23:3128");
 RestClient::Response res = conn->get("/get");
 ```
 
+## Unix Socket Support
+
+- https://docs.docker.com/develop/sdk/examples/
+- $ curl --unix-socket /var/run/docker.sock http:/v1.24/containers/json
+
+Note that the URL used with a unix socket has only ONE leading forward slash.
+
+```cpp
+RestClient::Connection* conn = new RestClient::Connection("http:/v1.30");
+conn->SetUnixSocketPath("/var/run/docker.sock");
+RestClient::HeaderFields headers;
+headers["Accept"] = "application/json; charset=UTF-8";
+headers["Expect"] = "";
+conn->SetHeaders(headers);
+auto resp = conn->get("/images/json");
+```
+
 ## Dependencies
 - [libcurl][]
 

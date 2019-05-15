@@ -71,7 +71,6 @@ RestClient::Connection::GetInfo() {
   ret.keyPassword = this->keyPassword;
 
   ret.uriProxy = this->uriProxy;
-  ret.unixSocketPath = this->unixSocketPath;
 
   return ret;
 }
@@ -267,19 +266,6 @@ RestClient::Connection::SetProxy(const std::string& uriProxy) {
 }
 
 /**
- * @brief set custom Unix socket path for connection.
- * See https://curl.haxx.se/libcurl/c/CURLOPT_UNIX_SOCKET_PATH.html
- *
- * @param unixSocketPath - path to Unix socket (ex: /var/run/docker.sock)
- *
- */
-void
-RestClient::Connection::SetUnixSocketPath(const std::string& unixSocketPath) {
-  this->unixSocketPath = unixSocketPath;
-}
-
-
-/**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
  * request and record some stats from the last request and then reset the
@@ -388,12 +374,6 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
                      uriProxy.c_str());
     curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
                      1L);
-  }
-
-  // set Unix socket path, if requested
-  if (!this->unixSocketPath.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_UNIX_SOCKET_PATH,
-                     this->unixSocketPath.c_str());
   }
 
   res = curl_easy_perform(this->curlHandle);

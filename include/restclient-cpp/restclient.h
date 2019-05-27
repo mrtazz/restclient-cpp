@@ -9,7 +9,6 @@
 #ifndef INCLUDE_RESTCLIENT_CPP_RESTCLIENT_H_
 #define INCLUDE_RESTCLIENT_CPP_RESTCLIENT_H_
 
-#include <curl/curl.h>
 #include <string>
 #include <map>
 #include <cstdlib>
@@ -80,8 +79,12 @@ Response postForm(const std::string& url,
 Response put(const std::string& url,
               const std::string& content_type,
               const std::string& data);
+Response patch(const std::string& url,
+              const std::string& content_type,
+              const std::string& data);
 Response del(const std::string& url);
 Response head(const std::string& url);
+Response options(const std::string& url);
 
 }  // namespace RestClient
 

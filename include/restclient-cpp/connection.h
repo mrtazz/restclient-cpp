@@ -79,6 +79,8 @@ class Connection {
       *  Member 'timeout' contains the configured timeout
       *  @var Info::followRedirects
       *  Member 'followRedirects' contains whether or not to follow redirects
+      *  @var Info::maxRedirects
+      *  Member 'maxRedirects' contains the maximum number of redirect to follow (-1 unlimited)
       *  @var Info::basicAuth
       *  Member 'basicAuth' contains information about basic auth
       *  @var basicAuth::username
@@ -105,6 +107,7 @@ class Connection {
       RestClient::HeaderFields headers;
       int timeout;
       bool followRedirects;
+      int maxRedirects;
       bool noSignal;
       struct {
         std::string username;
@@ -117,6 +120,7 @@ class Connection {
       std::string keyPassword;
       std::string customUserAgent;
       std::string uriProxy;
+      std::string unixSocketPath;
       RequestInfo lastRequest;
     } Info;
 
@@ -135,8 +139,9 @@ class Connection {
     // set to not use signals
     void SetNoSignal(bool no);
 
-    // set whether to follow redirects
-    void FollowRedirects(bool follow);
+    // set whether to follow redirects, maxRedirects indicitng the maximum
+    // number of redirects to follow
+    void FollowRedirects(bool follow, int maxRedirects = -1l);
 
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
@@ -161,6 +166,9 @@ class Connection {
     // set CURLOPT_PROXY
     void SetProxy(const std::string& uriProxy);
 
+    // set CURLOPT_UNIX_SOCKET_PATH
+    void SetUnixSocketPath(const std::string& unixSocketPath);
+
     std::string GetUserAgent();
 
     RestClient::Connection::Info GetInfo();
@@ -184,8 +192,11 @@ class Connection {
                                   const PostFormInfo& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
+    RestClient::Response patch(const std::string& uri,
+                             const std::string& data);
     RestClient::Response del(const std::string& uri);
     RestClient::Response head(const std::string& uri);
+    RestClient::Response options(const std::string& uri);
 
  private:
     CURL* curlHandle;
@@ -193,6 +204,7 @@ class Connection {
     RestClient::HeaderFields headerFields;
     int timeout;
     bool followRedirects;
+    int maxRedirects;
     bool noSignal;
     struct {
       std::string username;
@@ -206,6 +218,7 @@ class Connection {
     std::string keyPath;
     std::string keyPassword;
     std::string uriProxy;
+    std::string unixSocketPath;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

@@ -12,6 +12,7 @@
 #include <curl/curl.h>
 
 #include <string>
+#include <cctype>
 #include <algorithm>
 #include <functional>
 

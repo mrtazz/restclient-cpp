@@ -185,6 +185,21 @@ TEST_F(ConnectionTest, TestFollowRedirect)
   EXPECT_EQ(200, res.code);
 }
 
+TEST_F(ConnectionTest, TestFollowRedirectLimited)
+{
+  RestClient::Response res = conn->get("/redirect/2");
+  EXPECT_EQ(302, res.code);
+  conn->FollowRedirects(true, 1);
+  res = conn->get("/redirect/2");
+  EXPECT_EQ(-1, res.code);
+  conn->FollowRedirects(true, 2);
+  res = conn->get("/redirect/2");
+  EXPECT_EQ(200, res.code);
+  conn->FollowRedirects(true, -1);
+  res = conn->get("/redirect/2");
+  EXPECT_EQ(200, res.code);
+}
+
 TEST_F(ConnectionTest, TestGetInfoFromRedirect)
 {
   conn->FollowRedirects(true);
@@ -219,14 +234,22 @@ TEST_F(ConnectionTest, TestNoSignal)
 
 TEST_F(ConnectionTest, TestProxy)
 {
-  conn->SetProxy("37.187.100.23:3128");
+  conn->SetProxy("127.0.0.1:3128");
+  RestClient::Response res = conn->get("/get");
+  EXPECT_EQ(200, res.code);
+}
+
+TEST_F(ConnectionTest, TestUnSetProxy)
+{
+  conn->SetProxy("127.0.0.1:3128");
+  conn->SetProxy("");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
 
 TEST_F(ConnectionTest, TestProxyAddressPrefixed)
 {
-  conn->SetProxy("https://37.187.100.23:3128");
+  conn->SetProxy("http://127.0.0.1:3128");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }

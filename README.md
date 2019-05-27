@@ -24,8 +24,9 @@ verbs:
 #include "restclient-cpp/restclient.h"
 
 RestClient::Response r = RestClient::get("http://url.com")
-RestClient::Response r = RestClient::post("http://url.com/post", "text/json", "{\"foo\": \"bla\"}")
-RestClient::Response r = RestClient::put("http://url.com/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::post("http://url.com/post", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::put("http://url.com/put", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = RestClient::patch("http://url.com/patch", "application/json", "{\"foo\": \"bla\"}")
 RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
 
@@ -47,6 +48,7 @@ uploadInfo.addFormContent("filename", "myfile.cpp");
 uploadInfo.addFormContent("submit", "send");
 /* Performing a post form upload with the information provided above */
 RestClient::Response res = RestClient::postForm("http://posttestserver.com/post.php?dir=restclientcpptests", uploadInfo);
+RestClient::Response r = RestClient::options("http://url.com")
 ```
 
 The response is of type [RestClient::Response][restclient_response] and has
@@ -84,6 +86,8 @@ conn->SetUserAgent("foo/cool");
 
 // enable following of redirects (default is off)
 conn->FollowRedirects(true);
+// and limit the number of redirects (default is -1, unlimited)
+conn->FollowRedirects(true, 3);
 
 // set headers
 RestClient::HeaderFields headers;
@@ -99,11 +103,13 @@ conn->SetCAInfoFilePath("/etc/custom-ca.crt")
 RestClient::Response r = conn->get("/get")
 RestClient::Response r = conn->head("/get")
 RestClient::Response r = conn->del("/delete")
+RestClient::Response r = conn->options("/options")
 
-// set different content header for POST and PUT
-conn->AppendHeader("Content-Type", "text/json")
+// set different content header for POST, PUT and PATCH
+conn->AppendHeader("Content-Type", "application/json")
 RestClient::Response r = conn->post("/post", "{\"foo\": \"bla\"}")
-RestClient::Response r = conn->put("/put", "text/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->put("/put", "application/json", "{\"foo\": \"bla\"}")
+RestClient::Response r = conn->patch("/patch", "text/plain", "foobar")
 
 // deinit RestClient. After calling this you have to call RestClient::init()
 // again before you can use it
@@ -226,6 +232,23 @@ conn->SetProxy("37.187.100.23:3128");
 RestClient::Response res = conn->get("/get");
 ```
 
+## Unix Socket Support
+
+- https://docs.docker.com/develop/sdk/examples/
+- $ curl --unix-socket /var/run/docker.sock http:/v1.24/containers/json
+
+Note that the URL used with a unix socket has only ONE leading forward slash.
+
+```cpp
+RestClient::Connection* conn = new RestClient::Connection("http:/v1.30");
+conn->SetUnixSocketPath("/var/run/docker.sock");
+RestClient::HeaderFields headers;
+headers["Accept"] = "application/json; charset=UTF-8";
+headers["Expect"] = "";
+conn->SetHeaders(headers);
+auto resp = conn->get("/images/json");
+```
+
 ## Dependencies
 - [libcurl][]
 
@@ -256,7 +279,7 @@ merged as fast as possible.
 [libcurl]: http://curl.haxx.se/libcurl/
 [gtest]: http://code.google.com/p/googletest/
 [packagecloud]: https://packagecloud.io/mrtazz/restclient-cpp
-[contributing]: https://github.com/mrtazz/restclient-cpp/blob/master/CONTRIBUTING.md
+[contributing]: https://github.com/mrtazz/restclient-cpp/blob/master/.github/CONTRIBUTING.md
 [curl_keepalive]: http://curl.haxx.se/docs/faq.html#What_about_Keep_Alive_or_persist
 [curl_threadsafety]: http://curl.haxx.se/libcurl/c/threadsafe.html
 [restclient_response]: http://code.mrtazz.com/restclient-cpp/ref/struct_rest_client_1_1_response.html

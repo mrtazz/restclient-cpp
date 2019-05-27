@@ -1,13 +1,18 @@
 language: cpp
-dist: trusty
+dist: xenial
 sudo: required
 group: beta
+
+services:
+  - docker
+
 compiler:
   - gcc
   - clang
 script:
   - ./autogen.sh && ./configure --enable-coverage
   - make ci
+
 install:
 - gem install fpm
 - gem install package_cloud

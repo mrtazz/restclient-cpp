@@ -1,5 +1,43 @@
 # Changelog
 
+## v0.5.1 (6th May 2019)
+- add initial cmake build
+- switch httpbin tests over to https
+
+## v0.5.0 (31st October 2018)
+
+### Features
+* Add PATCH and OPTIONS methods (#106) (drodil)
+* Add support for limiting the number of redirects (Bas van Kervel)
+* Added web proxy tunneling support. (amzoughi)
+* add client cert & key support (Fan Zhang)
+* add HEAD method (limhyungseok)
+* no-signal capability (Chris Kruger)
+
+### Improvements and fixes
+* Remove duplicate FollowRedirects function (#109) (drodil)
+* Changed content type to application/json (Hajder Rabiee)
+* fix link to CONTRIBUTING guidelines (Daniel Schauenberg)
+* update distro repositories to push packages to (Daniel Schauenberg)
+* fix isspace is not a member of std with Visual Studio 2017 (Yoann Long)
+* add CODE_OF_CONDUCT.md  (Daniel Schauenberg)
+* fix linter error for redundant blank line (Daniel Schauenberg)
+* remove unneeded curl include in restclient.h (Daniel Schauenberg)
+* Make SetProxy behave like curl's CURLOPT_PROXY (Daniel Schauenberg)
+* change prefixed address for proxy to HTTP (Daniel Schauenberg)
+* add unit test for http2 connection (Daniel Schauenberg)
+* move docker setup into Makefile (Daniel Schauenberg)
+* update CONTRIBUTING docs with proxy server details (Daniel Schauenberg)
+* add proxy server as docker service (Daniel Schauenberg)
+* default to 10s timeout in unit tests (Daniel Schauenberg)
+* update docs for HTTPS user certificate feature (Daniel Schauenberg)
+* add .github folder with issue/PR templates (Daniel Schauenberg)
+* move CI to run on travis trusty beta (Daniel Schauenberg)
+* Small optimizations (Martin Gerhardy)
+* Fix -Wpedantic warning (Daniel Perez)
+* fix README examples for conn->post, conn->put (Daniel Schauenberg)
+* add OSX install instructions to README (Daniel Schauenberg)
+
 ## v0.4.4 (13th May 2016)
 - bump version because v0.4.3 was mistagged
 

@@ -120,6 +120,7 @@ class Connection {
       std::string keyPassword;
       std::string customUserAgent;
       std::string uriProxy;
+      std::string unixSocketPath;
       RequestInfo lastRequest;
     } Info;
 
@@ -164,6 +165,9 @@ class Connection {
 
     // set CURLOPT_PROXY
     void SetProxy(const std::string& uriProxy);
+
+    // set CURLOPT_UNIX_SOCKET_PATH
+    void SetUnixSocketPath(const std::string& unixSocketPath);
 
     std::string GetUserAgent();
 
@@ -212,6 +216,7 @@ class Connection {
     std::string keyPath;
     std::string keyPassword;
     std::string uriProxy;
+    std::string unixSocketPath;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

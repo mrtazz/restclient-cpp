@@ -26,7 +26,7 @@
  *
  */
 RestClient::Connection::Connection(const std::string& baseUrl)
-                               : lastRequest(), headerFields() {
+                               : headerFields(), lastRequest() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
     throw std::runtime_error("Couldn't initialize curl handle");

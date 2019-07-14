@@ -11,7 +11,7 @@ test_program_CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.
 
 lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cc source/connection.cc source/helpers.cc
-librestclient_cpp_la_CXXFLAGS=-fPIC
+librestclient_cpp_la_CXXFLAGS=-fPIC -std=c++11
 librestclient_cpp_la_LDFLAGS=-version-info 2:1:1
 
 dist_doc_DATA = README.md

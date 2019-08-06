@@ -4,14 +4,14 @@ check_PROGRAMS = test-program
 pkginclude_HEADERS = include/restclient-cpp/restclient.h include/restclient-cpp/version.h include/restclient-cpp/connection.h include/restclient-cpp/helpers.h
 BUILT_SOURCES = include/restclient-cpp/version.h
 
-test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/tests.cpp test/test_restclient.cc test/test_connection.cc
+test_program_SOURCES = vendor/jsoncpp-0.10.5/dist/jsoncpp.cpp test/tests.cpp test/test_helpers.cc test/test_restclient.cc test/test_connection.cc
 test_program_LDADD = .libs/librestclient-cpp.a
 test_program_LDFLAGS=-Lvendor/gtest-1.7.0/lib/.libs -lgtest
-test_program_CPPFLAGS=-Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist
+test_program_CPPFLAGS=-std=c++11 -Iinclude -Ivendor/gtest-1.7.0/include -Ivendor/jsoncpp-0.10.5/dist
 
 lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cc source/connection.cc source/helpers.cc
-librestclient_cpp_la_CXXFLAGS=-fPIC
+librestclient_cpp_la_CXXFLAGS=-fPIC -std=c++11
 librestclient_cpp_la_LDFLAGS=-version-info 2:1:1
 
 dist_doc_DATA = README.md

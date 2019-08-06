@@ -133,6 +133,7 @@ add_executable(test-program
   test/tests.cpp
   test/test_restclient.cc
   test/test_connection.cc
+  test/test_helpers.cc
 )
 target_include_directories(test-program
   PRIVATE include

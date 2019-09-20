@@ -39,7 +39,7 @@ find_package(Threads REQUIRED)
 find_package(CURL REQUIRED)
 find_package(jsoncpp)
 
-add_library(restclient-cpp SHARED
+add_library(restclient-cpp ${COMPILE_TYPE}
   source/restclient.cc
   source/connection.cc
   source/helpers.cc

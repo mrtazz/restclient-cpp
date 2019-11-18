@@ -444,11 +444,20 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
  * @brief HTTP GET method
  *
  * @param url to query
+ * @param data HTTP body
  *
  * @return response struct
  */
 RestClient::Response
-RestClient::Connection::get(const std::string& url) {
+RestClient::Connection::get(const std::string& url,
+                            const std::string& data) {
+
+  if( !data.empty() ){
+    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, "GET");
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDS, data.c_str());
+    curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDSIZE, data.size());
+  }
+    
   return this->performCurlRequest(url);
 }
 /**

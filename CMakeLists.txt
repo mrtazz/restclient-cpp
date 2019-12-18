@@ -96,7 +96,11 @@ install(TARGETS restclient-cpp EXPORT restclient-cppTargets
 
 include(CMakePackageConfigHelpers)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake.in"
-  "@PACKAGE_INIT@\ninclude(\${CMAKE_CURRENT_LIST_DIR}/\@PROJECT_NAME\@Targets.cmake)\n")
+  "@PACKAGE_INIT@\n"
+  "include(CMakeFindDependencyMacro)\n"
+  "find_dependency(CURL REQUIRED)\n"
+  "find_dependency(Threads REQUIRED)\n"
+  "include(\${CMAKE_CURRENT_LIST_DIR}/\@PROJECT_NAME\@Targets.cmake)\n")
 configure_package_config_file(
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake

@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.12.0)
 
 project(restclient-cpp
-  VERSION 0.5.1
+  VERSION 0.5.2
   DESCRIPTION "REST client for C++"
   HOMEPAGE_URL "http://code.mrtazz.com/restclient-cpp"
 )
@@ -115,7 +115,7 @@ configure_package_config_file(
     LIB_INSTALL_DIR
     DATA_INSTALL_DIR
 )
-  
+
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/restclient-cppConfigVersion.cmake"
   COMPATIBILITY

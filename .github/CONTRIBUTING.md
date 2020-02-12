@@ -15,3 +15,10 @@ working docker setup to make the full test suite pass.
 1. build vendorized gtest: `./utils/build_gtest.sh`
 2. build restclient-cpp: `./autogen.sh && ./configure && make check`
 3. run the unit test suite: `make ci`
+
+## Help wanted
+Given that I'm not in a position to maintain compatibility with all the different
+platforms, contributions around these are especially appreciated. I try to label
+issues accordingly. Some examples are:
+- [windows support](https://github.com/mrtazz/restclient-cpp/labels/windows)
+- [debian build problems](https://github.com/mrtazz/restclient-cpp/labels/debian)

@@ -21,7 +21,7 @@ AC_CHECK_LIB([curl], [main])
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile restclient-cpp.pc])
 
 # enable code coverage with ./configure --enable-coverage
 AC_ARG_ENABLE(coverage,

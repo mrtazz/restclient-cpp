@@ -12,6 +12,8 @@ vendor/*
 test-program
 .libs
 
+restclient-cpp.pc
+
 *autom4te.cache
 *aclocal.m4
 *compile

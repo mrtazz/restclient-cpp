@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: restclient-cpp
+Description: C++ client for making HTTP/REST requests
+URL: http://code.mrtazz.com/restclient-cpp/
+Version: @VERSION@
+Requires: curl
+Libs: -L${libdir} -lrestclient-cpp
+Cflags: -I${includedir}

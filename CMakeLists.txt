@@ -80,11 +80,12 @@ target_link_libraries(restclient-cpp
   PUBLIC Threads::Threads
 )
 
-set(INCLUDE_INSTALL_DIR "include/restclient-cpp" )
-set(CONFIG_INSTALL_DIR "lib/cmake/restclient-cpp" )
-set(RUNTIME_INSTALL_DIR "bin" )
-set(LIB_INSTALL_DIR "lib" )
-set(DATA_INSTALL_DIR "share/restclient-cpp" )
+include(GNUInstallDirs)
+set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/restclient-cpp" )
+set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/restclient-cpp" )
+set(RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}" )
+set(LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}" )
+set(DATA_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/restclient-cpp" )
 
 install(TARGETS restclient-cpp EXPORT restclient-cppTargets
   PUBLIC_HEADER DESTINATION ${INCLUDE_INSTALL_DIR}

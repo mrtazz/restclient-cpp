@@ -39,11 +39,12 @@ find_package(Threads REQUIRED)
 find_package(CURL REQUIRED)
 find_package(jsoncpp)
 
-if(NOT DEFINED COMPILE_TYPE)
-  set(COMPILE_TYPE SHARED)
-endif(NOT DEFINED COMPILE_TYPE)
+option(BUILD_SHARED_LIBS "Build shared library." YES)
+if(COMPILE_TYPE STREQUAL "SHARED")
+  set(BUILD_SHARED_LIBS YES)
+endif()
 
-add_library(restclient-cpp ${COMPILE_TYPE}
+add_library(restclient-cpp
   source/restclient.cc
   source/connection.cc
   source/helpers.cc

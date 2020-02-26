@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.2 (12th February 2020)
+- add a pkg-config setup
+- Use the standard CMake-flag BUILD_SHARED_LIBS. (tastytea)
+- Add CURL and Threads as dependency in CMake config. (tastytea)
+- Replace hardcoded installation directories with GNUInstallDirs. (tastytea)
+- Set minimum CMake version to 3.12.0 (tastytea)
+- Added default compile type to CMakeLists.txt (Jorge Marizan)
+- Added configurable compile type to CMakeLists.txt (Jorge Marizan)
+- use lambda over ptr_fun (Cynthia Coan)
+- mac os x uses glibtoolize not libtoolize (Cynthia Coan)
+- Use std::make_unique when C++14 is available (Heikki Hellgren)
+- fix git version problems during yocto build (Giuseppe Ursino)
+- fix autogen to work with yocto (Giuseppe Ursino)
+- fix relative path issues (Giuseppe Ursino)
+- Added support for Unix sockets. (Dennis Jenkins)
+- update CI dist to xenial (Daniel Schauenberg)
+
 ## v0.5.1 (6th May 2019)
 - add initial cmake build
 - switch httpbin tests over to https

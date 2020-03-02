@@ -8,15 +8,11 @@ config*
 *aclocal.m4
 *Makefile
 *Makefile.in
-vendor/gtest-1.7.0/scripts/gtest-config
-vendor/gtest-1.7.0/build-aux/config.h
-vendor/gtest-1.7.0/build-aux/config.h.in
-vendor/gtest-1.7.0/build-aux/ltmain.sh
-vendor/gtest-1.7.0/m4/ltoptions.m4
-vendor/gtest-1.7.0/m4/ltversion.m4
-vendor/jsoncpp-0.10.5/dist/.deps/jsoncpp.Po
+vendor/*
 test-program
 .libs
+
+restclient-cpp.pc
 
 *autom4te.cache
 *aclocal.m4
@@ -43,3 +39,4 @@ usr
 
 # generated files
 include/restclient-cpp/version.h
+arm-poky-linux-gnueabi-libtool

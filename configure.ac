@@ -1,5 +1,5 @@
 AC_PREREQ([2.52])
-AC_INIT([restclient-cpp], [0.4.4], [d@unwiredcouch.com])
+AC_INIT([restclient-cpp], [0.5.2], [d@unwiredcouch.com])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 LT_INIT
 AC_CONFIG_HEADERS([config.h])
@@ -21,7 +21,7 @@ AC_CHECK_LIB([curl], [main])
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile restclient-cpp.pc])
 
 # enable code coverage with ./configure --enable-coverage
 AC_ARG_ENABLE(coverage,

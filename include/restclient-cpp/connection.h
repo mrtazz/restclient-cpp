@@ -126,6 +126,7 @@ class Connection {
       std::string keyPassword;
       std::string customUserAgent;
       std::string uriProxy;
+      std::string unixSocketPath;
       RequestInfo lastRequest;
     } Info;
 
@@ -150,11 +151,9 @@ class Connection {
     // set to not use signals
     void SetNoSignal(bool no);
 
-    // set whether to follow redirects
-    void FollowRedirects(bool follow);
-
-    // set whether to follow redirects (-1 for unlimited)
-    void FollowRedirects(bool follow, int maxRedirects);
+    // set whether to follow redirects, maxRedirects indicitng the maximum
+    // number of redirects to follow
+    void FollowRedirects(bool follow, int maxRedirects = -1l);
 
     // set custom user agent
     // (this will result in the UA "foo/cool restclient-cpp/VERSION")
@@ -179,6 +178,9 @@ class Connection {
     // set CURLOPT_PROXY
     void SetProxy(const std::string& uriProxy);
 
+    // set CURLOPT_UNIX_SOCKET_PATH
+    void SetUnixSocketPath(const std::string& unixSocketPath);
+
     std::string GetUserAgent();
 
     RestClient::Connection::Info GetInfo();
@@ -200,8 +202,11 @@ class Connection {
                               const std::string& data);
     RestClient::Response put(const std::string& uri,
                              const std::string& data);
+    RestClient::Response patch(const std::string& uri,
+                             const std::string& data);
     RestClient::Response del(const std::string& uri);
     RestClient::Response head(const std::string& uri);
+    RestClient::Response options(const std::string& uri);
 
  private:
     CURL* curlHandle;
@@ -225,6 +230,7 @@ class Connection {
     std::string keyPath;
     std::string keyPassword;
     std::string uriProxy;
+    std::string unixSocketPath;
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

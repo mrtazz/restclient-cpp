@@ -26,7 +26,7 @@
  *
  */
 RestClient::Connection::Connection(const std::string& baseUrl)
-                               : lastRequest(), headerFields() {
+                               : headerFields(), lastRequest() {
   this->curlHandle = curl_easy_init();
   if (!this->curlHandle) {
     throw std::runtime_error("Couldn't initialize curl handle");
@@ -75,6 +75,7 @@ RestClient::Connection::GetInfo() {
   ret.keyPassword = this->keyPassword;
 
   ret.uriProxy = this->uriProxy;
+  ret.unixSocketPath = this->unixSocketPath;
 
   return ret;
 }
@@ -122,18 +123,7 @@ RestClient::Connection::GetHeaders() {
  * @brief configure whether to follow redirects on this connection
  *
  * @param follow - boolean whether to follow redirects
- */
-void
-RestClient::Connection::FollowRedirects(bool follow) {
-  this->followRedirects = follow;
-  this->maxRedirects = -1l;
-}
-
-/**
- * @brief configure whether to follow redirects on this connection
- *
- * @param follow - boolean whether to follow redirects
- * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited)
+ * @param maxRedirects - int indicating the maximum number of redirect to follow (-1 unlimited, default)
  */
 void
 RestClient::Connection::FollowRedirects(bool follow, int maxRedirects) {
@@ -304,6 +294,19 @@ RestClient::Connection::SetProxy(const std::string& uriProxy) {
 }
 
 /**
+ * @brief set custom Unix socket path for connection.
+ * See https://curl.haxx.se/libcurl/c/CURLOPT_UNIX_SOCKET_PATH.html
+ *
+ * @param unixSocketPath - path to Unix socket (ex: /var/run/docker.sock)
+ *
+ */
+void
+RestClient::Connection::SetUnixSocketPath(const std::string& unixSocketPath) {
+  this->unixSocketPath = unixSocketPath;
+}
+
+
+/**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
  * request and record some stats from the last request and then reset the
@@ -431,6 +434,12 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
                      1L);
   }
 
+  // set Unix socket path, if requested
+  if (!this->unixSocketPath.empty()) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_UNIX_SOCKET_PATH,
+                     this->unixSocketPath.c_str());
+  }
+
   res = curl_easy_perform(this->curlHandle);
   if (res != CURLE_OK) {
     switch (res) {
@@ -536,6 +545,39 @@ RestClient::Connection::put(const std::string& url,
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP PATCH method
+ *
+ * @param url to query
+ * @param data HTTP PATCH body
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::patch(const std::string& url,
+                            const std::string& data) {
+  /** initialize upload object */
+  RestClient::Helpers::UploadObject up_obj;
+  up_obj.data = data.c_str();
+  up_obj.length = data.size();
+
+  /** we want HTTP PATCH */
+  const char* http_patch = "PATCH";
+
+  /** set HTTP PATCH METHOD */
+  curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_patch);
+  curl_easy_setopt(this->curlHandle, CURLOPT_UPLOAD, 1L);
+  /** set read callback function */
+  curl_easy_setopt(this->curlHandle, CURLOPT_READFUNCTION,
+                   RestClient::Helpers::read_callback);
+  /** set data object to pass to callback function */
+  curl_easy_setopt(this->curlHandle, CURLOPT_READDATA, &up_obj);
+  /** set data size */
+  curl_easy_setopt(this->curlHandle, CURLOPT_INFILESIZE,
+                     static_cast<int64_t>(up_obj.length));
+
+  return this->performCurlRequest(url);
+}
+/**
  * @brief HTTP DELETE method
  *
  * @param url to query
@@ -567,6 +609,25 @@ RestClient::Connection::head(const std::string& url) {
 
     /** set HTTP HEAD METHOD */
     curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_head);
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
+
+    return this->performCurlRequest(url);
+}
+
+/**
+ * @brief HTTP OPTIONS method
+ *
+ * @param url to query
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::options(const std::string& url) {
+    /** we want HTTP OPTIONS */
+    const char* http_options = "OPTIONS";
+
+    /** set HTTP HEAD METHOD */
+    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_options);
     curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
 
     return this->performCurlRequest(url);

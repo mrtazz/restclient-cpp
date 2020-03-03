@@ -159,6 +159,21 @@ The connection object stores the curl easy handle in an instance variable and
 uses that for the lifetime of the object. This means curl will [automatically
 reuse connections][curl_keepalive] made with that handle.
 
+## Progress callback
+
+Two wrapper functions are provided to setup the progress callback for uploads/downloads. 
+
+Calling `conn->SetFileProgressCallback(callback)` with a callback parameter matching the prototype `int progress_callback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)` will setup the progress callback.
+
+Calling `conn->SetFileProgressCallbackData(data)` is optional. This will set the data pointer which is the first parameter fed back to the progress callback - `clientp`. If this isn't set then `clientp` will default to the connection object `conn`.
+
+```cpp
+// set CURLOPT_NOPROGRESS
+// set CURLOPT_PROGRESSFUNCTION
+conn->SetFileProgressCallback(progressFunc);
+// set CURLOPT_PROGRESSDATA
+conn->SetFileProgressCallbackData(data);
+```
 
 ## Thread Safety
 restclient-cpp leans heavily on libcurl as it aims to provide a thin wrapper

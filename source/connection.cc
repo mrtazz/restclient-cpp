@@ -36,6 +36,8 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->followRedirects = false;
   this->maxRedirects = -1l;
   this->noSignal = false;
+  this->progressFn = NULL;
+  this->progressFnData = NULL;
 }
 
 RestClient::Connection::~Connection() {
@@ -60,6 +62,8 @@ RestClient::Connection::GetInfo() {
   ret.followRedirects = this->followRedirects;
   ret.maxRedirects = this->maxRedirects;
   ret.noSignal = this->noSignal;
+  ret.progressFn = this->progressFn;
+  ret.progressFnData = this->progressFnData;
   ret.basicAuth.username = this->basicAuth.username;
   ret.basicAuth.password = this->basicAuth.password;
   ret.customUserAgent = this->customUserAgent;
@@ -186,6 +190,29 @@ RestClient::Connection::SetTimeout(int seconds) {
 void
 RestClient::Connection::SetNoSignal(bool no) {
   this->noSignal = no;
+}
+
+/**
+ * @brief set file progress callback function
+ *
+ * @param callback function pointer
+ *
+ */
+void
+RestClient::Connection::SetFileProgressCallback(curl_progress_callback
+                                                progressFn) {
+  this->progressFn = progressFn;
+}
+
+/**
+ * @brief set file progress callback data
+ *
+ * @param callback data pointer
+ *
+ */
+void
+RestClient::Connection::SetFileProgressCallbackData(void* data) {
+  this->progressFnData = data;
 }
 
 /**
@@ -352,6 +379,23 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   if (this->noSignal) {
     // multi-threaded and prevent entering foreign signal handler (e.g. JNI)
     curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+  }
+
+  // set file progress callback
+  if (this->progressFn) {
+    curl_easy_setopt(this->curlHandle, CURLOPT_NOPROGRESS, 0);
+    curl_easy_setopt(this->curlHandle,
+                     CURLOPT_PROGRESSFUNCTION,
+                    this->progressFn);
+    if (this->progressFnData) {
+      curl_easy_setopt(this->curlHandle,
+                       CURLOPT_PROGRESSDATA,
+                       this->progressFnData);
+    } else {
+      curl_easy_setopt(this->curlHandle,
+                       CURLOPT_PROGRESSDATA,
+                       this);
+    }
   }
 
   // if provided, supply CA path

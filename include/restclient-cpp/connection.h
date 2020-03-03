@@ -81,6 +81,10 @@ class Connection {
       *  Member 'followRedirects' contains whether or not to follow redirects
       *  @var Info::maxRedirects
       *  Member 'maxRedirects' contains the maximum number of redirect to follow (-1 unlimited)
+      *  @var Info::progressFn
+      *  Member 'progressFn' file progress callback function
+      *  @var Info::progressFnData
+      *  Member 'progressFnData' file progress callback data
       *  @var Info::basicAuth
       *  Member 'basicAuth' contains information about basic auth
       *  @var basicAuth::username
@@ -109,6 +113,8 @@ class Connection {
       bool followRedirects;
       int maxRedirects;
       bool noSignal;
+      curl_progress_callback progressFn;
+      void* progressFnData;
       struct {
         std::string username;
         std::string password;
@@ -135,6 +141,12 @@ class Connection {
 
     // set connection timeout to seconds
     void SetTimeout(int seconds);
+
+    // set file progress callback
+    void SetFileProgressCallback(curl_progress_callback progressFn);
+
+    // set file progress callback data
+    void SetFileProgressCallbackData(void* data);
 
     // set to not use signals
     void SetNoSignal(bool no);
@@ -204,6 +216,8 @@ class Connection {
     bool followRedirects;
     int maxRedirects;
     bool noSignal;
+    curl_progress_callback progressFn;
+    void* progressFnData;
     struct {
       std::string username;
       std::string password;

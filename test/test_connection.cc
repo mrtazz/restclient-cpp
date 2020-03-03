@@ -232,6 +232,26 @@ TEST_F(ConnectionTest, TestNoSignal)
   EXPECT_EQ(200, res.code);
 }
 
+TEST_F(ConnectionTest, TestSetProgress)
+{
+	static double totalToDownload = 0;
+	static double totalDownloaded = 0;
+
+	auto progressCallback = [](void* pData, double downloadTotal, double downloaded, double uploadTotal, double uploaded) -> int {
+    totalToDownload = downloadTotal;
+    totalDownloaded = downloaded;
+    return 0;
+	};
+
+	conn->SetFileProgressCallback(progressCallback);
+	conn->SetFileProgressCallbackData(NULL);
+
+  RestClient::Response res = conn->get("/anything/{test_data}");
+	EXPECT_EQ(200, res.code);
+  EXPECT_GT(totalDownloaded, 0);
+  EXPECT_EQ(totalDownloaded, totalToDownload);
+}
+
 TEST_F(ConnectionTest, TestProxy)
 {
   conn->SetProxy("127.0.0.1:3128");

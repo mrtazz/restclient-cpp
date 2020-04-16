@@ -56,6 +56,12 @@ class Connection {
       *  @var RequestInfo::redirectCount
       *  Member 'redirectCount' contains the number of redirects followed. See
       *  CURLINFO_REDIRECT_COUNT
+      *  @var RequestInfo::curlCode
+      *  Member 'curlCode' contains the cURL code (cast to int). See
+      *  libcurl-errors
+      *  @var RequestInfo::curlError
+      *  Member 'curlError' contains the cURL error as a string, if any. See
+      *  CURLOPT_ERRORBUFFER
       */
     typedef struct {
         double totalTime;
@@ -65,7 +71,9 @@ class Connection {
         double preTransferTime;
         double startTransferTime;
         double redirectTime;
-        int redirectCount;
+        long redirectCount;
+        int curlCode;
+        std::string curlError;
       } RequestInfo;
     /**
       *  @struct Info
@@ -231,6 +239,7 @@ class Connection {
     std::string keyPassword;
     std::string uriProxy;
     std::string unixSocketPath;
+    char curlErrorBuf[CURL_ERROR_SIZE];
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

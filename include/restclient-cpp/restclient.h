@@ -28,9 +28,9 @@ typedef std::map<std::string, std::string> HeaderFields;
 /** @struct Response
   *  @brief This structure represents the HTTP response data
   *  @var Response::code
-  *  Member 'code' contains the HTTP response code
+  *  Member 'code' contains the HTTP response code, or cURL error code
   *  @var Response::body
-  *  Member 'body' contains the HTTP response body
+  *  Member 'body' contains the HTTP response body, or curl_easy_strerror output
   *  @var Response::headers
   *  Member 'headers' contains the HTTP response headers
   */

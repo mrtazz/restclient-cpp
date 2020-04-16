@@ -71,7 +71,11 @@ class Connection {
         double preTransferTime;
         double startTransferTime;
         double redirectTime;
-        long redirectCount;
+        // note: libcurl specifies redirectCount is a long, but cpplint
+        // won't let us use long to match. So we must default to the
+        // largest int type available so as to not allow curl to corrupt
+        // the curlCode in that follows in this struct
+        uint64_t redirectCount;
         int curlCode;
         std::string curlError;
       } RequestInfo;

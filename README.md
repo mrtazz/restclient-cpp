@@ -159,7 +159,7 @@ The connection object stores the curl easy handle in an instance variable and
 uses that for the lifetime of the object. This means curl will [automatically
 reuse connections][curl_keepalive] made with that handle.
 
-## Progress callback
+### Progress callback
 
 Two wrapper functions are provided to setup the progress callback for uploads/downloads. 
 
@@ -174,6 +174,15 @@ conn->SetFileProgressCallback(progressFunc);
 // set CURLOPT_PROGRESSDATA
 conn->SetFileProgressCallbackData(data);
 ```
+
+## Error handling
+When restclient-cpp encounters an error, generally the error (or "status") code is returned in the `Response` (see
+[Response struct in restclient.h](https://github.com/mrtazz/restclient-cpp/blob/master/include/restclient-cpp/restclient.h)). This error code can be either
+an [HTTP error code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status), or if a lower-level cURL error was encountered, it may be
+a [CURLCode](https://curl.haxx.se/libcurl/c/libcurl-errors.html). Currently, libcurl only defines 92 error codes, which means
+there is no overlap between cURL error codes and HTTP response codes (which start at 1xx). However, if in the future, libcurl defines more than 99
+error codes, meaning that cURL errors overlap with the HTTP 1xx class of responses, restclient-cpp will return a -1 if the CURLCode is 100 or higher.
+In this case, callers can use `GetInfo().lastRequest.curlCode` to inspect the actual cURL error.
 
 ## Thread Safety
 restclient-cpp leans heavily on libcurl as it aims to provide a thin wrapper

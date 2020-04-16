@@ -46,8 +46,8 @@ TEST_F(ConnectionTest, TestFailForInvalidCA)
   conn->SetCAInfoFilePath("non-existent file");
   RestClient::Response res = conn->get("/get");
 
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ("Problem with the SSL CA cert (path? access rights?)", res.body);
+  EXPECT_EQ(77, res.code);
 }
 
 TEST_F(ConnectionTest, TestDefaultUserAgent)
@@ -102,6 +102,22 @@ TEST_F(ConnectionTest, TestSSLCert)
   RestClient::Response res = conn->get("/get");
 
   EXPECT_EQ(58, res.code);
+}
+
+TEST_F(ConnectionTest, TestCurlError)
+{
+	auto cancelCallback = [](void* pData, double downloadTotal, double downloaded, double uploadTotal, double uploaded) -> int {
+    // abort connection at first progress callback
+    return 1;
+	};
+	conn->SetFileProgressCallback(cancelCallback);
+	conn->SetFileProgressCallbackData(NULL);
+
+  RestClient::Response res = conn->get("/get");
+  int errorCode = conn->GetInfo().lastRequest.curlCode;
+
+  EXPECT_EQ(42, res.code);
+  EXPECT_EQ(42, errorCode);
 }
 
 TEST_F(ConnectionTest, TestSetHeaders)
@@ -191,7 +207,8 @@ TEST_F(ConnectionTest, TestFollowRedirectLimited)
   EXPECT_EQ(302, res.code);
   conn->FollowRedirects(true, 1);
   res = conn->get("/redirect/2");
-  EXPECT_EQ(-1, res.code);
+  // 47 = CURLE_TOO_MANY_REDIRECTS 
+  EXPECT_EQ(47, res.code);
   conn->FollowRedirects(true, 2);
   res = conn->get("/redirect/2");
   EXPECT_EQ(200, res.code);
@@ -278,6 +295,7 @@ TEST_F(ConnectionTest, TestInvalidProxy)
 {
   conn->SetProxy("127.0.0.1:666");
   RestClient::Response res = conn->get("/get");
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ("Couldn't connect to server", res.body);
+  // 7 = CURLE_COULDNT_CONNECT
+  EXPECT_EQ(7, res.code);
 }

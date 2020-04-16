@@ -51,7 +51,8 @@ TEST_F(RestClientTest, TestRestClientDELETEFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::del(u);
-  EXPECT_EQ(-1, res.code);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientDELETEHeaders)
@@ -89,8 +90,9 @@ TEST_F(RestClientTest, TestRestClientGETFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::get(u);
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
+  EXPECT_EQ("Couldn't resolve host name", res.body);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientGETHeaders)
@@ -123,7 +125,8 @@ TEST_F(RestClientTest, TestRestClientPOSTFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::post(u, "text/text", "data");
-  EXPECT_EQ(-1, res.code);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPOSTHeaders)
@@ -156,7 +159,8 @@ TEST_F(RestClientTest, TestRestClientPUTFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::put(u, "text/text", "data");
-  EXPECT_EQ(-1, res.code);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPUTHeaders)
@@ -189,7 +193,8 @@ TEST_F(RestClientTest, TestRestClientPATCHFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::patch(u, "text/text", "data");
-  EXPECT_EQ(-1, res.code);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientPATCHHeaders)
@@ -212,7 +217,8 @@ TEST_F(RestClientTest, TestRestClientOPTIONSFailureCode)
 {
   std::string u = "http://nonexistent";
   RestClient::Response res = RestClient::options(u);
-  EXPECT_EQ(-1, res.code);
+  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  EXPECT_EQ(6, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientOPTIONSHeaders)

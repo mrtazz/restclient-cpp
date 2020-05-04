@@ -359,6 +359,10 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     curl_easy_setopt(this->curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_easy_setopt(this->curlHandle, CURLOPT_USERPWD, authString.c_str());
   }
+  /** set error buffer */
+  curl_easy_setopt(this->curlHandle, CURLOPT_ERRORBUFFER,
+                   this->curlErrorBuf);
+
   /** set user agent */
   curl_easy_setopt(this->curlHandle, CURLOPT_USERAGENT,
                    this->GetUserAgent().c_str());
@@ -441,25 +445,21 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   }
 
   res = curl_easy_perform(this->curlHandle);
+  this->lastRequest.curlCode = res;
   if (res != CURLE_OK) {
-    switch (res) {
-      case CURLE_OPERATION_TIMEDOUT:
-        ret.code = res;
-        ret.body = "Operation Timeout.";
-        break;
-      case CURLE_SSL_CERTPROBLEM:
-        ret.code = res;
-        ret.body = curl_easy_strerror(res);
-        break;
-      default:
-        ret.body = "Failed to query.";
-        ret.code = -1;
+    int retCode = res;
+    if (retCode > 99) {
+      retCode = -1;
     }
+    ret.code = retCode;
+    ret.body = curl_easy_strerror(res);
   } else {
     int64_t http_code = 0;
     curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);
     ret.code = static_cast<int>(http_code);
   }
+
+  this->lastRequest.curlError = std::string(this->curlErrorBuf);
 
   curl_easy_getinfo(this->curlHandle, CURLINFO_TOTAL_TIME,
                     &this->lastRequest.totalTime);

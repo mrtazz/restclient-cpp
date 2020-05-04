@@ -10,11 +10,12 @@
 ## How to run tests
 
 Since most of the tests are actually integration tests you will need to have a
-working docker setup to make the full test suite pass.
+working docker setup to make the full test suite pass. gtest build requires python 2 :(
 
 1. build vendorized gtest: `./utils/build_gtest.sh`
-2. build restclient-cpp: `./autogen.sh && ./configure && make check`
-3. run the unit test suite: `make ci`
+1. build restclient-cpp: `./autogen.sh && ./configure && make check`
+1. ensure you have cpplint available `pip install cpplint`
+1. run the unit test suite: `make ci`
 
 ## Help wanted
 Given that I'm not in a position to maintain compatibility with all the different

@@ -23,6 +23,12 @@
 namespace RestClient {
 
 /**
+ * @brief define type used for RestClient write callback
+ */
+typedef size_t (*WriteCallback)(void *data, size_t size,
+                  size_t nmemb, void *userdata);
+
+/**
   * @brief Connection object for advanced usage
   */
 class Connection {
@@ -146,6 +152,9 @@ class Connection {
     explicit Connection(const std::string& baseUrl);
     ~Connection();
 
+    // Terminate open connection
+    void Terminate();
+
     // Instance configuration methods
     // configure basic auth
     void SetBasicAuth(const std::string& username,
@@ -193,6 +202,9 @@ class Connection {
     // set CURLOPT_UNIX_SOCKET_PATH
     void SetUnixSocketPath(const std::string& unixSocketPath);
 
+    // set CURLOPT_WRITEFUNCTION
+    void SetWriteFunction(WriteCallback write_callback);
+
     std::string GetUserAgent();
 
     RestClient::Connection::Info GetInfo();
@@ -220,7 +232,12 @@ class Connection {
     RestClient::Response head(const std::string& uri);
     RestClient::Response options(const std::string& uri);
 
+    // GET with custom response structure
+    RestClient::Response*
+    get(const std::string& uri, RestClient::Response* response);
+
  private:
+    CURL* getCurlHandle();
     CURL* curlHandle;
     std::string baseUrl;
     RestClient::HeaderFields headerFields;
@@ -244,6 +261,9 @@ class Connection {
     std::string uriProxy;
     std::string unixSocketPath;
     char curlErrorBuf[CURL_ERROR_SIZE];
+    RestClient::WriteCallback writeCallback;
+    RestClient::Response*
+    performCurlRequest(const std::string& uri, RestClient::Response* resp);
     RestClient::Response performCurlRequest(const std::string& uri);
 };
 };  // namespace RestClient

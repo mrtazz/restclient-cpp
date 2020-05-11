@@ -4,6 +4,8 @@
 #include <json/json.h>
 #include <string>
 
+#include "tests.h"
+
 class ConnectionTest : public ::testing::Test
 {
  protected:
@@ -13,6 +15,7 @@ class ConnectionTest : public ::testing::Test
     ConnectionTest()
     {
       conn = NULL;
+      testUrl = RestClient::TestUrl;
     }
 
     virtual ~ConnectionTest()
@@ -21,7 +24,8 @@ class ConnectionTest : public ::testing::Test
 
     virtual void SetUp()
     {
-      conn = new RestClient::Connection("https://httpbin.org");
+      // Port below should match what is set in Makefile.in
+      conn = new RestClient::Connection(testUrl);
       conn->SetTimeout(10);
     }
 
@@ -30,17 +34,28 @@ class ConnectionTest : public ::testing::Test
       delete conn;
     }
 
+    std::string testUrl;
+};
+
+class ConnectionTestRemote : public ConnectionTest
+{
+protected:
+    ConnectionTestRemote()
+    {
+      // Port below should match what is set in Makefile.in
+      testUrl = "https://httpbin.org";
+    }
 };
 
 TEST_F(ConnectionTest, TestTimeout)
 {
   std::string uri = "/delay/5";
-  conn->SetTimeout(2);
+  conn->SetTimeout(4);
   RestClient::Response res = conn->get(uri);
   EXPECT_EQ(28, res.code);
 }
 
-TEST_F(ConnectionTest, TestFailForInvalidCA)
+TEST_F(ConnectionTestRemote, TestFailForInvalidCA)
 {
   // set a non-existing file for the CA file and it should fail to verify the peer
   conn->SetCAInfoFilePath("non-existent file");
@@ -57,7 +72,7 @@ TEST_F(ConnectionTest, TestDefaultUserAgent)
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ(testUrl + "/get", root.get("url", "no url set").asString());
   EXPECT_EQ("restclient-cpp/" RESTCLIENT_VERSION,
       root["headers"].get("User-Agent", "nope/nope").asString());
 }
@@ -70,7 +85,7 @@ TEST_F(ConnectionTest, TestCustomUserAgent)
   std::istringstream str(res.body);
   str >> root;
 
-  EXPECT_EQ("https://httpbin.org/get", root.get("url", "no url set").asString());
+  EXPECT_EQ(testUrl + "/get", root.get("url", "no url set").asString());
   EXPECT_EQ("foobar/1.2.3 restclient-cpp/" RESTCLIENT_VERSION,
       root["headers"].get("User-Agent", "nope/nope").asString());
 }
@@ -93,7 +108,7 @@ TEST_F(ConnectionTest, TestBasicAuth)
 
 }
 
-TEST_F(ConnectionTest, TestSSLCert)
+TEST_F(ConnectionTestRemote, TestSSLCert)
 {
   conn->SetCertPath("non-existent file");
   conn->SetKeyPath("non-existent key path");
@@ -164,7 +179,7 @@ TEST_F(ConnectionTest, TestGetHeaders)
 
 }
 
-TEST_F(ConnectionTest, TestGetInfo)
+TEST_F(ConnectionTestRemote, TestGetInfo)
 {
   RestClient::HeaderFields headers;
   headers["Foo"] = "bar";
@@ -181,7 +196,7 @@ TEST_F(ConnectionTest, TestGetInfo)
   EXPECT_EQ("bar", info.basicAuth.password);
   EXPECT_EQ("foobar/1.2.3", info.customUserAgent);
   EXPECT_EQ(2, info.timeout);
-  EXPECT_EQ("https://httpbin.org", info.baseUrl);
+  EXPECT_EQ(testUrl, info.baseUrl);
   EXPECT_NE(0, info.lastRequest.totalTime);
   EXPECT_NE(0, info.lastRequest.connectTime);
   EXPECT_NE(0, info.lastRequest.nameLookupTime);
@@ -269,24 +284,24 @@ TEST_F(ConnectionTest, TestSetProgress)
   EXPECT_EQ(totalDownloaded, totalToDownload);
 }
 
-TEST_F(ConnectionTest, TestProxy)
+TEST_F(ConnectionTestRemote, TestProxy)
 {
-  conn->SetProxy("127.0.0.1:3128");
+  conn->SetProxy(RestClient::TestProxyUrl);
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
 
-TEST_F(ConnectionTest, TestUnSetProxy)
+TEST_F(ConnectionTestRemote, TestUnSetProxy)
 {
-  conn->SetProxy("127.0.0.1:3128");
+  conn->SetProxy(RestClient::TestProxyUrl);
   conn->SetProxy("");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
 
-TEST_F(ConnectionTest, TestProxyAddressPrefixed)
+TEST_F(ConnectionTestRemote, TestProxyAddressPrefixed)
 {
-  conn->SetProxy("http://127.0.0.1:3128");
+  conn->SetProxy(RestClient::TestProxyUrl);
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
@@ -296,6 +311,71 @@ TEST_F(ConnectionTest, TestInvalidProxy)
   conn->SetProxy("127.0.0.1:666");
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ("Couldn't connect to server", res.body);
-  // 7 = CURLE_COULDNT_CONNECT
-  EXPECT_EQ(7, res.code);
+  EXPECT_EQ(CURLE_COULDNT_CONNECT, res.code);
+}
+
+TEST_F(ConnectionTest, TestTerminate)
+{
+  conn->Terminate();
+  EXPECT_THROW({
+      try
+      {
+          RestClient::Response res = conn->get("/get");
+      }
+      catch(const std::runtime_error& e)
+      {
+          EXPECT_STREQ("Connection terminated", e.what());
+          throw;
+      }
+  }, std::runtime_error);
+}
+
+TEST_F(ConnectionTest, TestSetWriteFunction)
+{
+  static std::string lineReceived;
+  static size_t lines = 0;
+  static size_t ret = 0;
+
+	auto writeCallback = [](void *data, size_t size, size_t nmemb, void *userdata) -> size_t
+  {
+    size_t bytes = size * nmemb;
+    try
+    {
+        // Add to the buffer
+        auto res = reinterpret_cast<RestClient::Response *>(userdata);
+        res->body.append(static_cast<char*>(data), bytes);
+        // If the last character is not a new line, wait for the rest.
+        if ('\n' != *(res->body.end() - 1))
+        {
+            return bytes;
+        }
+        // Process data one line at a time.
+        std::stringstream stream(res->body);
+        std::string line;
+        while (std::getline(stream, line))
+        {
+          // Do something with the line here...
+          lineReceived += line;
+          lines++;
+        }
+        // Done processing the line
+        res->body.clear();
+    }
+    catch(std::exception e)
+    {
+        // Log caught exception here
+        return 0;
+    }
+    ret = bytes;
+    return bytes;
+  };
+
+  conn->SetWriteFunction(writeCallback);
+
+  RestClient::Response res = {};
+  auto ret_res = conn->get("/get", &res);
+
+  EXPECT_EQ(ret_res, &res);
+  EXPECT_EQ(200, res.code);
+  EXPECT_EQ(ret, lineReceived.size() + lines);
 }

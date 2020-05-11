@@ -38,12 +38,29 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->noSignal = false;
   this->progressFn = NULL;
   this->progressFnData = NULL;
+  this->writeCallback = RestClient::Helpers::write_callback;
 }
 
-RestClient::Connection::~Connection() {
+/**
+ * @brief Getter used to ensure NULL handle is not used.
+ *
+ */
+CURL* RestClient::Connection::getCurlHandle() {
+  if (this->curlHandle) {
+    return this->curlHandle;
+  }
+  throw std::runtime_error("Connection terminated");
+}
+
+void RestClient::Connection::Terminate() {
   if (this->curlHandle) {
     curl_easy_cleanup(this->curlHandle);
   }
+  this->curlHandle = NULL;
+}
+
+RestClient::Connection::~Connection() {
+  this->Terminate();
 }
 
 // getters/setters
@@ -305,6 +322,19 @@ RestClient::Connection::SetUnixSocketPath(const std::string& unixSocketPath) {
   this->unixSocketPath = unixSocketPath;
 }
 
+/**
+ * @brief set callback for writing received data.  Last parameter
+ * to callback (userdata) points to a RestClient::Response. For details,
+ * see https://curl.haxx.se/libcurl/c/CURLOPT_WRITEFUNCTION.html
+ *
+ * @param write_callback - callback to handle received data
+ *
+ */
+void
+RestClient::Connection::SetWriteFunction(RestClient::WriteCallback
+writeCallback) {
+  this->writeCallback = writeCallback;
+}
 
 /**
  * @brief helper function to get called from the actual request methods to
@@ -315,14 +345,37 @@ RestClient::Connection::SetUnixSocketPath(const std::string& unixSocketPath) {
  * parameters on the object for another request.
  *
  * @param uri URI to query
- * @param ret Reference to the Response struct that should be filled
  *
- * @return 0 on success and 1 on error
+ * @return Reference to the Response struct that should be filled
  */
 RestClient::Response
 RestClient::Connection::performCurlRequest(const std::string& uri) {
   // init return type
   RestClient::Response ret = {};
+  performCurlRequest(uri, &ret);
+  return ret;
+}
+
+/**
+ * @brief helper function to get called from the actual request methods to
+ * prepare the curlHandle for transfer with generic options, perform the
+ * request and record some stats from the last request and then reset the
+ * handle with curl_easy_reset to its default state. This will keep things
+ * like connections and session ID intact but makes sure you can change
+ * parameters on the object for another request.
+ *
+ * @param uri URI to query
+ * @param ret Reference to the response struct that should be filled
+ * 
+ * @return reference to response struct for chaining
+ */
+RestClient::Response*
+RestClient::Connection::performCurlRequest(const std::string& uri,
+                                           RestClient::Response* ret) {
+  // init return type
+  ret->body.clear();
+  ret->code = 0;
+  ret->headers.clear();
 
   std::string url = std::string(this->baseUrl + uri);
   std::string headerString;
@@ -330,17 +383,17 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
   curl_slist* headerList = NULL;
 
   /** set query URL */
-  curl_easy_setopt(this->curlHandle, CURLOPT_URL, url.c_str());
+  curl_easy_setopt(getCurlHandle(), CURLOPT_URL, url.c_str());
   /** set callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEFUNCTION,
-                   Helpers::write_callback);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_WRITEFUNCTION,
+                   this->writeCallback);
   /** set data object to pass to callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_WRITEDATA, &ret);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_WRITEDATA, ret);
   /** set the header callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_HEADERFUNCTION,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_HEADERFUNCTION,
                    Helpers::header_callback);
   /** callback object for headers */
-  curl_easy_setopt(this->curlHandle, CURLOPT_HEADERDATA, &ret);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_HEADERDATA, ret);
   /** set http headers */
   for (HeaderFields::const_iterator it = this->headerFields.begin();
       it != this->headerFields.end(); ++it) {
@@ -349,54 +402,54 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
     headerString += it->second;
     headerList = curl_slist_append(headerList, headerString.c_str());
   }
-  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPHEADER,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPHEADER,
       headerList);
 
   // set basic auth if configured
   if (this->basicAuth.username.length() > 0) {
     std::string authString = std::string(this->basicAuth.username + ":" +
                                          this->basicAuth.password);
-    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_easy_setopt(this->curlHandle, CURLOPT_USERPWD, authString.c_str());
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_USERPWD, authString.c_str());
   }
   /** set error buffer */
-  curl_easy_setopt(this->curlHandle, CURLOPT_ERRORBUFFER,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_ERRORBUFFER,
                    this->curlErrorBuf);
 
   /** set user agent */
-  curl_easy_setopt(this->curlHandle, CURLOPT_USERAGENT,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_USERAGENT,
                    this->GetUserAgent().c_str());
 
   // set timeout
   if (this->timeout) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_TIMEOUT, this->timeout);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_TIMEOUT, this->timeout);
     // dont want to get a sig alarm on timeout
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_NOSIGNAL, 1);
   }
   // set follow redirect
   if (this->followRedirects == true) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(this->curlHandle, CURLOPT_MAXREDIRS,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_MAXREDIRS,
                      static_cast<int64_t>(this->maxRedirects));
   }
 
   if (this->noSignal) {
     // multi-threaded and prevent entering foreign signal handler (e.g. JNI)
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOSIGNAL, 1);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_NOSIGNAL, 1);
   }
 
   // set file progress callback
   if (this->progressFn) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOPROGRESS, 0);
-    curl_easy_setopt(this->curlHandle,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_NOPROGRESS, 0);
+    curl_easy_setopt(getCurlHandle(),
                      CURLOPT_PROGRESSFUNCTION,
                     this->progressFn);
     if (this->progressFnData) {
-      curl_easy_setopt(this->curlHandle,
+      curl_easy_setopt(getCurlHandle(),
                        CURLOPT_PROGRESSDATA,
                        this->progressFnData);
     } else {
-      curl_easy_setopt(this->curlHandle,
+      curl_easy_setopt(getCurlHandle(),
                        CURLOPT_PROGRESSDATA,
                        this);
     }
@@ -404,83 +457,83 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
 
   // if provided, supply CA path
   if (!this->caInfoFilePath.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_CAINFO,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_CAINFO,
                      this->caInfoFilePath.c_str());
   }
 
   // set cert file path
   if (!this->certPath.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_SSLCERT,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_SSLCERT,
                      this->certPath.c_str());
   }
 
   // set cert type
   if (!this->certType.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_SSLCERTTYPE,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_SSLCERTTYPE,
                      this->certType.c_str());
   }
   // set key file path
   if (!this->keyPath.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_SSLKEY,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_SSLKEY,
                      this->keyPath.c_str());
   }
   // set key password
   if (!this->keyPassword.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_KEYPASSWD,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_KEYPASSWD,
                      this->keyPassword.c_str());
   }
 
   // set web proxy address
   if (!this->uriProxy.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_PROXY,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_PROXY,
                      uriProxy.c_str());
-    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
                      1L);
   }
 
   // set Unix socket path, if requested
   if (!this->unixSocketPath.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_UNIX_SOCKET_PATH,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_UNIX_SOCKET_PATH,
                      this->unixSocketPath.c_str());
   }
 
-  res = curl_easy_perform(this->curlHandle);
+  res = curl_easy_perform(getCurlHandle());
   this->lastRequest.curlCode = res;
   if (res != CURLE_OK) {
     int retCode = res;
     if (retCode > 99) {
       retCode = -1;
     }
-    ret.code = retCode;
-    ret.body = curl_easy_strerror(res);
+    ret->code = retCode;
+    ret->body = curl_easy_strerror(res);
   } else {
     int64_t http_code = 0;
-    curl_easy_getinfo(this->curlHandle, CURLINFO_RESPONSE_CODE, &http_code);
-    ret.code = static_cast<int>(http_code);
+    curl_easy_getinfo(getCurlHandle(), CURLINFO_RESPONSE_CODE, &http_code);
+    ret->code = static_cast<int>(http_code);
   }
 
   this->lastRequest.curlError = std::string(this->curlErrorBuf);
 
-  curl_easy_getinfo(this->curlHandle, CURLINFO_TOTAL_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_TOTAL_TIME,
                     &this->lastRequest.totalTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_NAMELOOKUP_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_NAMELOOKUP_TIME,
                     &this->lastRequest.nameLookupTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_CONNECT_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_CONNECT_TIME,
                     &this->lastRequest.connectTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_APPCONNECT_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_APPCONNECT_TIME,
                     &this->lastRequest.appConnectTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_PRETRANSFER_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_PRETRANSFER_TIME,
                     &this->lastRequest.preTransferTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_STARTTRANSFER_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_STARTTRANSFER_TIME,
                     &this->lastRequest.startTransferTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_REDIRECT_TIME,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_REDIRECT_TIME,
                     &this->lastRequest.redirectTime);
-  curl_easy_getinfo(this->curlHandle, CURLINFO_REDIRECT_COUNT,
+  curl_easy_getinfo(getCurlHandle(), CURLINFO_REDIRECT_COUNT,
                     &this->lastRequest.redirectCount);
   // free header list
   curl_slist_free_all(headerList);
   // reset curl handle
-  curl_easy_reset(this->curlHandle);
+  curl_easy_reset(getCurlHandle());
   return ret;
 }
 
@@ -496,6 +549,19 @@ RestClient::Connection::get(const std::string& url) {
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP GET method
+ *
+ * @param url to query
+ * @param response struct
+ * 
+ * @return response struct ref for chaining
+ */
+RestClient::Response*
+RestClient::Connection::get(const std::string& url,
+                            RestClient::Response* response) {
+  return this->performCurlRequest(url, response);
+}
+/**
  * @brief HTTP POST method
  *
  * @param url to query
@@ -507,10 +573,10 @@ RestClient::Response
 RestClient::Connection::post(const std::string& url,
                              const std::string& data) {
   /** Now specify we want to POST data */
-  curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_POST, 1L);
   /** set post fields */
-  curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDS, data.c_str());
-  curl_easy_setopt(this->curlHandle, CURLOPT_POSTFIELDSIZE, data.size());
+  curl_easy_setopt(getCurlHandle(), CURLOPT_POSTFIELDS, data.c_str());
+  curl_easy_setopt(getCurlHandle(), CURLOPT_POSTFIELDSIZE, data.size());
 
   return this->performCurlRequest(url);
 }
@@ -531,15 +597,15 @@ RestClient::Connection::put(const std::string& url,
   up_obj.length = data.size();
 
   /** Now specify we want to PUT data */
-  curl_easy_setopt(this->curlHandle, CURLOPT_PUT, 1L);
-  curl_easy_setopt(this->curlHandle, CURLOPT_UPLOAD, 1L);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_PUT, 1L);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_UPLOAD, 1L);
   /** set read callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_READFUNCTION,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_READFUNCTION,
                    RestClient::Helpers::read_callback);
   /** set data object to pass to callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_READDATA, &up_obj);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_READDATA, &up_obj);
   /** set data size */
-  curl_easy_setopt(this->curlHandle, CURLOPT_INFILESIZE,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_INFILESIZE,
                      static_cast<int64_t>(up_obj.length));
 
   return this->performCurlRequest(url);
@@ -564,15 +630,15 @@ RestClient::Connection::patch(const std::string& url,
   const char* http_patch = "PATCH";
 
   /** set HTTP PATCH METHOD */
-  curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_patch);
-  curl_easy_setopt(this->curlHandle, CURLOPT_UPLOAD, 1L);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_CUSTOMREQUEST, http_patch);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_UPLOAD, 1L);
   /** set read callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_READFUNCTION,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_READFUNCTION,
                    RestClient::Helpers::read_callback);
   /** set data object to pass to callback function */
-  curl_easy_setopt(this->curlHandle, CURLOPT_READDATA, &up_obj);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_READDATA, &up_obj);
   /** set data size */
-  curl_easy_setopt(this->curlHandle, CURLOPT_INFILESIZE,
+  curl_easy_setopt(getCurlHandle(), CURLOPT_INFILESIZE,
                      static_cast<int64_t>(up_obj.length));
 
   return this->performCurlRequest(url);
@@ -590,7 +656,7 @@ RestClient::Connection::del(const std::string& url) {
   const char* http_delete = "DELETE";
 
   /** set HTTP DELETE METHOD */
-  curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_delete);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_CUSTOMREQUEST, http_delete);
 
   return this->performCurlRequest(url);
 }
@@ -608,8 +674,8 @@ RestClient::Connection::head(const std::string& url) {
     const char* http_head = "HEAD";
 
     /** set HTTP HEAD METHOD */
-    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_head);
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_CUSTOMREQUEST, http_head);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_NOBODY, 1L);
 
     return this->performCurlRequest(url);
 }
@@ -627,8 +693,8 @@ RestClient::Connection::options(const std::string& url) {
     const char* http_options = "OPTIONS";
 
     /** set HTTP HEAD METHOD */
-    curl_easy_setopt(this->curlHandle, CURLOPT_CUSTOMREQUEST, http_options);
-    curl_easy_setopt(this->curlHandle, CURLOPT_NOBODY, 1L);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_CUSTOMREQUEST, http_options);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_NOBODY, 1L);
 
     return this->performCurlRequest(url);
 }

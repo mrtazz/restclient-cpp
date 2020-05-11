@@ -16,27 +16,35 @@ librestclient_cpp_la_LDFLAGS=-version-info 2:1:1
 
 dist_doc_DATA = README.md
 
-.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci docker-services
+.PHONY: test check clean-coverage-files coverage-html include/restclient-cpp/version.h lint ci docker-services clean-docker-services
 
 include/restclient-cpp/version.h:
 	m4 -I ${top_srcdir}/m4 -DM4_RESTCLIENT_VERSION=$(PACKAGE_VERSION) version.h.m4 > ${top_srcdir}/$@ 
  
 
 
-test: check
+test: check docker-services
 	./test-program
 
 valgrind: check
 	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
 lint:
-	cpplint --filter=-legal/copyright include/restclient-cpp/*.h source/*.cc
+	cpplint --filter=-legal/copyright --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
 
 docker-services:
-	docker inspect --format="{{ .State.Running }}" restclient-proxy &> /dev/null || docker run -d --name restclient-proxy -p 3128:3128 chrisdaish/squid
-	docker ps -a
+	[ -n "$$(docker ps --quiet --filter name=restclient-cpp-httpbin)" ] || \
+		docker run --detach -p 8998:80 --name restclient-cpp-httpbin kennethreitz/httpbin
+	[ -n "$$(docker ps --quiet --filter name=restclient-cpp-squid)" ] || \
+		docker run --detach -p 3128:3128 --name restclient-cpp-squid \
+		--volume "$(CURDIR)/test/squid.conf:/etc/squid/squid.conf:ro" sameersbn/squid:3.5.27-2
+	docker ps --all --filter 'name=^restclient-cpp-'
 
-ci: lint docker-services test valgrind
+clean-docker-services:
+	docker rm --force restclient-cpp-httpbin 2>/dev/null || true
+	docker rm --force restclient-cpp-squid 2>/dev/null || true
+
+ci: lint test valgrind
 
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm

@@ -175,6 +175,47 @@ conn->SetFileProgressCallback(progressFunc);
 conn->SetFileProgressCallbackData(data);
 ```
 
+### Write callback
+
+A write callback function can be provided for processing data as it's received from a GET call (for instance the [Kubernetes Watch API](https://kubernetes.io/docs/reference/using-api/api-concepts/#efficient-detection-of-changes)).
+
+Calling `conn->SetWriteFunction(callback)` with a function parameter matching the prototype `size_t write_function(void *data, size_t size, size_t nmemb, void *userdata)int progress_callback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)` will setup the write function.
+
+Here is an example of a write callback function, processing result data line by line.
+
+```cpp
+auto writeCallback = [](void *data, size_t size, size_t nmemb, void *userdata) -> size_t
+{
+  size_t bytes = size * nmemb;
+  try
+  {
+      // Add to the buffer
+      auto res = reinterpret_cast<RestClient::Response *>(userdata);
+      res->body.append(static_cast<char*>(data), bytes);
+      // If the last character is not a new line, wait for the rest.
+      if ('\n' != *(res->body.end() - 1))
+      {
+          return bytes;
+      }
+      // Process data one line at a time.
+      std::stringstream stream(res->body);
+      std::string line;
+      while (std::getline(stream, line))
+      {
+        // Do something with the line here...
+      }
+      // Done processing the line
+      res->body.clear();
+  }
+  catch(std::exception e)
+  {
+      // Log caught exception here
+      return 0;
+  }
+  return bytes;
+};
+```
+
 ## Error handling
 When restclient-cpp encounters an error, generally the error (or "status") code is returned in the `Response` (see
 [Response struct in restclient.h](https://github.com/mrtazz/restclient-cpp/blob/master/include/restclient-cpp/restclient.h)). This error code can be either

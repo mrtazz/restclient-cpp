@@ -62,7 +62,11 @@ list(APPEND restclient-cpp_PUBLIC_HEADERS
 # target_sources(restclient-cpp PRIVATE ${restclient-cpp_PUBLIC_HEADERS})
 set_property(TARGET restclient-cpp PROPERTY
   PUBLIC_HEADER ${restclient-cpp_PUBLIC_HEADERS})
-target_include_directories(restclient-cpp PRIVATE include)
+target_include_directories(restclient-cpp
+    PRIVATE include    
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+)
 
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/version.h.in")
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/version.h.in" [=[

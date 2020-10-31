@@ -2,7 +2,7 @@
 .PHONY: rpm deb packages deploy-packages
 
 local-install:
-	$(MAKE) install PREFIX=usr
+	$(MAKE) install PREFIX=usr DESTDIR="$(CURDIR)"
 
 NAME=restclient-cpp
 VERSION = $(shell git describe --tags --always --dirty)
@@ -25,10 +25,7 @@ packages: local-install rpm deb
 
 deploy-packages: packages
 	package_cloud push mrtazz/$(NAME)/el/7 *.rpm
-	package_cloud push mrtazz/$(NAME)/debian/wheezy *.deb
-	package_cloud push mrtazz/$(NAME)/debian/jessie *.deb
 	package_cloud push mrtazz/$(NAME)/debian/stretch *.deb
 	package_cloud push mrtazz/$(NAME)/debian/buster *.deb
-	package_cloud push mrtazz/$(NAME)/ubuntu/trusty *.deb
 	package_cloud push mrtazz/$(NAME)/ubuntu/xenial *.deb
 	package_cloud push mrtazz/$(NAME)/ubuntu/bionic *.deb

@@ -1,5 +1,5 @@
 language: cpp
-dist: xenial
+dist: bionic
 sudo: required
 group: beta
 
@@ -12,6 +12,7 @@ compiler:
 script:
   - ./autogen.sh && ./configure --enable-coverage
   - make ci
+  - make packages
 
 install:
 - gem install fpm

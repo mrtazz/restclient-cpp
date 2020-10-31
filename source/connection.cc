@@ -317,41 +317,6 @@ RestClient::Connection::SetProxy(const std::string& uriProxy) {
 }
 
 /**
- * @brief set key password
- *
- * @param key password
- *
- */
-void
-RestClient::Connection::SetKeyPassword(const std::string& keyPassword) {
-  this->keyPassword = keyPassword;
-}
-
-/**
- * @brief set HTTP proxy address and port
- *
- * @param proxy address with port number
- *
- */
-void
-RestClient::Connection::SetProxy(const std::string& uriProxy) {
-  if (uriProxy.empty()) {
-    return;
-  }
-  
-  std::string uriProxyUpper = uriProxy;
-  // check if the provided address is prefixed with "http"
-  std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),
-    uriProxyUpper.begin(), ::toupper);
-
-  if (uriProxyUpper.compare(0, 4, "HTTP") != 0) {
-    this->uriProxy = "http://" + uriProxy;
-  } else {
-    this->uriProxy = uriProxy;
-  }
-}
-
-/**
  * @brief set custom Unix socket path for connection.
  * See https://curl.haxx.se/libcurl/c/CURLOPT_UNIX_SOCKET_PATH.html
  *
@@ -520,28 +485,28 @@ RestClient::Connection::performCurlRequest(const std::string& uri,
   }
   // set key password
   if (!this->keyPassword.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_KEYPASSWD,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_KEYPASSWD,
                      this->keyPassword.c_str());
   }
 
   // set web proxy address
   if (!this->uriProxy.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_PROXY,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_PROXY,
                      uriProxy.c_str());
-    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
                      1L);
   }
   // set key password
   if (!this->keyPassword.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_KEYPASSWD,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_KEYPASSWD,
                      this->keyPassword.c_str());
   }
 
   // set web proxy address
   if (!this->uriProxy.empty()) {
-    curl_easy_setopt(this->curlHandle, CURLOPT_PROXY,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_PROXY,
                      uriProxy.c_str());
-    curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPROXYTUNNEL,
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
                      1L);
   }
   // set key password
@@ -656,34 +621,14 @@ RestClient::Connection::post(const std::string& url,
  * @return response struct
  */
 RestClient::Response
-RestClient::Connection::postForm(const std::string& url,
-                             const Helpers::PostFormInfo& data) {
+RestClient::Connection::post(const std::string& url,
+                             const FormData& data) {
   /** Now specify we want to POST data */
-  curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
+  curl_easy_setopt(getCurlHandle(), CURLOPT_POST, 1L);
   /* stating that Expect: 100-continue is not wanted */
   AppendHeader("Expect", "");
   /** set post form */
-  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPOST, data.formPtr);
-
-  return this->performCurlRequest(url);
-}
-/**
- * @brief HTTP POST Form method
- *
- * @param url to query
- * @param data form info
- *
- * @return response struct
- */
-RestClient::Response
-RestClient::Connection::postForm(const std::string& url,
-                             const PostFormInfo& data) {
-  /** Now specify we want to POST data */
-  curl_easy_setopt(this->curlHandle, CURLOPT_POST, 1L);
-  /* stating that Expect: 100-continue is not wanted */
-  AppendHeader("Expect", "");
-  /** set post form */
-  curl_easy_setopt(this->curlHandle, CURLOPT_HTTPPOST, data.GetFormPtr());
+  curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPOST, data.getFormPtr());
 
   return this->performCurlRequest(url);
 }
@@ -727,7 +672,7 @@ RestClient::Connection::put(const std::string& url,
  */
 RestClient::Response
 RestClient::Connection::patch(const std::string& url,
-                            const std::string& data) {
+                              const std::string& data) {
   /** initialize upload object */
   RestClient::Helpers::UploadObject up_obj;
   up_obj.data = data.c_str();

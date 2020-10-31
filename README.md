@@ -32,8 +32,8 @@ RestClient::Response r = RestClient::head("http://url.com")
 RestClient::Response r = RestClient::options("http://url.com")
 
 // Post Form Upload
-/* Filling information about the form in a RestClient::PostFormInfo object */
-RestClient::PostFormInfo uploadInfo;
+/* Filling information about the form in a RestClient::FormData object */
+RestClient::FormData uploadInfo;
 /* "submitted" is the name of the "file" input and "TestPostForm.txt"
 is the location of the file to submit.
 <input type="file" name="submitted">
@@ -48,7 +48,7 @@ the 2nd argument is the value assigned to it.
 uploadInfo.addFormContent("filename", "myfile.cpp");
 uploadInfo.addFormContent("submit", "send");
 /* Performing a post form upload with the information provided above */
-RestClient::Response res = RestClient::postForm("http://posttestserver.com/post.php?dir=restclientcpptests", uploadInfo);
+RestClient::Response res = RestClient::post("http://posttestserver.com/post.php?dir=restclientcpptests", uploadInfo);
 ```
 
 The response is of type [RestClient::Response][restclient_response] and has

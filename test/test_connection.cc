@@ -378,30 +378,5 @@ TEST_F(ConnectionTest, TestSetWriteFunction)
   EXPECT_EQ(ret_res, &res);
   EXPECT_EQ(200, res.code);
   EXPECT_EQ(ret, lineReceived.size() + lines);
-=======
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
->>>>>>> 934aff7... Added web proxy tunneling support.
 }
 
-TEST_F(ConnectionTest, TestProxy)
-{
-  conn->SetProxy("37.187.100.23:3128");
-  RestClient::Response res = conn->get("/get");
-  EXPECT_EQ(200, res.code);
-}
-
-TEST_F(ConnectionTest, TestProxyAddressPrefixed)
-{
-  conn->SetProxy("https://37.187.100.23:3128");
-  RestClient::Response res = conn->get("/get");
-  EXPECT_EQ(200, res.code);
-}
-
-TEST_F(ConnectionTest, TestInvalidProxy)
-{
-  conn->SetProxy("127.0.0.1:666");
-  RestClient::Response res = conn->get("/get");
-  EXPECT_EQ("Failed to query.", res.body);
-  EXPECT_EQ(-1, res.code);
-}

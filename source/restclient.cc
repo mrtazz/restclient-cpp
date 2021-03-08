@@ -49,16 +49,10 @@ void RestClient::disable() {
  * @return response struct
  */
 RestClient::Response RestClient::get(const std::string& url) {
-#if __cplusplus >= 201402L
-  auto conn = std::make_unique<RestClient::Connection>("");
-  return conn->get(url);
-#else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  ret = conn->get(url);
-  delete conn;
+  RestClient::Connection conn("");
+  ret = conn.get(url);
   return ret;
-#endif
 }
 
 /**
@@ -73,18 +67,27 @@ RestClient::Response RestClient::get(const std::string& url) {
 RestClient::Response RestClient::post(const std::string& url,
                                       const std::string& ctype,
                                       const std::string& data) {
-#if __cplusplus >= 201402L
-  auto conn = std::make_unique<RestClient::Connection>("");
-  conn->AppendHeader("Content-Type", ctype);
-  return conn->post(url, data);
-#else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  conn->AppendHeader("Content-Type", ctype);
-  ret = conn->post(url, data);
-  delete conn;
+  RestClient::Connection conn("");
+  conn.AppendHeader("Content-Type", ctype);
+  ret = conn.post(url, data);
   return ret;
-#endif
+}
+
+/**
+ * @brief HTTP POST Form method
+ *
+ * @param url to query
+ * @param data post form information
+ *
+ * @return response struct
+ */
+RestClient::Response RestClient::post(const std::string& url,
+                                      const FormData& data) {
+  RestClient::Response ret;
+  RestClient::Connection conn("");
+  ret = conn.post(url, data);
+  return ret;
 }
 
 /**
@@ -99,18 +102,11 @@ RestClient::Response RestClient::post(const std::string& url,
 RestClient::Response RestClient::put(const std::string& url,
                                      const std::string& ctype,
                                      const std::string& data) {
-#if __cplusplus >= 201402L
-  auto conn = std::make_unique<RestClient::Connection>("");
-  conn->AppendHeader("Content-Type", ctype);
-  return conn->put(url, data);
-#else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  conn->AppendHeader("Content-Type", ctype);
-  ret = conn->put(url, data);
-  delete conn;
+  RestClient::Connection conn("");
+  conn.AppendHeader("Content-Type", ctype);
+  ret = conn.put(url, data);
   return ret;
-#endif
 }
 
 /**
@@ -123,13 +119,12 @@ RestClient::Response RestClient::put(const std::string& url,
  * @return response struct
  */
 RestClient::Response RestClient::patch(const std::string& url,
-                                     const std::string& ctype,
-                                     const std::string& data) {
+                                       const std::string& ctype,
+                                       const std::string& data) {
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  conn->AppendHeader("Content-Type", ctype);
-  ret = conn->patch(url, data);
-  delete conn;
+  RestClient::Connection conn("");
+  conn.AppendHeader("Content-Type", ctype);
+  ret = conn.patch(url, data);
   return ret;
 }
 
@@ -141,16 +136,10 @@ RestClient::Response RestClient::patch(const std::string& url,
  * @return response struct
  */
 RestClient::Response RestClient::del(const std::string& url) {
-#if __cplusplus >= 201402L
-  auto conn = std::make_unique<RestClient::Connection>("");
-  return conn->del(url);
-#else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  ret = conn->del(url);
-  delete conn;
+  RestClient::Connection conn("");
+  ret = conn.del(url);
   return ret;
-#endif
 }
 
 /**
@@ -161,16 +150,10 @@ RestClient::Response RestClient::del(const std::string& url) {
  * @return response struct
  */
 RestClient::Response RestClient::head(const std::string& url) {
-#if __cplusplus >= 201402L
-  auto conn = std::make_unique<RestClient::Connection>("");
-  return conn->head(url);
-#else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  ret = conn->head(url);
-  delete conn;
+  RestClient::Connection conn("");
+  ret = conn.head(url);
   return ret;
-#endif
 }
 
 /**
@@ -182,8 +165,55 @@ RestClient::Response RestClient::head(const std::string& url) {
  */
 RestClient::Response RestClient::options(const std::string& url) {
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
-  ret = conn->options(url);
-  delete conn;
+  RestClient::Connection conn("");
+  ret = conn.options(url);
   return ret;
+}
+
+/**
+ * @brief FormData constructor
+ */
+RestClient::FormData::FormData()
+  : formPtr(NULL), lastFormPtr(NULL) {
+}
+
+/**
+ * @brief FormData destructor
+ */
+RestClient::FormData::~FormData() {
+  // cleanup the formpost chain
+  if (this->formPtr) {
+    curl_formfree(this->formPtr);
+    this->formPtr = NULL;
+    this->lastFormPtr = NULL;
+  }
+}
+
+/**
+ * @brief set the name and the value of the HTML "file" form's input
+ *
+ * @param fieldName name of the "file" input
+ * @param fieldValue path to the file to upload
+ */
+void RestClient::FormData::addFormFile(const std::string& fieldName,
+                                           const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_FILE, fieldValue.c_str(),
+               CURLFORM_END);
+}
+
+/**
+ * @brief set the name and the value of an HTML form's input 
+ * (other than "file" like "text", "hidden" or "submit")
+ *
+ * @param fieldName name of the input element
+ * @param fieldValue value to be assigned to the input element
+ */
+void RestClient::FormData::addFormContent(const std::string& fieldName,
+                                              const std::string& fieldValue) {
+  curl_formadd(&this->formPtr, &this->lastFormPtr,
+               CURLFORM_COPYNAME, fieldName.c_str(),
+               CURLFORM_COPYCONTENTS, fieldValue.c_str(),
+               CURLFORM_END);
 }

@@ -21,6 +21,9 @@ AC_CHECK_LIB([curl], [main])
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
+dnl Set install dir for pkg-config file
+PKG_INSTALLDIR
+
 AC_CONFIG_FILES([Makefile restclient-cpp.pc])
 
 # enable code coverage with ./configure --enable-coverage

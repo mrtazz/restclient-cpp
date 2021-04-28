@@ -13,6 +13,7 @@ lib_LTLIBRARIES=librestclient-cpp.la
 librestclient_cpp_la_SOURCES=source/restclient.cc source/connection.cc source/helpers.cc
 librestclient_cpp_la_CXXFLAGS=-fPIC -std=c++11
 librestclient_cpp_la_LDFLAGS=-version-info 2:1:1
+pkgconfig_DATA=restclient-cpp.pc
 
 dist_doc_DATA = README.md
 

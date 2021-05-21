@@ -1,26 +1,20 @@
-#include "restclient-cpp/helpers.h"
 #include <gtest/gtest.h>
 #include <string>
+#include "restclient-cpp/helpers.h"
 
-class HelpersTest : public ::testing::Test
-{
+class HelpersTest : public ::testing::Test {
  protected:
+  HelpersTest() {
+  }
 
-    HelpersTest()
-    {
-    }
+  virtual ~HelpersTest() {
+  }
 
-    virtual ~HelpersTest()
-    {
-    }
+  virtual void SetUp() {
+  }
 
-    virtual void SetUp()
-    {
-    }
-
-    virtual void TearDown()
-    {
-    }
+  virtual void TearDown() {
+  }
 };
 
 TEST_F(HelpersTest, TrimLeft) {

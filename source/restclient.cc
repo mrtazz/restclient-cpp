@@ -18,8 +18,8 @@
 #include <memory>
 #endif
 
-#include "restclient-cpp/version.h"
 #include "restclient-cpp/connection.h"
+#include "restclient-cpp/version.h"
 
 /**
  * @brief global init function. Call this before you start any threads.
@@ -54,7 +54,7 @@ RestClient::Response RestClient::get(const std::string& url) {
   return conn->get(url);
 #else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   ret = conn->get(url);
   delete conn;
   return ret;
@@ -79,7 +79,7 @@ RestClient::Response RestClient::post(const std::string& url,
   return conn->post(url, data);
 #else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   conn->AppendHeader("Content-Type", ctype);
   ret = conn->post(url, data);
   delete conn;
@@ -105,7 +105,7 @@ RestClient::Response RestClient::put(const std::string& url,
   return conn->put(url, data);
 #else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   conn->AppendHeader("Content-Type", ctype);
   ret = conn->put(url, data);
   delete conn;
@@ -123,10 +123,10 @@ RestClient::Response RestClient::put(const std::string& url,
  * @return response struct
  */
 RestClient::Response RestClient::patch(const std::string& url,
-                                     const std::string& ctype,
-                                     const std::string& data) {
+                                       const std::string& ctype,
+                                       const std::string& data) {
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   conn->AppendHeader("Content-Type", ctype);
   ret = conn->patch(url, data);
   delete conn;
@@ -146,7 +146,7 @@ RestClient::Response RestClient::del(const std::string& url) {
   return conn->del(url);
 #else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   ret = conn->del(url);
   delete conn;
   return ret;
@@ -166,7 +166,7 @@ RestClient::Response RestClient::head(const std::string& url) {
   return conn->head(url);
 #else
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   ret = conn->head(url);
   delete conn;
   return ret;
@@ -182,7 +182,7 @@ RestClient::Response RestClient::head(const std::string& url) {
  */
 RestClient::Response RestClient::options(const std::string& url) {
   RestClient::Response ret;
-  RestClient::Connection *conn = new RestClient::Connection("");
+  RestClient::Connection* conn = new RestClient::Connection("");
   ret = conn->options(url);
   delete conn;
   return ret;

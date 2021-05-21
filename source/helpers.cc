@@ -20,11 +20,13 @@
  *
  * @return (size * nmemb)
  */
-size_t RestClient::Helpers::write_callback(void *data, size_t size,
-                                           size_t nmemb, void *userdata) {
+size_t RestClient::Helpers::write_callback(void* data,
+                                           size_t size,
+                                           size_t nmemb,
+                                           void* userdata) {
   RestClient::Response* r;
   r = reinterpret_cast<RestClient::Response*>(userdata);
-  r->body.append(reinterpret_cast<char*>(data), size*nmemb);
+  r->body.append(reinterpret_cast<char*>(data), size * nmemb);
 
   return (size * nmemb);
 }
@@ -38,13 +40,15 @@ size_t RestClient::Helpers::write_callback(void *data, size_t size,
  * @param userdata pointer to user data object to save headr data
  * @return size * nmemb;
  */
-size_t RestClient::Helpers::header_callback(void *data, size_t size,
-                                            size_t nmemb, void *userdata) {
+size_t RestClient::Helpers::header_callback(void* data,
+                                            size_t size,
+                                            size_t nmemb,
+                                            void* userdata) {
   RestClient::Response* r;
   r = reinterpret_cast<RestClient::Response*>(userdata);
-  std::string header(reinterpret_cast<char*>(data), size*nmemb);
+  std::string header(reinterpret_cast<char*>(data), size * nmemb);
   size_t seperator = header.find_first_of(':');
-  if ( std::string::npos == seperator ) {
+  if (std::string::npos == seperator) {
     // roll with non seperated headers...
     trim(header);
     if (0 == header.length()) {
@@ -72,8 +76,10 @@ size_t RestClient::Helpers::header_callback(void *data, size_t size,
  *
  * @return (size * nmemb)
  */
-size_t RestClient::Helpers::read_callback(void *data, size_t size,
-                                          size_t nmemb, void *userdata) {
+size_t RestClient::Helpers::read_callback(void* data,
+                                          size_t size,
+                                          size_t nmemb,
+                                          void* userdata) {
   /** get upload struct */
   RestClient::Helpers::UploadObject* u;
   u = reinterpret_cast<RestClient::Helpers::UploadObject*>(userdata);

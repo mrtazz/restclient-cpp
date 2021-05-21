@@ -1,0 +1,5 @@
+﻿---
+BasedOnStyle: Chromium
+AllowShortFunctionsOnASingleLine: None
+
+...

@@ -160,6 +160,9 @@ class Connection {
     void SetBasicAuth(const std::string& username,
                       const std::string& password);
 
+    // Allow other authentication protocols to be used (such as NTLM)
+    void SetAuthProtocol( unsigned int proto ) { authProtocol = proto; }
+    
     // set connection timeout to seconds
     void SetTimeout(int seconds);
 
@@ -254,6 +257,7 @@ class Connection {
       std::string username;
       std::string password;
     } basicAuth;
+    unsigned long authProtocol = 0;
     std::string customUserAgent;
     std::string caInfoFilePath;
     RequestInfo lastRequest;

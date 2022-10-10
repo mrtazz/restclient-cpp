@@ -328,6 +328,20 @@ cd vcpkg
 The restclient-cpp port in vcpkg is kept up to date by Microsoft team members and community contributors.
 If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
+Another option is to use Mingw64 and CMake to compile on Windows. This requires you to have [Mingw64](https://www.mingw-w64.org/) installed with [CMake](https://cmake.org/download/) and [libCurl](https://curl.se/windows/) (MSYS2 would also work fine).
+
+```bash
+# Make sure cmake, mingw32-make and g++ are in PATH
+# Clone the repo
+git clone https://github.com/mrtazz/restclient-cpp && cd restclient-cpp
+# Build library
+mkdir build && cd build
+# Run cmake
+cmake -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CC_COMPILER=gcc -DCMAKE_MAKE_PROGRAM=mingw32-make -G "MinGW Makefiles" ..
+# Builds the dll.a lib and dll file
+mingw32-make
+```
+
 ## Contribute
 All contributions are highly appreciated. This includes filing issues,
 updating documentation and writing code. Please take a look at the

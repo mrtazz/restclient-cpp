@@ -40,6 +40,7 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->progressFnData = NULL;
   this->writeCallback = RestClient::Helpers::write_callback;
   this->verifyPeer = true;
+  this->verifyHost = true;
 }
 
 /**
@@ -303,6 +304,17 @@ RestClient::Connection::SetVerifyPeer(bool verifyPeer) {
 }
 
 /**
+ * @brief set SSL host verification flag
+ *
+ * @param boolean (default is true)
+ *
+ */
+void
+RestClient::Connection::SetVerifyHost(bool verifyHost) {
+  this->verifyHost = verifyHost;
+}
+
+/**
  * @brief set HTTP proxy address and port
  *
  * @param proxy address with port number
@@ -499,6 +511,12 @@ RestClient::Connection::performCurlRequest(const std::string& uri,
   if (!this->verifyPeer) {
     curl_easy_setopt(getCurlHandle(), CURLOPT_SSL_VERIFYPEER,
                      this->verifyPeer);
+  }
+
+  // set host verification
+  if (!this->verifyHost) {
+    curl_easy_setopt(getCurlHandle(), CURLOPT_SSL_VERIFYHOST,
+                     this->verifyHost);
   }
 
   // set web proxy address

@@ -196,6 +196,9 @@ class Connection {
     // set CURLOPT_SSL_VERIFYPEER. Default is true.
     void SetVerifyPeer(bool verifyPeer);
 
+    // set CURLOPT_SSL_VERIFYHOST. Default is true.
+    void SetVerifyHost(bool verifyHost);
+
     // set CURLOPT_KEYPASSWD.
     void SetKeyPassword(const std::string& keyPassword);
 
@@ -262,6 +265,7 @@ class Connection {
     std::string keyPath;
     std::string keyPassword;
     bool verifyPeer;
+    bool verifyHost;
     std::string uriProxy;
     std::string unixSocketPath;
     char curlErrorBuf[CURL_ERROR_SIZE];

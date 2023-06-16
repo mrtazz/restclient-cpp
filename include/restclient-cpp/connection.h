@@ -13,6 +13,7 @@
 #include <string>
 #include <map>
 #include <cstdlib>
+#include <cstdint>
 
 #include "restclient-cpp/restclient.h"
 #include "restclient-cpp/version.h"

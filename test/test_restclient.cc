@@ -210,6 +210,7 @@ TEST_F(RestClientTest, TestRestClientPATCHHeaders)
 // Disabled as httpbin does not support options requests for now
 TEST_F(RestClientTest, TestRestClientOPTIONSCode)
 {
+  GTEST_SKIP();
   RestClient::Response res = RestClient::options("https://api.reqbin.com/api/v1/requests");
   EXPECT_EQ(200, res.code);
 }

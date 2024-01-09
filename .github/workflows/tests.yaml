@@ -19,6 +19,9 @@ jobs:
         pip install cpplint
         sudo apt-get install -qq valgrind libcurl4-openssl-dev
 
+    - name: build googletest
+      run: ./utils/build_gtest.sh
+
     - name: build
       run: |
         ./autogen.sh

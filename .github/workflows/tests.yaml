@@ -1,0 +1,23 @@
+name: test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
+
+jobs:
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: build
+      run: |
+        ./autogen.sh
+        ./configure --enable-coverage
+
+    - name: run tests
+      run: make ci

@@ -161,7 +161,7 @@ reuse connections][curl_keepalive] made with that handle.
 
 ### Progress callback
 
-Two wrapper functions are provided to setup the progress callback for uploads/downloads. 
+Two wrapper functions are provided to setup the progress callback for uploads/downloads.
 
 Calling `conn->SetFileProgressCallback(callback)` with a callback parameter matching the prototype `int progress_callback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)` will setup the progress callback.
 

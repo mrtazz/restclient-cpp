@@ -71,8 +71,9 @@ TEST_F(RestClientTest, TestRestClientGETCode)
 
 TEST_F(RestClientTest, TestRestClientGETHTTP2Code)
 {
-  RestClient::Response res = RestClient::get("https://http2.golang.org/reqinfo");
-  EXPECT_EQ(200, res.code);
+  // the endpoint does a redirect now
+  RestClient::Response res = RestClient::get("https://http2.golang.org");
+  EXPECT_EQ(302, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientGETBodyCode)

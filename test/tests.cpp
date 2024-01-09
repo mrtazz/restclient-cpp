@@ -9,6 +9,7 @@ namespace RestClient
     std::string TestNonExistantUrl;
     std::string TestServer;
     std::string TestUrl;
+    std::string TestProxy;
     std::string TestProxyUrl;
 };
 
@@ -19,8 +20,9 @@ int main(int argc, char **argv)
     RestClient::TestNonExistantUrl = "http://nonexistent";
     RestClient::TestServer = "127.0.0.1:8998";
     RestClient::TestUrl = "http://" + RestClient::TestServer;
-    RestClient::TestProxyUrl = "http://127.0.0.1:3128";
+    RestClient::TestProxy = "127.0.0.1:3128";
+    RestClient::TestProxyUrl = "http://" + RestClient::TestProxy;
 
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

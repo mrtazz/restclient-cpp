@@ -265,7 +265,7 @@ class Connection {
     bool verifyPeer;
     std::string uriProxy;
     std::string unixSocketPath;
-    char curlErrorBuf[CURL_ERROR_SIZE];
+    char curlErrorBuf[CURL_ERROR_SIZE] = {0};
     RestClient::WriteCallback writeCallback;
     RestClient::Response*
     performCurlRequest(const std::string& uri, RestClient::Response* resp);

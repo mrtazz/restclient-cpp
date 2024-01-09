@@ -52,7 +52,7 @@ TEST_F(RestClientTest, TestRestClientDELETEFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::del(u);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -93,7 +93,7 @@ TEST_F(RestClientTest, TestRestClientGETFailureCode)
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::get(u);
   EXPECT_EQ("Couldn't resolve host name", res.body);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -127,7 +127,7 @@ TEST_F(RestClientTest, TestRestClientPOSTFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::post(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -161,7 +161,7 @@ TEST_F(RestClientTest, TestRestClientPUTFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::put(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -195,7 +195,7 @@ TEST_F(RestClientTest, TestRestClientPATCHFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::patch(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -220,7 +220,7 @@ TEST_F(RestClientTest, TestRestClientOPTIONSFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::options(u);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 

@@ -1,5 +1,5 @@
 # REST client for C++
-[![Build Status](https://travis-ci.org/mrtazz/restclient-cpp.svg?branch=master)](https://travis-ci.org/mrtazz/restclient-cpp)
+![build status](https://github.com/mrtazz/restclient-cpp/actions/workflows/tests.yaml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/mrtazz/restclient-cpp/badge.svg?branch=master&service=github)](https://coveralls.io/github/mrtazz/restclient-cpp?branch=master)
 [![Packagecloud](https://img.shields.io/badge/packagecloud-available-brightgreen.svg)](https://packagecloud.io/mrtazz/restclient-cpp)
 [![doxygen](https://img.shields.io/badge/doxygen-reference-blue.svg)](http://code.mrtazz.com/restclient-cpp/ref/)
@@ -161,7 +161,7 @@ reuse connections][curl_keepalive] made with that handle.
 
 ### Progress callback
 
-Two wrapper functions are provided to setup the progress callback for uploads/downloads. 
+Two wrapper functions are provided to setup the progress callback for uploads/downloads.
 
 Calling `conn->SetFileProgressCallback(callback)` with a callback parameter matching the prototype `int progress_callback(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)` will setup the progress callback.
 

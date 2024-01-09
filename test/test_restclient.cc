@@ -52,7 +52,7 @@ TEST_F(RestClientTest, TestRestClientDELETEFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::del(u);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -71,8 +71,9 @@ TEST_F(RestClientTest, TestRestClientGETCode)
 
 TEST_F(RestClientTest, TestRestClientGETHTTP2Code)
 {
-  RestClient::Response res = RestClient::get("https://http2.golang.org/reqinfo");
-  EXPECT_EQ(200, res.code);
+  // the endpoint does a redirect now
+  RestClient::Response res = RestClient::get("https://http2.golang.org");
+  EXPECT_EQ(302, res.code);
 }
 
 TEST_F(RestClientTest, TestRestClientGETBodyCode)
@@ -92,7 +93,7 @@ TEST_F(RestClientTest, TestRestClientGETFailureCode)
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::get(u);
   EXPECT_EQ("Couldn't resolve host name", res.body);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -126,7 +127,7 @@ TEST_F(RestClientTest, TestRestClientPOSTFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::post(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -160,7 +161,7 @@ TEST_F(RestClientTest, TestRestClientPUTFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::put(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -194,7 +195,7 @@ TEST_F(RestClientTest, TestRestClientPATCHFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::patch(u, "text/text", "data");
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 
@@ -209,6 +210,7 @@ TEST_F(RestClientTest, TestRestClientPATCHHeaders)
 // Disabled as httpbin does not support options requests for now
 TEST_F(RestClientTest, TestRestClientOPTIONSCode)
 {
+  GTEST_SKIP();
   RestClient::Response res = RestClient::options("https://api.reqbin.com/api/v1/requests");
   EXPECT_EQ(200, res.code);
 }
@@ -218,7 +220,7 @@ TEST_F(RestClientTest, TestRestClientOPTIONSFailureCode)
 {
   std::string u = RestClient::TestNonExistantUrl;
   RestClient::Response res = RestClient::options(u);
-  // 6 = CURLE_COULDNT_RESOLVE_HOST 
+  // 6 = CURLE_COULDNT_RESOLVE_HOST
   EXPECT_EQ(6, res.code);
 }
 

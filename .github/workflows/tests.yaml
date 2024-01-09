@@ -1,0 +1,31 @@
+name: test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
+
+jobs:
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: |
+        pip install cpplint
+        sudo apt-get install -qq valgrind libcurl4-openssl-dev
+
+    - name: build googletest
+      run: ./utils/build_gtest.sh
+
+    - name: build
+      run: |
+        ./autogen.sh
+        ./configure --enable-coverage
+
+    - name: run tests
+      run: make ci

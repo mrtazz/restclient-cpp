@@ -1,6 +1,4 @@
 #!/bin/sh
-cd vendor/gtest-1.7.0
-autoreconf -i
-./configure
-
+cd vendor/googletest-1.14.0
+cmake .
 which -s gmake && gmake || make

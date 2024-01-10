@@ -421,7 +421,8 @@ RestClient::Connection::performCurlRequest(const std::string& uri,
   if (this->basicAuth.username.length() > 0) {
     std::string authString = std::string(this->basicAuth.username + ":" +
                                          this->basicAuth.password);
-    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPAUTH,
+              this->authProtocol == 0 ? CURLAUTH_BASIC : this->authProtocol);
     curl_easy_setopt(getCurlHandle(), CURLOPT_USERPWD, authString.c_str());
   }
   /** set error buffer */

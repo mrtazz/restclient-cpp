@@ -58,6 +58,9 @@ RestClient::Connection* conn = new RestClient::Connection("http://url.com");
 // configure basic auth
 conn->SetBasicAuth("WarMachine68", "WARMACHINEROX");
 
+// to authenticate using the NTLM protocol
+conn->SetAuthProtocol( CURLAUTH_NTLM );
+
 // set connection timeout to 5s
 conn->SetTimeout(5);
 

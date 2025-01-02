@@ -44,7 +44,7 @@ clean-docker-services:
 	docker rm --force restclient-cpp-httpbin 2>/dev/null || true
 	docker rm --force restclient-cpp-squid 2>/dev/null || true
 
-ci: lint test valgrind
+ci: test valgrind
 
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm

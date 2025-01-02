@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.3 (2nd January 2025)
+- add unit test actions workflow (mrtazz)
+- Fix missing cstdint include (williamspatrick)
+- init Connection::curlErrorBuf[] at compile (montdidier)
+- Added Mingw Instructions (CypherpunkSamurai)
+- [docs] use correct json mime type in example (aknoerig)
+- Allow SSL peer verification to be disabled.  (edwinpjacques)
+- write callback and termination API (edwinpjacques)
+- These two lines allow the scope of the property <target> for the public  (Vi1i)
+- User/shawkins/improve curl errors (Spencatro)
+- Add vcpkg installation instructions (PhoebeHui)
+- update linux package builds (mrtazz)
+
 ## v0.5.2 (12th February 2020)
 - add a pkg-config setup
 - Use the standard CMake-flag BUILD_SHARED_LIBS. (tastytea)

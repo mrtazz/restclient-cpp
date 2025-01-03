@@ -16,6 +16,7 @@ jobs:
     - name: install dependencies
       run: |
         pip install cpplint
+        sudo apt-get update
         sudo apt-get install -qq valgrind libcurl4-openssl-dev
 
     - name: build
@@ -35,6 +36,7 @@ jobs:
     - name: install dependencies
       run: |
         pip install cpplint
+        sudo apt-get update
         sudo apt-get install -qq valgrind libcurl4-openssl-dev
 
     - name: build

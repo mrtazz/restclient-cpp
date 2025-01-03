@@ -66,6 +66,7 @@ target_include_directories(restclient-cpp
     PRIVATE include
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+    PUBLIC $<INSTALL_INTERFACE:include>
 )
 
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/version.h.in")

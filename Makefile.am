@@ -29,12 +29,12 @@ test: check docker-services
 valgrind: check docker-services
 	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
+# Filter reasons:
+#  legal/copyright: it's just maintenance overhead to have license headers
+#  in all files
+#  whitespace/indent_namespace: it makes code less readable if indentations
+#  in namespaces are not allowed
 lint:
-	# Filter reasons:
-	#  legal/copyright: it's just maintenance overhead to have license headers
-	#  in all files
-	#  whitespace/indent_namespace: it makes code less readable if indentations
-	#  in namespaces are not allowed
 	cpplint --filter="-legal/copyright,-whitespace/indent_namespace" --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
 
 docker-services:

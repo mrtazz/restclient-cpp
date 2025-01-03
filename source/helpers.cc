@@ -7,6 +7,7 @@
 #include "restclient-cpp/helpers.h"
 
 #include <cstring>
+#include <string>
 
 #include "restclient-cpp/restclient.h"
 

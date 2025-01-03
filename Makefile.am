@@ -30,7 +30,12 @@ valgrind: check
 	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
 lint:
-	cpplint --filter=-legal/copyright --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
+	# Filter reasons:
+	#  legal/copyright: it's just maintenance overhead to have license headers
+	#  in all files
+	#  whitespace/indent_namespace: it makes code less readable if indentations
+	#  in namespaces are not allowed
+	cpplint --filter="-legal/copyright,-whitespace/indent_namespace" --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
 
 docker-services:
 	[ -n "$$(docker ps --quiet --filter name=restclient-cpp-httpbin)" ] || \

@@ -17,6 +17,8 @@
 #if __cplusplus >= 201402L
 #include <memory>
 #endif
+#include <string>
+
 
 #include "restclient-cpp/version.h"
 #include "restclient-cpp/connection.h"

@@ -8,11 +8,12 @@
 
 #include <curl/curl.h>
 
+#include <algorithm>
 #include <cstring>
-#include <string>
 #include <iostream>
 #include <map>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 #include "restclient-cpp/restclient.h"
@@ -378,7 +379,7 @@ RestClient::Connection::performCurlRequest(const std::string& uri) {
  *
  * @param uri URI to query
  * @param ret Reference to the response struct that should be filled
- * 
+ *
  * @return reference to response struct for chaining
  */
 RestClient::Response*
@@ -571,7 +572,7 @@ RestClient::Connection::get(const std::string& url) {
  *
  * @param url to query
  * @param response struct
- * 
+ *
  * @return response struct ref for chaining
  */
 RestClient::Response*

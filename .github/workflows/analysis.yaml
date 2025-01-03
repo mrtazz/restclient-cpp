@@ -1,0 +1,48 @@
+name: analysis
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
+
+jobs:
+  cpplint:
+    name: unit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: |
+        pip install cpplint
+        sudo apt-get install -qq valgrind libcurl4-openssl-dev
+
+    - name: build
+      run: |
+        ./autogen.sh
+        ./configure --enable-coverage
+
+    - name: run cpplint
+      run: make lint
+
+  valgrind:
+    name: unit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: |
+        pip install cpplint
+        sudo apt-get install -qq valgrind libcurl4-openssl-dev
+
+    - name: build
+      run: |
+        ./autogen.sh
+        ./configure --enable-coverage
+
+    - name: run cpplint
+      run: make valgrind

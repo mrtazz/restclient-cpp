@@ -1,4 +1,4 @@
-name: test
+name: analysis
 
 on:
   workflow_dispatch:
@@ -7,8 +7,27 @@ on:
 
 
 jobs:
-  unit:
-    name: unit
+  cpplint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: install dependencies
+      run: |
+        pip install cpplint
+        sudo apt-get update
+        sudo apt-get install -qq valgrind libcurl4-openssl-dev
+
+    - name: build
+      run: |
+        ./autogen.sh
+        ./configure --enable-coverage
+
+    - name: run cpplint
+      run: make lint
+
+  valgrind:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,5 +47,5 @@ jobs:
         ./autogen.sh
         ./configure --enable-coverage
 
-    - name: run tests
-      run: make test
+    - name: run valgrind
+      run: make valgrind

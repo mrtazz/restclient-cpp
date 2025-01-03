@@ -26,11 +26,16 @@ include/restclient-cpp/version.h:
 test: check docker-services
 	./test-program
 
-valgrind: check
+valgrind: check docker-services
 	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
+# Filter reasons:
+#  legal/copyright: it's just maintenance overhead to have license headers
+#  in all files
+#  whitespace/indent_namespace: it makes code less readable if indentations
+#  in namespaces are not allowed
 lint:
-	cpplint --filter=-legal/copyright --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
+	cpplint --filter="-legal/copyright,-whitespace/indent_namespace" --root=$(CURDIR) include/restclient-cpp/*.h source/*.cc
 
 docker-services:
 	[ -n "$$(docker ps --quiet --filter name=restclient-cpp-httpbin)" ] || \
@@ -43,8 +48,6 @@ docker-services:
 clean-docker-services:
 	docker rm --force restclient-cpp-httpbin 2>/dev/null || true
 	docker rm --force restclient-cpp-squid 2>/dev/null || true
-
-ci: test valgrind
 
 clean-local:
 	find . -name "*.gcda" -print0 | xargs -0 rm

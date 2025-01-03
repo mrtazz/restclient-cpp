@@ -65,6 +65,20 @@ TEST_F(ConnectionTestRemote, TestFailForInvalidCA)
   EXPECT_EQ(77, res.code);
 }
 
+static CURLcode sslctx_fail_function(CURL *curl, void *ctx, void *parm)
+{
+  return CURLE_SSL_CONNECT_ERROR;
+}
+
+TEST_F(ConnectionTestRemote, TestAllowSettingSSLContext)
+{
+  // setting a callback which returns error. The call should fail.
+  conn->SetSSLContextCallback(*sslctx_fail_function);
+  RestClient::Response res = conn->get("/get");
+
+  EXPECT_EQ(CURLE_SSL_CONNECT_ERROR, res.code);
+}
+
 TEST_F(ConnectionTestRemote, TestAllowInsecure)
 {
   // set a non-existing file for the CA file, should allow access anyway

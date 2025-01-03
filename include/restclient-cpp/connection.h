@@ -30,6 +30,11 @@ typedef size_t (*WriteCallback)(void *data, size_t size,
                   size_t nmemb, void *userdata);
 
 /**
+ * @brief define type used for RestClient SSL context callback
+ */
+typedef CURLcode (*SSLCtxCallback)(CURL *curl, void *ssl_ctx, void *userptr);
+
+/**
   * @brief Connection object for advanced usage
   */
 class Connection {
@@ -267,6 +272,7 @@ class Connection {
     std::string unixSocketPath;
     char curlErrorBuf[CURL_ERROR_SIZE] = {0};
     RestClient::WriteCallback writeCallback;
+    RestClient::SSLCtxCallback sslContextCallback;
     RestClient::Response*
     performCurlRequest(const std::string& uri, RestClient::Response* resp);
     RestClient::Response performCurlRequest(const std::string& uri);

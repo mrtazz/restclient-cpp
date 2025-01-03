@@ -40,6 +40,13 @@ RestClient::Connection::Connection(const std::string& baseUrl)
   this->progressFn = NULL;
   this->progressFnData = NULL;
   this->writeCallback = RestClient::Helpers::write_callback;
+  
+  #if __cplusplus >= 201103L
+    this->sslContextCallback = nullptr;
+  #else
+    this->sslContextCallback = NULL;
+  #endif
+
   this->verifyPeer = true;
 }
 
@@ -350,6 +357,20 @@ writeCallback) {
 }
 
 /**
+ * @brief Sets a callback to enable custom setting of the ssl context,
+ * at construction time. For details,
+ * see https://curl.se/libcurl/c/CURLOPT_SSL_CTX_FUNCTION.html
+ *
+ * @param callback - A user callback allowing for customization of the ssl
+ context at construction time.
+ *
+ */
+void RestClient::Connection::SetSSLContextCallback(
+    RestClient::SSLCtxCallback callback) {
+  this->sslContextCallback = callback;
+}
+
+/**
  * @brief helper function to get called from the actual request methods to
  * prepare the curlHandle for transfer with generic options, perform the
  * request and record some stats from the last request and then reset the
@@ -402,6 +423,17 @@ RestClient::Connection::performCurlRequest(const std::string& uri,
                    this->writeCallback);
   /** set data object to pass to callback function */
   curl_easy_setopt(getCurlHandle(), CURLOPT_WRITEDATA, ret);
+  /** set ssl context callback function */
+  #if __cplusplus >= 201103L 
+    if (this->sslContextCallback != nullptr) {
+      curl_easy_setopt(getCurlHandle(), CURLOPT_SSL_CTX_FUNCTION,
+      this->sslContextCallback);
+    }
+  #else
+    if (this->sslContextCallback != NULL) {
+      curl_easy_setopt(getCurlHandle(), CURLOPT_SSL_CTX_FUNCTION, this->sslContextCallback);
+    }
+  #endif
   /** set the header callback function */
   curl_easy_setopt(getCurlHandle(), CURLOPT_HEADERFUNCTION,
                    Helpers::header_callback);

@@ -26,7 +26,7 @@ include/restclient-cpp/version.h:
 test: check docker-services
 	./test-program
 
-valgrind: check
+valgrind: check docker-services
 	valgrind --leak-check=full --error-exitcode=1 ./test-program
 
 lint:

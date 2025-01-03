@@ -8,6 +8,7 @@ namespace RestClient
     extern std::string TestNonExistantUrl;
     extern std::string TestServer;
     extern std::string TestUrl;
+    extern std::string TestProxy;
     extern std::string TestProxyUrl;
 };
 

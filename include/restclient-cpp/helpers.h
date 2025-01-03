@@ -9,6 +9,8 @@
 #ifndef INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 #define INCLUDE_RESTCLIENT_CPP_HELPERS_H_
 
+#include <curl/curl.h>
+
 #include <string>
 #include <cctype>
 #include <algorithm>

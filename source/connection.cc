@@ -96,6 +96,8 @@ RestClient::Connection::GetInfo() {
   ret.uriProxy = this->uriProxy;
   ret.unixSocketPath = this->unixSocketPath;
 
+  ret.uriProxy = this->uriProxy;
+
   return ret;
 }
 
@@ -311,12 +313,16 @@ RestClient::Connection::SetVerifyPeer(bool verifyPeer) {
  */
 void
 RestClient::Connection::SetProxy(const std::string& uriProxy) {
+  if (uriProxy.empty()) {
+    return;
+  }
+
   std::string uriProxyUpper = uriProxy;
   // check if the provided address is prefixed with "http"
   std::transform(uriProxyUpper.begin(), uriProxyUpper.end(),
     uriProxyUpper.begin(), ::toupper);
 
-  if ((uriProxy.length() > 0) && (uriProxyUpper.compare(0, 4, "HTTP") != 0)) {
+  if (uriProxyUpper.compare(0, 4, "HTTP") != 0) {
     this->uriProxy = "http://" + uriProxy;
   } else {
     this->uriProxy = uriProxy;
@@ -509,6 +515,32 @@ RestClient::Connection::performCurlRequest(const std::string& uri,
     curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
                      1L);
   }
+  // set key password
+  if (!this->keyPassword.empty()) {
+    curl_easy_setopt(getCurlHandle(), CURLOPT_KEYPASSWD,
+                     this->keyPassword.c_str());
+  }
+
+  // set web proxy address
+  if (!this->uriProxy.empty()) {
+    curl_easy_setopt(getCurlHandle(), CURLOPT_PROXY,
+                     uriProxy.c_str());
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
+                     1L);
+  }
+  // set key password
+  if (!this->keyPassword.empty()) {
+    curl_easy_setopt(getCurlHandle(), CURLOPT_KEYPASSWD,
+                     this->keyPassword.c_str());
+  }
+
+  // set web proxy address
+  if (!this->uriProxy.empty()) {
+    curl_easy_setopt(getCurlHandle(), CURLOPT_PROXY,
+                     uriProxy.c_str());
+    curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPROXYTUNNEL,
+                     1L);
+  }
 
   // set Unix socket path, if requested
   if (!this->unixSocketPath.empty()) {
@@ -600,6 +632,26 @@ RestClient::Connection::post(const std::string& url,
   return this->performCurlRequest(url);
 }
 /**
+ * @brief HTTP POST Form method
+ *
+ * @param url to query
+ * @param data form info
+ *
+ * @return response struct
+ */
+RestClient::Response
+RestClient::Connection::post(const std::string& url,
+                             const FormData& data) {
+  /** Now specify we want to POST data */
+  curl_easy_setopt(getCurlHandle(), CURLOPT_POST, 1L);
+  /* stating that Expect: 100-continue is not wanted */
+  AppendHeader("Expect", "");
+  /** set post form */
+  curl_easy_setopt(getCurlHandle(), CURLOPT_HTTPPOST, data.getFormPtr());
+
+  return this->performCurlRequest(url);
+}
+/**
  * @brief HTTP PUT method
  *
  * @param url to query
@@ -639,7 +691,7 @@ RestClient::Connection::put(const std::string& url,
  */
 RestClient::Response
 RestClient::Connection::patch(const std::string& url,
-                            const std::string& data) {
+                              const std::string& data) {
   /** initialize upload object */
   RestClient::Helpers::UploadObject up_obj;
   up_obj.data = data.c_str();

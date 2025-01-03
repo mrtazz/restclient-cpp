@@ -13,6 +13,7 @@
 #include <map>
 #include <cstdlib>
 
+#include "restclient-cpp/helpers.h"
 #include "restclient-cpp/version.h"
 
 /**
@@ -40,6 +41,26 @@ typedef struct {
   HeaderFields headers;
 } Response;
 
+/** @class FormData
+  * @brief This class represents the form information to send on
+  * POST Form requests
+  */
+class FormData {
+  struct curl_httppost* formPtr;
+  struct curl_httppost* lastFormPtr;
+ public:
+  FormData();
+  ~FormData();
+  /* Fill in the file upload field */
+  void addFormFile(const std::string& fieldName,
+                   const std::string& fieldValue);
+  /* Fill in the filename or the submit field */
+  void addFormContent(const std::string& fieldName,
+                        const std::string& fieldValue);
+  /* Get Form pointer */
+  struct curl_httppost* getFormPtr() const { return formPtr; }
+};
+
 // init and disable functions
 int init();
 void disable();
@@ -53,6 +74,8 @@ Response get(const std::string& url);
 Response post(const std::string& url,
               const std::string& content_type,
               const std::string& data);
+Response post(const std::string& url,
+              const FormData& data);
 Response put(const std::string& url,
               const std::string& content_type,
               const std::string& data);

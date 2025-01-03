@@ -30,6 +30,25 @@ RestClient::Response r = RestClient::patch("http://url.com/patch", "application/
 RestClient::Response r = RestClient::del("http://url.com/delete")
 RestClient::Response r = RestClient::head("http://url.com")
 RestClient::Response r = RestClient::options("http://url.com")
+
+// Post Form Upload
+/* Filling information about the form in a RestClient::FormData object */
+RestClient::FormData uploadInfo;
+/* "submitted" is the name of the "file" input and "TestPostForm.txt"
+is the location of the file to submit.
+<input type="file" name="submitted">
+*/
+uploadInfo.addFormFile("submitted", "TestPostForm.txt");
+/* In some rare cases, some fields related to the form can be filled with
+addFormContent(), the 1st argument is the name of the input element and
+the 2nd argument is the value assigned to it.
+<input type="text" name="filename" value=""/>
+<input type="submit" name="submit" value="send">
+*/
+uploadInfo.addFormContent("filename", "myfile.cpp");
+uploadInfo.addFormContent("submit", "send");
+/* Performing a post form upload with the information provided above */
+RestClient::Response res = RestClient::post("http://posttestserver.com/post.php?dir=restclientcpptests", uploadInfo);
 ```
 
 The response is of type [RestClient::Response][restclient_response] and has
@@ -293,6 +312,23 @@ headers["Accept"] = "application/json; charset=UTF-8";
 headers["Expect"] = "";
 conn->SetHeaders(headers);
 auto resp = conn->get("/images/json");
+```
+
+## HTTP Proxy Tunneling Support
+
+An HTTP Proxy can be set to use for the upcoming request.
+To specify a port number, append :[port] to the end of the host name. If not specified, `libcurl` will default to using port 1080 for proxies. The proxy string may be prefixed with `http://` or `https://`. If no HTTP(S) scheme is specified, the address provided to `libcurl` will be prefixed with `http://` to specify an HTTP proxy. A proxy host string can embedded user + password.
+The operation will be tunneled through the proxy as curl option `CURLOPT_HTTPPROXYTUNNEL` is enabled by default.
+A numerical IPv6 address must be written within [brackets].
+
+```cpp
+// set CURLOPT_PROXY
+conn->SetProxy("https://37.187.100.23:3128");
+/* or you can set it without the protocol scheme and
+http:// will be prefixed by default */
+conn->SetProxy("37.187.100.23:3128");
+/* the following request will be tunneled through the proxy */
+RestClient::Response res = conn->get("/get");
 ```
 
 ## Dependencies

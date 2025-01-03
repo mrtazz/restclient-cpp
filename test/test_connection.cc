@@ -297,7 +297,7 @@ TEST_F(ConnectionTest, TestSetProgress)
 
 TEST_F(ConnectionTestRemote, TestProxy)
 {
-  conn->SetProxy(RestClient::TestProxyUrl);
+  conn->SetProxy(RestClient::TestProxy);
   RestClient::Response res = conn->get("/get");
   EXPECT_EQ(200, res.code);
 }
@@ -390,3 +390,4 @@ TEST_F(ConnectionTest, TestSetWriteFunction)
   EXPECT_EQ(200, res.code);
   EXPECT_EQ(ret, lineReceived.size() + lines);
 }
+

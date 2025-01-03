@@ -37,6 +37,7 @@ size_t RestClient::Helpers::write_callback(void *data, size_t size,
  * @param size of data
  * @param nmemb memblock
  * @param userdata pointer to user data object to save headr data
+ *
  * @return size * nmemb;
  */
 size_t RestClient::Helpers::header_callback(void *data, size_t size,

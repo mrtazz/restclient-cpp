@@ -8,7 +8,6 @@ on:
 
 jobs:
   cpplint:
-    name: unit
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +27,6 @@ jobs:
       run: make lint
 
   valgrind:
-    name: unit
     runs-on: ubuntu-latest
 
     steps:
